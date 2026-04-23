@@ -1,0 +1,94 @@
+/* ============================================================
+   PatientTrac Revela — Design Token System
+   Brand: Plastic & Reconstructive Surgery Module
+   ============================================================ */
+
+:root {
+  /* --- Brand Colors --- */
+  --revela-navy:          #0a1628;
+  --revela-surgical-blue: #1a3a5c;
+  --revela-gold:          #c9a96e;
+  --revela-gold-dark:     #a8884e;
+  --revela-gold-light:    #fdf3e3;
+  --revela-ivory:         #f0ece4;
+  --revela-ivory-dark:    #e2dbd0;
+  --revela-steel-teal:    #4a7fa8;
+  --revela-steel-teal-light: #dbeeff;
+
+  /* --- Clinical Flag Colors --- */
+  --revela-flag-red:      #e11d48;
+  --revela-flag-red-bg:   #ffe4e6;
+  --revela-flag-amber:    #d97706;
+  --revela-flag-amber-bg: #fef3c7;
+  --revela-flag-blue:     #3b82f6;
+  --revela-flag-blue-bg:  #dbeafe;
+  --revela-flag-green:    #16a34a;
+  --revela-flag-green-bg: #dcfce7;
+
+  /* --- UI Surface Colors --- */
+  --revela-surface-1:     #ffffff;
+  --revela-surface-2:     #f7f5f1;
+  --revela-surface-3:     #eee9e1;
+  --revela-border:        rgba(10, 22, 40, 0.12);
+  --revela-border-strong: rgba(10, 22, 40, 0.25);
+
+  /* --- Typography --- */
+  --revela-font-display:  'Georgia', 'Times New Roman', serif;
+  --revela-font-ui:       -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --revela-font-mono:     'JetBrains Mono', 'Fira Code', monospace;
+
+  /* --- Font Sizes --- */
+  --revela-text-xs:   11px;
+  --revela-text-sm:   13px;
+  --revela-text-base: 15px;
+  --revela-text-lg:   17px;
+  --revela-text-xl:   20px;
+  --revela-text-2xl:  26px;
+  --revela-text-3xl:  34px;
+  --revela-text-4xl:  44px;
+
+  /* --- Spacing --- */
+  --revela-space-1:   4px;
+  --revela-space-2:   8px;
+  --revela-space-3:   12px;
+  --revela-space-4:   16px;
+  --revela-space-5:   20px;
+  --revela-space-6:   24px;
+  --revela-space-8:   32px;
+  --revela-space-10:  40px;
+  --revela-space-12:  48px;
+
+  /* --- Border Radius --- */
+  --revela-radius-sm:   6px;
+  --revela-radius-md:   10px;
+  --revela-radius-lg:   14px;
+  --revela-radius-xl:   20px;
+  --revela-radius-full: 9999px;
+
+  /* --- Shadows (flat — no drop shadows in UI) --- */
+  --revela-focus-ring: 0 0 0 3px rgba(201, 169, 110, 0.35);
+
+  /* --- Transitions --- */
+  --revela-transition: 150ms ease;
+
+  /* --- OR Status Colors --- */
+  --revela-or-scheduled:    #4a7fa8;
+  --revela-or-in-progress:  #16a34a;
+  --revela-or-complete:     #888780;
+  --revela-or-cancelled:    #e11d48;
+  --revela-or-blocked:      #d97706;
+}
+
+/* ============================================================
+   Dark Mode Overrides
+   ============================================================ */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --revela-surface-1:     #0f1e35;
+    --revela-surface-2:     #0a1628;
+    --revela-surface-3:     #071020;
+    --revela-border:        rgba(240, 236, 228, 0.10);
+    --revela-border-strong: rgba(240, 236, 228, 0.22);
+    --revela-ivory:         #e8e3db;
+  }
+}
