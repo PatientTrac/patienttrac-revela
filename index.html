@@ -1,0 +1,1405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PatientTrac Revela — Where Precision Meets Possibility</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #060e1c;
+  --navy2: #0a1628;
+  --navy3: #112240;
+  --gold: #c9a96e;
+  --gold2: #e8c98a;
+  --gold3: #f5e4c0;
+  --ivory: #f0ece4;
+  --teal: #4a7fa8;
+  --teal2: #6fb3d9;
+  --red: #8b1a1a;
+  --muted: #4a6080;
+  --serif: 'Cormorant Garamond', Georgia, serif;
+  --sans: 'DM Sans', system-ui, sans-serif;
+  --mono: 'DM Mono', monospace;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--navy);
+  color: var(--ivory);
+  font-family: var(--sans);
+  font-weight: 300;
+  overflow-x: hidden;
+}
+
+/* ── NOISE TEXTURE OVERLAY ── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 1000;
+  opacity: 0.4;
+}
+
+/* ── NAVIGATION ── */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.5rem 4rem;
+  background: linear-gradient(to bottom, rgba(6,14,28,0.95) 0%, transparent 100%);
+  backdrop-filter: blur(12px);
+}
+
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  text-decoration: none;
+}
+
+.logo-mark {
+  width: 42px;
+  height: 42px;
+  position: relative;
+}
+
+.nav-brand {
+  display: flex;
+  flex-direction: column;
+}
+
+.nav-brand-top {
+  font-family: var(--sans);
+  font-size: 9px;
+  letter-spacing: 0.28em;
+  color: var(--teal);
+  text-transform: uppercase;
+  font-weight: 400;
+}
+
+.nav-brand-name {
+  font-family: var(--serif);
+  font-size: 22px;
+  font-weight: 300;
+  color: var(--ivory);
+  letter-spacing: 0.06em;
+  line-height: 1;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 2.5rem;
+  list-style: none;
+}
+
+.nav-links a {
+  font-family: var(--sans);
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  text-decoration: none;
+  transition: color 0.3s;
+  font-weight: 400;
+}
+
+.nav-links a:hover { color: var(--gold); }
+
+.nav-cta {
+  padding: 10px 28px;
+  border: 1px solid var(--gold);
+  color: var(--gold) !important;
+  border-radius: 2px;
+  transition: all 0.3s !important;
+}
+
+.nav-cta:hover {
+  background: var(--gold) !important;
+  color: var(--navy) !important;
+}
+
+/* ── HERO ── */
+.hero {
+  min-height: 100vh;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 100%, rgba(74,127,168,0.12) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 40% at 80% 20%, rgba(201,169,110,0.06) 0%, transparent 50%),
+    radial-gradient(ellipse 60% 80% at 20% 50%, rgba(139,26,26,0.04) 0%, transparent 60%),
+    var(--navy);
+}
+
+/* Animated grid lines */
+.hero-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(74,127,168,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(74,127,168,0.04) 1px, transparent 1px);
+  background-size: 80px 80px;
+  animation: gridDrift 20s linear infinite;
+}
+
+@keyframes gridDrift {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(80px); }
+}
+
+/* Floating orbs */
+.orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.15;
+  animation: orbFloat 8s ease-in-out infinite;
+}
+
+.orb-1 {
+  width: 400px; height: 400px;
+  background: var(--teal);
+  top: 10%; left: -5%;
+  animation-delay: 0s;
+}
+
+.orb-2 {
+  width: 300px; height: 300px;
+  background: var(--gold);
+  top: 60%; right: -5%;
+  animation-delay: -3s;
+}
+
+.orb-3 {
+  width: 200px; height: 200px;
+  background: var(--red);
+  bottom: 20%; left: 30%;
+  animation-delay: -6s;
+  opacity: 0.08;
+}
+
+@keyframes orbFloat {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(20px, -30px) scale(1.05); }
+  66% { transform: translate(-15px, 20px) scale(0.97); }
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  max-width: 900px;
+  padding: 0 2rem;
+  animation: heroFadeIn 1.2s ease both;
+}
+
+@keyframes heroFadeIn {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.hero-eyebrow {
+  font-family: var(--sans);
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--teal);
+  font-weight: 400;
+  margin-bottom: 2rem;
+  animation: heroFadeIn 1s ease 0.2s both;
+}
+
+/* ── HERO LOGO MARK ── */
+.hero-logo-mark {
+  width: 100px;
+  height: 100px;
+  margin: 0 auto 2.5rem;
+  animation: heroFadeIn 1s ease 0.1s both;
+}
+
+.hero-title {
+  font-family: var(--serif);
+  font-size: clamp(3.5rem, 8vw, 7rem);
+  font-weight: 300;
+  line-height: 0.95;
+  letter-spacing: 0.02em;
+  margin-bottom: 0.5rem;
+  animation: heroFadeIn 1s ease 0.3s both;
+}
+
+.hero-title em {
+  font-style: italic;
+  color: var(--gold);
+}
+
+.hero-subtitle-line {
+  font-family: var(--serif);
+  font-size: clamp(1.2rem, 2.5vw, 1.8rem);
+  font-weight: 300;
+  font-style: italic;
+  color: rgba(240,236,228,0.5);
+  margin-bottom: 2.5rem;
+  letter-spacing: 0.04em;
+  animation: heroFadeIn 1s ease 0.5s both;
+}
+
+.hero-tagline {
+  font-family: var(--sans);
+  font-size: 13px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 3rem;
+  animation: heroFadeIn 1s ease 0.6s both;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 1.5rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  animation: heroFadeIn 1s ease 0.8s both;
+}
+
+.btn-primary {
+  padding: 16px 48px;
+  background: var(--gold);
+  color: var(--navy);
+  font-family: var(--sans);
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  border-radius: 2px;
+  text-decoration: none;
+  transition: all 0.3s;
+  display: inline-block;
+}
+
+.btn-primary:hover {
+  background: var(--gold2);
+  transform: translateY(-2px);
+}
+
+.btn-secondary {
+  padding: 16px 48px;
+  background: transparent;
+  color: var(--ivory);
+  font-family: var(--sans);
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-weight: 400;
+  border: 1px solid rgba(240,236,228,0.2);
+  cursor: pointer;
+  border-radius: 2px;
+  text-decoration: none;
+  transition: all 0.3s;
+  display: inline-block;
+}
+
+.btn-secondary:hover {
+  border-color: var(--ivory);
+  transform: translateY(-2px);
+}
+
+/* Scroll indicator */
+.scroll-indicator {
+  position: absolute;
+  bottom: 3rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  animation: heroFadeIn 1s ease 1.2s both;
+  z-index: 2;
+}
+
+.scroll-indicator span {
+  font-size: 9px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.scroll-line {
+  width: 1px;
+  height: 60px;
+  background: linear-gradient(to bottom, var(--gold), transparent);
+  animation: scrollPulse 2s ease-in-out infinite;
+}
+
+@keyframes scrollPulse {
+  0%, 100% { opacity: 1; transform: scaleY(1); }
+  50% { opacity: 0.4; transform: scaleY(0.7); }
+}
+
+/* Floating data particles */
+.data-particle {
+  position: absolute;
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--teal);
+  opacity: 0.12;
+  animation: particleFade 6s ease-in-out infinite;
+  pointer-events: none;
+  user-select: none;
+  z-index: 1;
+}
+
+@keyframes particleFade {
+  0%, 100% { opacity: 0.05; transform: translateY(0); }
+  50% { opacity: 0.15; transform: translateY(-10px); }
+}
+
+/* ── SECTIONS ── */
+section {
+  position: relative;
+  padding: 8rem 4rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.section-label {
+  font-family: var(--sans);
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--teal);
+  font-weight: 400;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.section-label::before {
+  content: '';
+  display: block;
+  width: 40px;
+  height: 1px;
+  background: var(--teal);
+}
+
+.section-title {
+  font-family: var(--serif);
+  font-size: clamp(2.5rem, 4vw, 4rem);
+  font-weight: 300;
+  line-height: 1.1;
+  letter-spacing: 0.02em;
+  margin-bottom: 1.5rem;
+}
+
+.section-title em {
+  font-style: italic;
+  color: var(--gold);
+}
+
+/* ── HISTORY SECTION ── */
+.history-section {
+  padding: 10rem 4rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.history-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6rem;
+  align-items: start;
+}
+
+.history-left {
+  position: sticky;
+  top: 8rem;
+}
+
+.history-right {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.timeline-item {
+  display: flex;
+  gap: 2rem;
+  padding: 3rem 0;
+  border-bottom: 1px solid rgba(240,236,228,0.06);
+  opacity: 0;
+  transform: translateX(20px);
+  transition: all 0.6s ease;
+  position: relative;
+}
+
+.timeline-item.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.timeline-item:last-child { border-bottom: none; }
+
+.timeline-year {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--gold);
+  letter-spacing: 0.1em;
+  padding-top: 4px;
+  min-width: 60px;
+  font-weight: 500;
+}
+
+.timeline-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--gold);
+  margin-top: 7px;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.timeline-dot::after {
+  content: '';
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 1px solid var(--gold);
+  opacity: 0.3;
+}
+
+.timeline-content {}
+
+.timeline-era {
+  font-family: var(--serif);
+  font-size: 1.4rem;
+  font-weight: 400;
+  color: var(--ivory);
+  margin-bottom: 0.75rem;
+  letter-spacing: 0.02em;
+}
+
+.timeline-desc {
+  font-family: var(--sans);
+  font-size: 14px;
+  color: rgba(240,236,228,0.55);
+  line-height: 1.8;
+  font-weight: 300;
+}
+
+.timeline-tag {
+  display: inline-block;
+  margin-top: 0.75rem;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  padding: 4px 12px;
+  border-radius: 2px;
+  text-transform: uppercase;
+}
+
+.tag-legacy { background: rgba(139,26,26,0.2); color: #d4726e; }
+.tag-growth { background: rgba(74,127,168,0.2); color: var(--teal2); }
+.tag-ai { background: rgba(201,169,110,0.2); color: var(--gold); }
+
+.history-visual {
+  background: var(--navy3);
+  border: 1px solid rgba(201,169,110,0.12);
+  border-radius: 4px;
+  padding: 3rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.history-visual::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+
+.vb6-code {
+  font-family: var(--mono);
+  font-size: 11px;
+  line-height: 1.7;
+  color: rgba(240,236,228,0.4);
+}
+
+.vb6-keyword { color: #79b4e8; }
+.vb6-string { color: #c3e88d; }
+.vb6-comment { color: rgba(240,236,228,0.25); font-style: italic; }
+.vb6-highlight { color: var(--gold); }
+
+.then-now {
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.then-now-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1rem;
+  border-radius: 4px;
+  background: rgba(240,236,228,0.03);
+  border-left: 2px solid transparent;
+  transition: all 0.3s;
+}
+
+.then-now-item.then { border-color: rgba(139,26,26,0.5); }
+.then-now-item.now { border-color: var(--teal); }
+
+.then-now-badge {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 2px;
+  min-width: 40px;
+  text-align: center;
+}
+
+.then .then-now-badge { background: rgba(139,26,26,0.2); color: #d4726e; }
+.now .then-now-badge { background: rgba(74,127,168,0.2); color: var(--teal2); }
+
+.then-now-text {
+  font-family: var(--sans);
+  font-size: 12px;
+  color: rgba(240,236,228,0.6);
+  line-height: 1.6;
+}
+
+/* ── FEATURES SECTION ── */
+.features-section {
+  padding: 8rem 4rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.features-header {
+  text-align: center;
+  max-width: 700px;
+  margin: 0 auto 5rem;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5px;
+  background: rgba(201,169,110,0.08);
+  border: 1px solid rgba(201,169,110,0.08);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.feature-card {
+  background: var(--navy2);
+  padding: 2.5rem;
+  transition: background 0.3s;
+  position: relative;
+  overflow: hidden;
+}
+
+.feature-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(201,169,110,0.3), transparent);
+  transform: scaleX(0);
+  transition: transform 0.5s;
+}
+
+.feature-card:hover::before { transform: scaleX(1); }
+.feature-card:hover { background: var(--navy3); }
+
+.feature-icon {
+  width: 44px;
+  height: 44px;
+  margin-bottom: 1.5rem;
+}
+
+.feature-number {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  color: var(--gold);
+  opacity: 0.5;
+  margin-bottom: 0.75rem;
+}
+
+.feature-name {
+  font-family: var(--serif);
+  font-size: 1.4rem;
+  font-weight: 400;
+  color: var(--ivory);
+  margin-bottom: 0.75rem;
+  letter-spacing: 0.02em;
+}
+
+.feature-desc {
+  font-family: var(--sans);
+  font-size: 13px;
+  color: rgba(240,236,228,0.45);
+  line-height: 1.8;
+  font-weight: 300;
+}
+
+.feature-vb6-badge {
+  margin-top: 1rem;
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  color: var(--teal);
+  opacity: 0.6;
+  text-transform: uppercase;
+}
+
+/* ── AI SECTION ── */
+.ai-section {
+  padding: 10rem 4rem;
+  max-width: 1400px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.ai-visual {
+  margin: 4rem auto;
+  max-width: 700px;
+  position: relative;
+  height: 200px;
+}
+
+.ai-ring {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  border: 1px solid rgba(201,169,110,0.15);
+  animation: ringPulse 3s ease-in-out infinite;
+}
+
+.ai-ring-1 { width: 120px; height: 120px; animation-delay: 0s; }
+.ai-ring-2 { width: 200px; height: 200px; animation-delay: 0.5s; border-color: rgba(74,127,168,0.12); }
+.ai-ring-3 { width: 320px; height: 320px; animation-delay: 1s; border-color: rgba(201,169,110,0.06); }
+.ai-ring-4 { width: 440px; height: 440px; animation-delay: 1.5s; border-color: rgba(74,127,168,0.04); }
+
+@keyframes ringPulse {
+  0%, 100% { opacity: 0.5; transform: translate(-50%, -50%) scale(1); }
+  50% { opacity: 1; transform: translate(-50%, -50%) scale(1.02); }
+}
+
+.ai-core {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(135deg, var(--navy3), var(--navy2));
+  border: 1px solid rgba(201,169,110,0.3);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+}
+
+.ai-flags {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin: 4rem 0;
+}
+
+.ai-flag {
+  padding: 1.5rem;
+  border-radius: 4px;
+  text-align: left;
+  border-left: 3px solid transparent;
+}
+
+.ai-flag-critical { background: rgba(139,26,26,0.12); border-color: #8b1a1a; }
+.ai-flag-warning { background: rgba(201,169,110,0.08); border-color: var(--gold); }
+.ai-flag-info { background: rgba(74,127,168,0.1); border-color: var(--teal); }
+
+.ai-flag-label {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+
+.critical { color: #d4726e; }
+.warning { color: var(--gold); }
+.info { color: var(--teal2); }
+
+.ai-flag-text {
+  font-family: var(--sans);
+  font-size: 13px;
+  color: rgba(240,236,228,0.6);
+  line-height: 1.6;
+}
+
+/* ── STATS BANNER ── */
+.stats-banner {
+  background: var(--navy3);
+  border-top: 1px solid rgba(201,169,110,0.1);
+  border-bottom: 1px solid rgba(201,169,110,0.1);
+  padding: 5rem 4rem;
+}
+
+.stats-inner {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 3rem;
+  text-align: center;
+}
+
+.stat-number {
+  font-family: var(--serif);
+  font-size: 3.5rem;
+  font-weight: 300;
+  color: var(--gold);
+  letter-spacing: 0.02em;
+  line-height: 1;
+  margin-bottom: 0.5rem;
+}
+
+.stat-label {
+  font-family: var(--sans);
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(240,236,228,0.4);
+  font-weight: 400;
+}
+
+.stat-divider {
+  width: 1px;
+  background: rgba(201,169,110,0.15);
+  align-self: stretch;
+  display: block;
+}
+
+/* ── SUPABASE SECTION ── */
+.db-section {
+  padding: 8rem 4rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.db-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: center;
+}
+
+.db-schema {
+  background: var(--navy3);
+  border: 1px solid rgba(74,127,168,0.2);
+  border-radius: 4px;
+  padding: 2rem;
+  font-family: var(--mono);
+  font-size: 11px;
+  line-height: 1.9;
+  position: relative;
+  overflow: hidden;
+}
+
+.db-schema::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--teal), transparent);
+}
+
+.db-table-name { color: var(--gold); font-weight: 500; }
+.db-field { color: var(--teal2); }
+.db-type { color: rgba(240,236,228,0.35); }
+.db-pk { color: #c3e88d; font-size: 9px; }
+
+.db-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  margin: 0.4rem 0.25rem 0.4rem 0;
+  border: 1px solid rgba(74,127,168,0.25);
+  background: rgba(74,127,168,0.08);
+  color: var(--teal2);
+}
+
+/* ── CTA SECTION ── */
+.cta-section {
+  padding: 10rem 4rem;
+  max-width: 1400px;
+  margin: 0 auto;
+  text-align: center;
+  position: relative;
+}
+
+.cta-section::before {
+  content: '';
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(ellipse, rgba(201,169,110,0.04) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.cta-title {
+  font-family: var(--serif);
+  font-size: clamp(2.5rem, 5vw, 5rem);
+  font-weight: 300;
+  letter-spacing: 0.02em;
+  line-height: 1.1;
+  margin-bottom: 1.5rem;
+}
+
+.cta-title em { font-style: italic; color: var(--gold); }
+
+.cta-sub {
+  font-family: var(--sans);
+  font-size: 15px;
+  color: rgba(240,236,228,0.45);
+  max-width: 500px;
+  margin: 0 auto 3rem;
+  line-height: 1.8;
+}
+
+/* ── FOOTER ── */
+footer {
+  background: var(--navy);
+  border-top: 1px solid rgba(240,236,228,0.05);
+  padding: 3rem 4rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.footer-brand {
+  font-family: var(--serif);
+  font-size: 1.1rem;
+  color: rgba(240,236,228,0.4);
+  letter-spacing: 0.04em;
+}
+
+.footer-note {
+  font-family: var(--sans);
+  font-size: 11px;
+  color: rgba(240,236,228,0.2);
+  letter-spacing: 0.08em;
+}
+
+/* ── FULL WIDTH DIVIDER ── */
+.divider {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 4rem;
+}
+
+.divider-line {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(201,169,110,0.15), transparent);
+}
+
+/* ── SCROLL ANIMATIONS ── */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+  nav { padding: 1.5rem 2rem; }
+  .nav-links { display: none; }
+  section, .history-section, .features-section, .ai-section, .db-section, .cta-section { padding: 5rem 2rem; }
+  .history-grid, .db-grid { grid-template-columns: 1fr; gap: 3rem; }
+  .history-left { position: static; }
+  .features-grid { grid-template-columns: 1fr; }
+  .stats-inner { grid-template-columns: 1fr 1fr; }
+  .ai-flags { grid-template-columns: 1fr; }
+  footer { flex-direction: column; gap: 1rem; text-align: center; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAVIGATION -->
+<nav>
+  <a href="#" class="nav-logo">
+    <svg class="logo-mark" viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="21" cy="21" r="19" stroke="#c9a96e" stroke-width="0.75" opacity="0.6"/>
+      <circle cx="21" cy="21" r="13" stroke="#4a7fa8" stroke-width="0.5" opacity="0.5"/>
+      <path d="M21 4 C27 10 30 15 30 21 C30 27 27 32 21 38 C15 32 12 27 12 21 C12 15 15 10 21 4Z"
+        fill="none" stroke="#f0ece4" stroke-width="0.9" opacity="0.7"/>
+      <circle cx="21" cy="21" r="3.5" fill="#c9a96e"/>
+      <line x1="21" y1="4" x2="21" y2="11" stroke="#c9a96e" stroke-width="0.75" opacity="0.8"/>
+      <line x1="21" y1="31" x2="21" y2="38" stroke="#c9a96e" stroke-width="0.75" opacity="0.8"/>
+      <line x1="4" y1="21" x2="11" y2="21" stroke="#4a7fa8" stroke-width="0.5" opacity="0.6"/>
+      <line x1="31" y1="21" x2="38" y2="21" stroke="#4a7fa8" stroke-width="0.5" opacity="0.6"/>
+    </svg>
+    <div class="nav-brand">
+      <span class="nav-brand-top">PatientTrac</span>
+      <span class="nav-brand-name">Revela</span>
+    </div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#history">History</a></li>
+    <li><a href="#features">Platform</a></li>
+    <li><a href="#ai">AI Tools</a></li>
+    <li><a href="#database">Database</a></li>
+    <li><a href="#" class="nav-cta">Request Demo</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero" style="padding:0;max-width:100%;">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+
+  <!-- Floating code particles -->
+  <div class="data-particle" style="top:15%;left:8%;animation-delay:0s">PATIENT_ID = 00482761</div>
+  <div class="data-particle" style="top:25%;right:6%;animation-delay:-2s">BP: 158/96 ⚑ FLAG</div>
+  <div class="data-particle" style="top:70%;left:5%;animation-delay:-4s">ICD_CODE: Z42.1</div>
+  <div class="data-particle" style="bottom:30%;right:8%;animation-delay:-1s">OR Suite 2 → Active</div>
+  <div class="data-particle" style="top:50%;left:2%;animation-delay:-3s">piPatientID As Long</div>
+  <div class="data-particle" style="bottom:20%;left:20%;animation-delay:-5s">claude-sonnet-4 ✓</div>
+
+  <div class="hero-content">
+    <!-- Logo Mark -->
+    <svg class="hero-logo-mark" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="50" cy="50" r="46" stroke="#c9a96e" stroke-width="0.75" opacity="0.4"/>
+      <circle cx="50" cy="50" r="36" stroke="#4a7fa8" stroke-width="0.5" opacity="0.35"/>
+      <circle cx="50" cy="50" r="26" stroke="rgba(201,169,110,0.2)" stroke-width="0.5"/>
+      <path d="M50 4 C65 18 72 33 72 50 C72 67 65 82 50 96 C35 82 28 67 28 50 C28 33 35 18 50 4Z"
+        fill="none" stroke="#f0ece4" stroke-width="1" opacity="0.6"/>
+      <path d="M4 50 C18 35 33 28 50 28 C67 28 82 35 96 50 C82 65 67 72 50 72 C33 72 18 65 4 50Z"
+        fill="none" stroke="#4a7fa8" stroke-width="0.6" opacity="0.3"/>
+      <circle cx="50" cy="50" r="7" fill="none" stroke="#c9a96e" stroke-width="1"/>
+      <circle cx="50" cy="50" r="3" fill="#c9a96e"/>
+      <line x1="50" y1="4" x2="50" y2="22" stroke="#c9a96e" stroke-width="0.75"/>
+      <line x1="50" y1="78" x2="50" y2="96" stroke="#c9a96e" stroke-width="0.75"/>
+      <line x1="4" y1="50" x2="22" y2="50" stroke="#4a7fa8" stroke-width="0.5"/>
+      <line x1="78" y1="50" x2="96" y2="50" stroke="#4a7fa8" stroke-width="0.5"/>
+      <circle cx="50" cy="15" r="2" fill="#c9a96e" opacity="0.6"/>
+      <circle cx="50" cy="85" r="2" fill="#c9a96e" opacity="0.6"/>
+      <circle cx="15" cy="50" r="1.5" fill="#4a7fa8" opacity="0.5"/>
+      <circle cx="85" cy="50" r="1.5" fill="#4a7fa8" opacity="0.5"/>
+    </svg>
+
+    <p class="hero-eyebrow">PatientTrac EMR · Est. 2001 · Now Reinvented</p>
+    <h1 class="hero-title">Patient<em>Trac</em><br>Revela</h1>
+    <p class="hero-subtitle-line">Plastic & Reconstructive Surgery</p>
+    <p class="hero-tagline">Where precision meets possibility</p>
+
+    <div class="hero-actions">
+      <a href="#features" class="btn-primary">Explore the Platform</a>
+      <a href="#history" class="btn-secondary">Our Story</a>
+    </div>
+  </div>
+
+  <div class="scroll-indicator">
+    <span>Scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- STATS BANNER -->
+<div class="stats-banner">
+  <div class="stats-inner">
+    <div>
+      <div class="stat-number reveal">20+</div>
+      <div class="stat-label">Years of Clinical Heritage</div>
+    </div>
+    <div>
+      <div class="stat-number reveal" style="transition-delay:0.1s">8</div>
+      <div class="stat-label">VB6 Forms Reborn in AI</div>
+    </div>
+    <div>
+      <div class="stat-number reveal" style="transition-delay:0.2s">34</div>
+      <div class="stat-label">Surgical Modules</div>
+    </div>
+    <div>
+      <div class="stat-number reveal" style="transition-delay:0.3s">90</div>
+      <div class="stat-label">Day MVP Sprint</div>
+    </div>
+  </div>
+</div>
+
+<!-- DIVIDER -->
+<div class="divider"><div class="divider-line"></div></div>
+
+<!-- HISTORY SECTION -->
+<section id="history" class="history-section" style="padding-top:8rem;padding-bottom:8rem;max-width:1400px;margin:0 auto;">
+  <div class="history-grid">
+    <div class="history-left reveal">
+      <div class="section-label">The Story</div>
+      <h2 class="section-title">Born in <em>2001.</em><br>Reinvented<br>with AI.</h2>
+      <p style="font-family:var(--sans);font-size:14px;color:rgba(240,236,228,0.5);line-height:1.9;margin-bottom:2rem;font-weight:300;">
+        PatientTrac began as a pioneering electronic medical record system — hand-coded in Visual Basic 6, running on Windows XP, serving plastic surgeons and nursing homes across the United States. It worked. It lasted. It held the clinical logic of thousands of patient encounters.
+      </p>
+      <p style="font-family:var(--sans);font-size:14px;color:rgba(240,236,228,0.5);line-height:1.9;margin-bottom:2rem;font-weight:300;">
+        Now, that same clinical wisdom — the validation rules, the surgical workflows, the field-by-field knowledge of what a plastic surgeon truly needs — has been extracted, preserved, and rebuilt from the ground up with AI at its core.
+      </p>
+
+      <div class="history-visual">
+        <pre class="vb6-code"><span class="vb6-comment">'PatientTrac v1.0 — 2001</span>
+<span class="vb6-keyword">Public</span> piPatientID <span class="vb6-keyword">As</span> <span class="vb6-highlight">Long</span>
+<span class="vb6-keyword">Public</span> piEncounterID <span class="vb6-keyword">As</span> <span class="vb6-highlight">Long</span>
+<span class="vb6-keyword">Public</span> piProviderID <span class="vb6-keyword">As</span> <span class="vb6-highlight">Long</span>
+
+<span class="vb6-keyword">Private Sub</span> cmdBreastExam_Click()
+  frmBreastExam.piPatientID = piPatientID
+  frmBreastExam.Show vbModal
+<span class="vb6-keyword">End Sub</span>
+
+<span class="vb6-string">strSQL = "SELECT DIAGNOSIS FROM "</span>
+<span class="vb6-string">       & "EVALUATION_MANAGEMENT"</span>
+<span class="vb6-string">       & " WHERE PATIENT_ID = "</span>
+<span class="vb6-string">       & piPatientID</span></pre>
+
+        <div class="then-now">
+          <div class="then-now-item then">
+            <span class="then-now-badge">Then</span>
+            <span class="then-now-text">VB6 modal forms, ADO recordsets, Windows XP, manual SQL strings, FPSpread grids</span>
+          </div>
+          <div class="then-now-item now">
+            <span class="then-now-badge">Now</span>
+            <span class="then-now-text">React + TypeScript, Anthropic Claude AI, Netlify serverless, Supabase PostgreSQL, real-time clinical flags</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="history-right">
+      <div class="timeline-item">
+        <div class="timeline-year">2001</div>
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-era">PatientTrac is born</div>
+          <p class="timeline-desc">Built in Visual Basic 6 on Windows XP. The first electronic medical record system purpose-built for nursing home and long-term care providers. Pioneering structured clinical data capture at a time when most practices still used paper charts.</p>
+          <span class="timeline-tag tag-legacy">Legacy Foundation</span>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-year">2005</div>
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-era">Plastic Surgery module launched</div>
+          <p class="timeline-desc">Expanded into plastic and reconstructive surgery with dedicated modules for breast examination, OR scheduling, surgical proposals, and post-operative care. frmPlasticSurgery becomes the hub of an entire clinical workflow.</p>
+          <span class="timeline-tag tag-legacy">Specialty Expansion</span>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-year">2010</div>
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-era">Clinical depth grows</div>
+          <p class="timeline-desc">Diagnosis ICD coding, mental status assessment, emergency contact management, and inpatient appointment scheduling added. The system accumulates over 40,000 lines of clinical business logic across 30+ forms.</p>
+          <span class="timeline-tag tag-growth">Clinical Depth</span>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-year">2020</div>
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-era">The reinvention begins</div>
+          <p class="timeline-desc">Decision made to preserve 20 years of clinical wisdom and rebuild on modern infrastructure. Every VB6 form analyzed. Every validation rule extracted. Every SQL query documented. Nothing lost — everything elevated.</p>
+          <span class="timeline-tag tag-growth">Migration Begins</span>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-year">2026</div>
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-era">Revela launches</div>
+          <p class="timeline-desc">PatientTrac Revela — the complete reinvention. AI-guided patient intake, real-time clinical flags, surgical proposal generation, and full practice operations. Built on React, TypeScript, Anthropic Claude, and Supabase. The same trusted clinical logic. Infinitely more powerful.</p>
+          <span class="timeline-tag tag-ai">AI-Powered · 2026</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DIVIDER -->
+<div class="divider"><div class="divider-line"></div></div>
+
+<!-- FEATURES -->
+<section id="features" class="features-section">
+  <div class="features-header reveal">
+    <div class="section-label" style="justify-content:center">The Platform</div>
+    <h2 class="section-title" style="text-align:center;">Everything a plastic<br>surgeon's practice needs.<br><em>Intelligently unified.</em></h2>
+  </div>
+
+  <div class="features-grid reveal">
+    <div class="feature-card">
+      <svg class="feature-icon" viewBox="0 0 44 44" fill="none">
+        <circle cx="22" cy="22" r="18" stroke="#4a7fa8" stroke-width="0.75" opacity="0.4"/>
+        <path d="M22 8 C28 14 30 18 30 22 C30 26 28 30 22 36 C16 30 14 26 14 22 C14 18 16 14 22 8Z" fill="none" stroke="#c9a96e" stroke-width="1.2"/>
+        <circle cx="22" cy="22" r="3" fill="#c9a96e"/>
+      </svg>
+      <div class="feature-number">01</div>
+      <div class="feature-name">AI Patient Intake</div>
+      <p class="feature-desc">Six-section structured interview with AI pre-fill from EMR records, clinical risk flagging, and voice dictation with auto-SOAP note generation. Physician review under 60 seconds.</p>
+      <div class="feature-vb6-badge">↑ frmNursingHome · frmPlastiSurg</div>
+    </div>
+
+    <div class="feature-card">
+      <svg class="feature-icon" viewBox="0 0 44 44" fill="none">
+        <rect x="8" y="12" width="28" height="20" rx="3" stroke="#4a7fa8" stroke-width="0.75" opacity="0.4"/>
+        <rect x="12" y="16" width="8" height="12" rx="2" stroke="#c9a96e" stroke-width="0.8" fill="rgba(201,169,110,0.05)"/>
+        <rect x="24" y="16" width="8" height="12" rx="2" stroke="#4a7fa8" stroke-width="0.8" fill="rgba(74,127,168,0.05)"/>
+      </svg>
+      <div class="feature-number">02</div>
+      <div class="feature-name">OR Scheduling</div>
+      <p class="feature-desc">Multi-suite parallel calendar with conflict detection, staff assignment, real-time status tracking, and utilization reporting across all operating suites.</p>
+      <div class="feature-vb6-badge">↑ frmInPatientAppt · frmPlasticSurgery</div>
+    </div>
+
+    <div class="feature-card">
+      <svg class="feature-icon" viewBox="0 0 44 44" fill="none">
+        <path d="M8 32 L8 14 L22 8 L36 14 L36 32 L22 38 Z" stroke="#c9a96e" stroke-width="0.75" fill="rgba(201,169,110,0.03)" opacity="0.6"/>
+        <circle cx="22" cy="23" r="5" stroke="#4a7fa8" stroke-width="0.8"/>
+        <line x1="22" y1="15" x2="22" y2="18" stroke="#c9a96e" stroke-width="0.75"/>
+      </svg>
+      <div class="feature-number">03</div>
+      <div class="feature-name">Breast Examination</div>
+      <p class="feature-desc">Anatomical diagram tools, AI flag detection on mass/discharge/skin-change findings, measurement capture, and encounter navigation with prior visit comparison.</p>
+      <div class="feature-vb6-badge">↑ frmBreastExam · FN_BreastExam OCX</div>
+    </div>
+
+    <div class="feature-card">
+      <svg class="feature-icon" viewBox="0 0 44 44" fill="none">
+        <rect x="8" y="8" width="28" height="28" rx="3" stroke="#4a7fa8" stroke-width="0.75" opacity="0.4"/>
+        <line x1="14" y1="16" x2="30" y2="16" stroke="#c9a96e" stroke-width="0.75" opacity="0.7"/>
+        <line x1="14" y1="22" x2="26" y2="22" stroke="rgba(240,236,228,0.3)" stroke-width="0.75"/>
+        <line x1="14" y1="28" x2="28" y2="28" stroke="rgba(240,236,228,0.3)" stroke-width="0.75"/>
+        <circle cx="30" cy="22" r="3" fill="rgba(201,169,110,0.2)" stroke="#c9a96e" stroke-width="0.75"/>
+      </svg>
+      <div class="feature-number">04</div>
+      <div class="feature-name">ICD Diagnosis</div>
+      <p class="feature-desc">Full ICD code search with preferred diagnosis templates, multi-select, and automatic serialization to patient encounter records. TextFound matching preserved from VB6 logic.</p>
+      <div class="feature-vb6-badge">↑ frmDiagnosis · ICD_TEMPLATE table</div>
+    </div>
+
+    <div class="feature-card">
+      <svg class="feature-icon" viewBox="0 0 44 44" fill="none">
+        <circle cx="22" cy="16" r="7" stroke="#c9a96e" stroke-width="0.75" opacity="0.6"/>
+        <path d="M10 36 C10 28 14 24 22 24 C30 24 34 28 34 36" stroke="#4a7fa8" stroke-width="0.75" fill="none" opacity="0.5"/>
+        <line x1="28" y1="30" x2="36" y2="30" stroke="#c9a96e" stroke-width="0.75"/>
+        <line x1="28" y1="33" x2="34" y2="33" stroke="rgba(240,236,228,0.3)" stroke-width="0.75"/>
+      </svg>
+      <div class="feature-number">05</div>
+      <div class="feature-name">Surgical Proposals</div>
+      <p class="feature-desc">AI-assembled patient proposals with itemized costing, financing options, and PDF generation. Full practice accounting with MTD revenue, A/R aging, and net margin dashboards.</p>
+      <div class="feature-vb6-badge">↑ frmPlasticSurgery · Proposals panel</div>
+    </div>
+
+    <div class="feature-card">
+      <svg class="feature-icon" viewBox="0 0 44 44" fill="none">
+        <rect x="10" y="10" width="10" height="10" rx="2" stroke="#4a7fa8" stroke-width="0.75" opacity="0.5"/>
+        <rect x="24" y="10" width="10" height="10" rx="2" stroke="#c9a96e" stroke-width="0.75" opacity="0.5"/>
+        <rect x="10" y="24" width="10" height="10" rx="2" stroke="#c9a96e" stroke-width="0.75" opacity="0.5"/>
+        <rect x="24" y="24" width="10" height="10" rx="2" stroke="#4a7fa8" stroke-width="0.75" opacity="0.5"/>
+        <circle cx="22" cy="22" r="4" fill="rgba(201,169,110,0.15)" stroke="#c9a96e" stroke-width="0.75"/>
+      </svg>
+      <div class="feature-number">06</div>
+      <div class="feature-name">Mental Status & Assessment</div>
+      <p class="feature-desc">Group-based mental status term selection across Orientation, Memory, Affect, Behavior, Cognition, Speech, and Mood — auto-generating structured clinical narrative notes.</p>
+      <div class="feature-vb6-badge">↑ fmCareIntrvn · Mental Status Selection</div>
+    </div>
+  </div>
+</section>
+
+<!-- DIVIDER -->
+<div class="divider"><div class="divider-line"></div></div>
+
+<!-- AI SECTION -->
+<section id="ai" class="ai-section">
+  <div class="reveal">
+    <div class="section-label" style="justify-content:center">AI Intelligence</div>
+    <h2 class="section-title">Flags what matters.<br><em>Instantly.</em> Without<br>physician chart-diving.</h2>
+    <p style="font-family:var(--sans);font-size:15px;color:rgba(240,236,228,0.45);max-width:520px;margin:1.5rem auto 0;line-height:1.9;font-weight:300;">
+      Revela's AI engine reads every intake response, cross-references the patient's history, and surfaces clinical risks in real time — before the physician enters the room.
+    </p>
+  </div>
+
+  <div class="ai-visual reveal" style="transition-delay:0.2s">
+    <div class="ai-ring ai-ring-4"></div>
+    <div class="ai-ring ai-ring-3"></div>
+    <div class="ai-ring ai-ring-2"></div>
+    <div class="ai-ring ai-ring-1"></div>
+    <div class="ai-core">
+      <svg width="32" height="32" viewBox="0 0 44 44" fill="none">
+        <circle cx="22" cy="22" r="14" stroke="#c9a96e" stroke-width="1"/>
+        <path d="M22 8 C28 14 30 18 30 22 C30 26 28 30 22 36 C16 30 14 26 14 22 C14 18 16 14 22 8Z"
+          fill="none" stroke="#f0ece4" stroke-width="1.2"/>
+        <circle cx="22" cy="22" r="2.5" fill="#c9a96e"/>
+      </svg>
+    </div>
+  </div>
+
+  <div class="ai-flags reveal" style="transition-delay:0.3s">
+    <div class="ai-flag ai-flag-critical">
+      <div class="ai-flag-label critical">Critical · Cardiovascular</div>
+      <p class="ai-flag-text">BP 158/96 — exceeds safe anesthesia threshold. Cardiology clearance required before OR scheduling. Do not clear without repeat reading.</p>
+    </div>
+    <div class="ai-flag ai-flag-warning">
+      <div class="ai-flag-label warning">Warning · Medication</div>
+      <p class="ai-flag-text">Lisinopril — hold day of surgery per protocol. Escitalopram (SSRI) — assess serotonin syndrome risk if opioids planned post-op.</p>
+    </div>
+    <div class="ai-flag ai-flag-info">
+      <div class="ai-flag-label info">Info · Surgical Planning</div>
+      <p class="ai-flag-text">Prior chest wall radiation + C-section history. DIEP flap preferred. Preoperative CTA angiography recommended before OR scheduling.</p>
+    </div>
+  </div>
+</section>
+
+<!-- DIVIDER -->
+<div class="divider"><div class="divider-line"></div></div>
+
+<!-- DATABASE SECTION -->
+<section id="database" class="db-section">
+  <div class="db-grid">
+    <div class="reveal">
+      <div class="section-label">Infrastructure</div>
+      <h2 class="section-title">Built on<br><em>Supabase.</em><br>HIPAA-grade<br>from day one.</h2>
+      <p style="font-family:var(--sans);font-size:14px;color:rgba(240,236,228,0.5);line-height:1.9;margin-bottom:2rem;font-weight:300;">
+        The original PatientTrac database schema — tables like <code style="font-family:var(--mono);font-size:12px;color:var(--teal2)">PATIENT</code>, <code style="font-family:var(--mono);font-size:12px;color:var(--teal2)">EVALUATION_MANAGEMENT</code>, <code style="font-family:var(--mono);font-size:12px;color:var(--teal2)">DEFAULT_CLINICAL</code>, and <code style="font-family:var(--mono);font-size:12px;color:var(--teal2)">ICD_TEMPLATE</code> — is being migrated to Supabase PostgreSQL with row-level security, real-time subscriptions, and full audit logging.
+      </p>
+      <div style="display:flex;flex-wrap:wrap;gap:0.5rem;margin-bottom:2rem;">
+        <span class="db-pill">PostgreSQL 15</span>
+        <span class="db-pill">Row-level security</span>
+        <span class="db-pill">Real-time</span>
+        <span class="db-pill">HIPAA compliant</span>
+        <span class="db-pill">Edge functions</span>
+        <span class="db-pill">Supabase Auth</span>
+      </div>
+      <a href="#" class="btn-primary" style="display:inline-block">View schema docs</a>
+    </div>
+    <div class="db-schema reveal" style="transition-delay:0.2s">
+<span class="db-table-name">PATIENT</span>
+  <span class="db-field">  patient_id</span>    <span class="db-type">bigserial</span> <span class="db-pk">PK</span>
+  <span class="db-field">  first_name</span>    <span class="db-type">varchar(80)</span>
+  <span class="db-field">  last_name</span>     <span class="db-type">varchar(80)</span>
+  <span class="db-field">  birth</span>         <span class="db-type">date</span>
+  <span class="db-field">  gender</span>        <span class="db-type">char(1)</span>
+  <span class="db-field">  social_security</span><span class="db-type">varchar(11)</span>
+  <span class="db-field">  status</span>        <span class="db-type">varchar(20)</span>
+
+<span class="db-table-name">EVALUATION_MANAGEMENT</span>
+  <span class="db-field">  encounter_id</span>  <span class="db-type">bigserial</span> <span class="db-pk">PK</span>
+  <span class="db-field">  patient_id</span>    <span class="db-type">bigint</span> <span class="db-pk">FK → PATIENT</span>
+  <span class="db-field">  provider_id</span>   <span class="db-type">bigint</span>
+  <span class="db-field">  diagnosis</span>     <span class="db-type">text</span>
+  <span class="db-field">  encounter_date</span><span class="db-type">timestamptz</span>
+
+<span class="db-table-name">DEFAULT_CLINICAL</span>
+  <span class="db-field">  provider_id</span>   <span class="db-type">bigint</span>
+  <span class="db-field">  clinical_value</span><span class="db-type">text</span>
+  <span class="db-field">  clinical_value_ref</span><span class="db-type">varchar(120)</span>
+  <span class="db-field">  clinical_desc</span> <span class="db-type">varchar(80)</span>
+  <span class="db-field">  sequence_no</span>   <span class="db-type">integer</span>
+
+<span class="db-table-name">ICD_TEMPLATE</span>
+  <span class="db-field">  icd_code</span>      <span class="db-type">varchar(10)</span> <span class="db-pk">PK</span>
+  <span class="db-field">  icd_diag</span>      <span class="db-type">varchar(255)</span>
+  <span class="db-field">  provider_id</span>   <span class="db-type">bigint</span>
+    </div>
+  </div>
+</section>
+
+<!-- DIVIDER -->
+<div class="divider"><div class="divider-line"></div></div>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="reveal">
+    <div class="section-label" style="justify-content:center">Get Started</div>
+    <h2 class="cta-title">Twenty years<br>of clinical wisdom.<br><em>Reinvented</em> for today.</h2>
+    <p class="cta-sub">PatientTrac Revela is available now for plastic and reconstructive surgery practices. Join the 90-day MVP program.</p>
+    <div class="hero-actions">
+      <a href="#" class="btn-primary">Request a Demo</a>
+      <a href="#" class="btn-secondary">View on GitHub</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-brand">PatientTrac <em style="font-family:var(--serif);font-style:italic;">Revela</em></div>
+  <div class="footer-note">© 2026 PatientTrac · Plastic & Reconstructive Surgery · A PatientTrac EMR Module</div>
+</footer>
+
+<script>
+// Intersection observer for reveal animations
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+document.querySelectorAll('.reveal, .timeline-item').forEach(el => observer.observe(el));
+
+// Stagger timeline items
+document.querySelectorAll('.timeline-item').forEach((item, i) => {
+  item.style.transitionDelay = `${i * 0.1}s`;
+});
+</script>
+</body>
+</html>
