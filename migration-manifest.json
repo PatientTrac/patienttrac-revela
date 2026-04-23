@@ -1,0 +1,2290 @@
+{
+  "generatedAt": "2026-04-23T15:20:25.672Z",
+  "totalForms": 134,
+  "forms": [
+    {
+      "formName": "Basic",
+      "file": "Basic.frm",
+      "controlCount": 1,
+      "hasValidation": true,
+      "hasCalculations": true,
+      "hasSQL": true,
+      "lineCount": 2058,
+      "suggestedModule": "core",
+      "jiraEpic": "SCRUM-12"
+    },
+    {
+      "formName": "DialogSetExt",
+      "file": "DialogSetExt.frm",
+      "controlCount": 1,
+      "hasValidation": true,
+      "hasCalculations": true,
+      "hasSQL": false,
+      "lineCount": 392,
+      "suggestedModule": "core",
+      "jiraEpic": "SCRUM-12"
+    },
+    {
+      "formName": "DialogSetFilePath",
+      "file": "DialogSetFilePath.frm",
+      "controlCount": 1,
+      "hasValidation": true,
+      "hasCalculations": true,
+      "hasSQL": false,
+      "lineCount": 423,
+      "suggestedModule": "core",
+      "jiraEpic": "SCRUM-12"
+    },
+    {
+      "formName": "DialogSetURL",
+      "file": "DialogSetURL.frm",
+      "controlCount": 1,
+      "hasValidation": true,
+      "hasCalculations": true,
+      "hasSQL": false,
+      "lineCount": 115,
+      "suggestedModule": "core",
+      "jiraEpic": "SCRUM-12"
+    },
+    {
+      "formName": "etalon",
+      "file": "etalon.frm",
+      "controlCount": 1,
+      "hasValidation": false,
+      "hasCalculations": false,
+      "hasSQL": false,
+      "lineCount": 432,
+      "suggestedModule": "core",
+      "jiraEpic": "SCRUM-12"
+    },
+    {
+      "formName": "fmCareIntrvn",
+      "file": "fmCareIntrvn.frm",
+      "controlCount": 1,
+      "hasValidation": true,
+      "hasCalculations": true,
+      "hasSQL": true,
+      "lineCount": 1023,
+      "suggestedModule": "core",
+      "jiraEpic": "SCRUM-12"
+    },
+    {
+      "formName": "fmMseTerms",
+      "file": "fmMseTerms.frm",
+      "controlCount": 1,
+      "hasValidation": true,
+      "hasCalculations": true,
+      "hasSQL": true,
+      "lineCount": 1682,
+      "suggestedModule": "core",
+      "jiraEpic": "SCRUM-12"
+    },
+    {
+      "formName": "frmAddEnctr",
+      "file": "frmAddEnctr.frm",
+      "controlCount": 1,
+      "hasValidation": false,
+      "hasCalculations": true,
+      "hasSQL": false,
+      "lineCount": 1459,
+      "suggestedModule": "core",
+      "jiraEpic": "SCRUM-12"
+    },
+    {
+      "formName": "frmAdmin",
+      "file": "frmAdmin.frm",
+      "controlCount": 1,
+      "hasValidation": true,
+      "hasCalculations": true,
+      "hasSQL": true,
+      "lineCount": 944,
+      "suggestedModule": "core",
+      "jiraEpic": "SCRUM-12"
+    },
+    {
+      "formName": "frmAdmission",
+      "file": "frmAdmission.frm",
+      "controlCount": 1,
+      "hasValidation": true,
+      "hasCalculations": true,
+      "hasSQL": false,
+      "lineCount": 334,
+      "suggestedModule": "core",
+      "jiraEpic": "SCRUM-12"
+    },
+    {
+      "formName": "frmAdmitHistory",
+      "file": "frmAdmitHistory.frm",
+      "controlCount": 1,
+      "hasValidation": true,
+      "hasCalculations": true,
+      "hasSQL": false,
+      "lineCount": 581,
+      "suggestedModule": "intake",
+      "jiraEpic": "SCRUM-6"
+    },
+    {
+      "formName": "frmAllergy",
+      "file": "frmAllergy.frm",
+      "controlCount": 1,
+      "hasValidation": true,
+      "hasCalculations": true,
+      "hasSQL": false,
+      "lineCount": 270,
+      "suggestedModule": "core",
+      "jiraEpic": "SCRUM-12"
+    },
+    {
+      "formName": "frmApptDate",
+      "file": "frmApptDate.frm",
+      "controlCount": 1,
+      "hasValidation": false,
+      "hasCalculations": true,
+      "hasSQL": true,
+      "lineCount": 362,
+      "suggestedModule": "core",
+      "jiraEpic": "SCRUM-12"
+    },
+    {
+      "formName": "frmApptMaint",
+      "file": "frmApptMaint.frm",
+      "controlCount": 1,
+      "hasValidation": true,
+      "hasCalculations": true,
+      "hasSQL": true,
+      "lineCount": 1010,
+      "suggestedModule": "core",
+      "jiraEpic": "SCRUM-12"
+    },
+    {
+      "formName": "frmAssessment",
+      "file": "frmAssessment.frm",
+      "controlCount": 1,
+      "hasValidation": true,
+      "hasCalculations": true,
+      "hasSQL": true,
+      "lineCount": 1878,
+      "suggestedModule": "core",
+      "jiraEpic": "SCRUM-12"
+    },
+    {
+      "formName": "frmAssignRoom",
+      "file": "frmAssignRoom.frm",
+      "controlCount": 1,
+      "hasValidation": true,
+      "hasCalculations": true,
+      "hasSQL": false,
+      "lineCount": 292,
+      "suggestedModule": "or-scheduling",
+      "jiraEpic": "SCRUM-7"
+    },
+    {
+      "formName": "frmBlockTime",
+      "file": "frmBlockTime.frm",
+      "controlCount": 1,
+      "hasValidation": true,
+      "hasCalculations": true,
+      "hasSQL": true,
+      "lineCount": 5138,
+      "suggestedModule": "core",
+      "jiraEpic": "SCRUM-12"
+    },
+    {
+      "formName": "frmBlockTime_August_1",
+      "file": "frmBlockTime_August_1.frm",
+      "controlCount": 1,
+      "hasValidation": true,
+      "hasCalculations": true,
+      "hasSQL": true,
+      "lineCount": 5097,
+      "suggestedModule": "core",
+      "jiraEpic": "SCRUM-12"
+    },
+    {
+      "formName": "frmBlockTime_August_10_2014",
+      "file": "frmBlockTime_August_10_2014.frm",
+      "controlCount": 1,
+      "hasValidation": true,
+      "hasCalculations": true,
+      "hasSQL": true,
+      "lineCount": 5157,
+      "suggestedModule": "core",
+      "jiraEpic": "SCRUM-12"
+    },
+    {
+      "formName": "frmBlockTime_Old",
+      "file": "frmBlockTime_Old.frm",
+      "controlCount": 1,
+      "hasValidation": true,
+      "hasCalculations": true,
+      "hasSQL": true,
+      "lineCount": 4703,
+      "suggestedModule": "core",
+      "jiraEpic": "SCRUM-12"
+    },
+    {
+      "formName": "frmBlockTime_Old2",
+      "file": "frmBlockTime_Old2.frm",
+      "controlCount": 1,
+      "hasValidation": true,
+      "hasCalculations": true,
+      "hasSQL": true,
+      "lineCount": 4786,
+      "suggestedModule": "core",
+      "jiraEpic": "SCRUM-12"
+    },
+    {
+      "formName": "frmBreastExam",
+      "file": "frmBreastExam.frm",
+      "controlCount": 1,
+      "hasValidation": true,
+      "hasCalculations": true,
+      "hasSQL": true,
+      "lineCount": 1233,
+      "suggestedModule": "core",
+      "jiraEpic": "SCRUM-12"
+    },
+    {
+      "formName": "frmBrowser",
+      "file": "frmBrowser.frm",
+      "controlCount": 1,
+      "hasValidation": false,
+      "hasCalculations": true,
+      "hasSQL": true,
+      "lineCount": 760,
+      "suggestedModule": "core",
+      "jiraEpic": "SCRUM-12"
+    },
+    {
+      "formName": "frmBrowser_Old",
+      "file": "frmBrowser_Old.frm",
+      "controlCount": 1,
+      "hasValidation": false,
+      "hasCalculations": true,
+      "hasSQL": true,
+      "lineCount": 737,
+      "suggestedModule": "core",
+      "jiraEpic": "SCRUM-12"
+    },
+    {
+      "formName": "frmCheckOut",
+      "file": "frmCheckOut.frm",
+      "controlCount": 1,
+      "hasValidation": true,
+      "hasCalculations": true,
+      "hasSQL": true,
+      "lineCount": 1656,
+      "suggestedModule": "core",
+      "jiraEpic": "SCRUM-12"
+    },
+    {
+      "formName": "frmCoding",
+      "file": "frmCoding.frm",
+      "controlCount": 1,
+      "hasValidation": false,
+      "hasCalculations": true,
+      "hasSQL": false,
+      "lineCount": 728,
+      "suggestedModule": "core",
+      "jiraEpic": "SCRUM-12"
+    },
+    {
+      "formName": "frmComment",
+      "file": "frmComment.frm",
+      "controlCount": 1,
+      "hasValidation": true,
+      "hasCalculations": true,
+      "hasSQL": false,
+      "lineCount": 816,
+      "suggestedModule": "core",
+      "jiraEpic": "SCRUM-12"
+    },
+    {
+      "formName": "frmComment_All",
+      "file": "frmComment_All.frm",
+      "controlCount": 1,
+      "hasValidation": true,
+      "hasCalculations": true,
+      "hasSQL": true,
+      "lineCount": 979,
+      "suggestedModule": "core",
+      "jiraEpic": "SCRUM-12"
+    },
+    {
+      "formName": "frmConsent",
+      "file": "frmConsent.frm",
+      "controlCount": 1,
+      "hasValidation": true,
+      "hasCalculations": true,
+      "hasSQL": true,
+      "lineCount": 951,
+      "suggestedModule": "core",
+      "jiraEpic": "SCRUM-12"
+    },
+    {
+      "formName": "frmCPTMaint",
+      "file": "frmCPTMaint.frm",
+      "controlCount": 1,
+      "hasValidation": true,
+      "hasCalculations": true,
+      "hasSQL": true,
+      "lineCount": 2713,
+      "suggestedModule": "core",
+      "jiraEpic": "SCRUM-12"
+    },
+    {
+      "formName": "frmCPTMaint_Mine",
+      "file": "frmCPTMaint_Mine.frm",
+      "controlCount": 1,
+      "hasValidation": true,
+      "hasCalculations": true,
+      "hasSQL": true,
+      "lineCount": 2658,
+      "suggestedModule": "core",
+      "jiraEpic": "SCRUM-12"
+    },
+    {
+      "formName": "frmDefaultOrder",
+      "file": "frmDefaultOrder.frm",
+      "controlCount": 1,
+      "hasValidation": true,
+      "hasCalculations": true,
+      "hasSQL": true,
+      "lineCount": 2200,
+      "suggestedModule": "or-scheduling",
+      "jiraEpic": "SCRUM-7"
+    },
+    {
+      "formName": "frmDiagnosis",
+      "file": "frmDiagnosis.frm",
+      "controlCount": 1,
+      "hasValidation": true,
+      "hasCalculations": true,
+      "hasSQL": true,
+      "lineCount": 998,
+      "suggestedModule": "core",
+      "jiraEpic": "SCRUM-12"
+    },
+    {
+      "formName": "frmDSMIV",
+      "file": "frmDSMIV.frm",
+      "controlCount": 1,
+      "hasValidation": true,
+      "hasCalculations": true,
+      "hasSQL": true,
+      "lineCount": 779,
+      "suggestedModule": "core",
+      "jiraEpic": "SCRUM-12"
+    },
+    {
+      "formName": "frmEmergContact",
+      "file": "frmEmergContact.frm",
+      "controlCount": 1,
+      "hasValidation": true,
+      "hasCalculations": true,
+      "hasSQL": false,
+      "lineCount": 209,
+      "suggestedModule": "core",
+      "jiraEpic": "SCRUM-12"
+    },
+    {
+      "formName": "frmEmployer",
+      "file": "frmEmployer.frm",
+      "controlCount": 1,
+      "hasValidation": false,
+      "hasCalculations": true,
+      "hasSQL": false,
+      "lineCount": 326,
+      "suggestedModule": "core",
+      "jiraEpic": "SCRUM-12"
+    },
+    {
+      "formName": "frmEnctr",
+      "file": "frmEnctr.frm",
+      "controlCount": 1,
+      "hasValidation": true,
+      "hasCalculations": true,
+      "hasSQL": true,
+      "lineCount": 10793,
+      "suggestedModule": "core",
+      "jiraEpic": "SCRUM-12"
+    },
+    {
+      "formName": "frmEnctrDefault",
+      "file": "frmEnctrDefault.frm",
+      "controlCount": 1,
+      "hasValidation": false,
+      "hasCalculations": true,
+      "hasSQL": true,
+      "lineCount": 651,
+      "suggestedModule": "core",
+      "jiraEpic": "SCRUM-12"
+    },
+    {
+      "formName": "frmEnctryp",
+      "file": "frmEnctryp.frm",
+      "controlCount": 1,
+      "hasValidation": false,
+      "hasCalculations": false,
+      "hasSQL": false,
+      "lineCount": 321,
+      "suggestedModule": "core",
+      "jiraEpic": "SCRUM-12"
+    },
+    {
+      "formName": "frmEnctr_old",
+      "file": "frmEnctr_old.frm",
+      "controlCount": 1,
+      "hasValidation": true,
+      "hasCalculations": true,
+      "hasSQL": true,
+      "lineCount": 8914,
+      "suggestedModule": "core",
+      "jiraEpic": "SCRUM-12"
+    },
+    {
+      "formName": "frmErrorLog",
+      "file": "frmErrorLog.frm",
+      "controlCount": 1,
+      "hasValidation": true,
+      "hasCalculations": false,
+      "hasSQL": false,
+      "lineCount": 95,
+      "suggestedModule": "or-scheduling",
+      "jiraEpic": "SCRUM-7"
+    },
+    {
+      "formName": "frmExamList",
+      "file": "frmExamList.frm",
+      "controlCount": 1,
+      "hasValidation": true,
+      "hasCalculations": true,
+      "hasSQL": true,
+      "lineCount": 1768,
+      "suggestedModule": "core",
+      "jiraEpic": "SCRUM-12"
+    },
+    {
+      "formName": "frmFaceSheet",
+      "file": "frmFaceSheet.frm",
+      "controlCount": 1,
+      "hasValidation": false,
+      "hasCalculations": true,
+      "hasSQL": true,
+      "lineCount": 264,
+      "suggestedModule": "core",
+      "jiraEpic": "SCRUM-12"
+    },
+    {
+      "formName": "frmFacilities",
+      "file": "frmFacilities.frm",
+      "controlCount": 1,
+      "hasValidation": true,
+      "hasCalculations": true,
+      "hasSQL": true,
+      "lineCount": 2016,
+      "suggestedModule": "core",
+      "jiraEpic": "SCRUM-12"
+    },
+    {
+      "formName": "frmGeneral",
+      "file": "frmGeneral.frm",
+      "controlCount": 1,
+      "hasValidation": true,
+      "hasCalculations": true,
+      "hasSQL": true,
+      "lineCount": 422,
+      "suggestedModule": "core",
+      "jiraEpic": "SCRUM-12"
+    },
+    {
+      "formName": "frmGridList",
+      "file": "frmGridList.frm",
+      "controlCount": 1,
+      "hasValidation": true,
+      "hasCalculations": true,
+      "hasSQL": true,
+      "lineCount": 1022,
+      "suggestedModule": "core",
+      "jiraEpic": "SCRUM-12"
+    },
+    {
+      "formName": "frmGridList_Old",
+      "file": "frmGridList_Old.frm",
+      "controlCount": 1,
+      "hasValidation": true,
+      "hasCalculations": true,
+      "hasSQL": true,
+      "lineCount": 852,
+      "suggestedModule": "core",
+      "jiraEpic": "SCRUM-12"
+    },
+    {
+      "formName": "frmInPatient",
+      "file": "frmInPatient.frm",
+      "controlCount": 1,
+      "hasValidation": true,
+      "hasCalculations": true,
+      "hasSQL": true,
+      "lineCount": 2682,
+      "suggestedModule": "intake",
+      "jiraEpic": "SCRUM-6"
+    },
+    {
+      "formName": "frmInPatientAppt",
+      "file": "frmInPatientAppt.frm",
+      "controlCount": 1,
+      "hasValidation": true,
+      "hasCalculations": true,
+      "hasSQL": true,
+      "lineCount": 13032,
+      "suggestedModule": "intake",
+      "jiraEpic": "SCRUM-6"
+    },
+    {
+      "formName": "frmInsurance",
+      "file": "frmInsurance.frm",
+      "controlCount": 1,
+      "hasValidation": true,
+      "hasCalculations": true,
+      "hasSQL": true,
+      "lineCount": 793,
+      "suggestedModule": "core",
+      "jiraEpic": "SCRUM-12"
+    },
+    {
+      "formName": "frmInternalMed",
+      "file": "frmInternalMed.frm",
+      "controlCount": 1,
+      "hasValidation": true,
+      "hasCalculations": true,
+      "hasSQL": true,
+      "lineCount": 20761,
+      "suggestedModule": "core",
+      "jiraEpic": "SCRUM-12"
+    },
+    {
+      "formName": "frmIntraOffice",
+      "file": "frmIntraOffice.frm",
+      "controlCount": 1,
+      "hasValidation": true,
+      "hasCalculations": true,
+      "hasSQL": false,
+      "lineCount": 1944,
+      "suggestedModule": "core",
+      "jiraEpic": "SCRUM-12"
+    },
+    {
+      "formName": "frmListPatient",
+      "file": "frmListPatient.frm",
+      "controlCount": 1,
+      "hasValidation": true,
+      "hasCalculations": true,
+      "hasSQL": true,
+      "lineCount": 1223,
+      "suggestedModule": "intake",
+      "jiraEpic": "SCRUM-6"
+    },
+    {
+      "formName": "frmLoadControl",
+      "file": "frmLoadControl.frm",
+      "controlCount": 1,
+      "hasValidation": false,
+      "hasCalculations": true,
+      "hasSQL": false,
+      "lineCount": 310,
+      "suggestedModule": "core",
+      "jiraEpic": "SCRUM-12"
+    },
+    {
+      "formName": "frmLogFile",
+      "file": "frmLogFile.frm",
+      "controlCount": 1,
+      "hasValidation": false,
+      "hasCalculations": false,
+      "hasSQL": false,
+      "lineCount": 71,
+      "suggestedModule": "core",
+      "jiraEpic": "SCRUM-12"
+    },
+    {
+      "formName": "frmManage",
+      "file": "frmManage.frm",
+      "controlCount": 1,
+      "hasValidation": false,
+      "hasCalculations": true,
+      "hasSQL": true,
+      "lineCount": 406,
+      "suggestedModule": "core",
+      "jiraEpic": "SCRUM-12"
+    },
+    {
+      "formName": "frmMAR",
+      "file": "frmMAR.frm",
+      "controlCount": 1,
+      "hasValidation": false,
+      "hasCalculations": true,
+      "hasSQL": false,
+      "lineCount": 91,
+      "suggestedModule": "core",
+      "jiraEpic": "SCRUM-12"
+    },
+    {
+      "formName": "frmMDIReport",
+      "file": "frmMDIReport.frm",
+      "controlCount": 1,
+      "hasValidation": true,
+      "hasCalculations": true,
+      "hasSQL": true,
+      "lineCount": 3632,
+      "suggestedModule": "or-scheduling",
+      "jiraEpic": "SCRUM-7"
+    },
+    {
+      "formName": "frmMDSign",
+      "file": "frmMDSign.frm",
+      "controlCount": 1,
+      "hasValidation": true,
+      "hasCalculations": true,
+      "hasSQL": true,
+      "lineCount": 1103,
+      "suggestedModule": "core",
+      "jiraEpic": "SCRUM-12"
+    },
+    {
+      "formName": "frmMedMaint",
+      "file": "frmMedMaint.frm",
+      "controlCount": 1,
+      "hasValidation": true,
+      "hasCalculations": true,
+      "hasSQL": true,
+      "lineCount": 1063,
+      "suggestedModule": "core",
+      "jiraEpic": "SCRUM-12"
+    },
+    {
+      "formName": "frmMeds",
+      "file": "frmMeds.frm",
+      "controlCount": 1,
+      "hasValidation": true,
+      "hasCalculations": true,
+      "hasSQL": false,
+      "lineCount": 240,
+      "suggestedModule": "core",
+      "jiraEpic": "SCRUM-12"
+    },
+    {
+      "formName": "frmMessage",
+      "file": "frmMessage.frm",
+      "controlCount": 1,
+      "hasValidation": false,
+      "hasCalculations": true,
+      "hasSQL": false,
+      "lineCount": 167,
+      "suggestedModule": "core",
+      "jiraEpic": "SCRUM-12"
+    },
+    {
+      "formName": "frmMovePatient",
+      "file": "frmMovePatient.frm",
+      "controlCount": 1,
+      "hasValidation": true,
+      "hasCalculations": true,
+      "hasSQL": true,
+      "lineCount": 824,
+      "suggestedModule": "intake",
+      "jiraEpic": "SCRUM-6"
+    },
+    {
+      "formName": "frmMultiAppt",
+      "file": "frmMultiAppt.frm",
+      "controlCount": 1,
+      "hasValidation": true,
+      "hasCalculations": true,
+      "hasSQL": true,
+      "lineCount": 6079,
+      "suggestedModule": "core",
+      "jiraEpic": "SCRUM-12"
+    },
+    {
+      "formName": "frmMultiAppt_01_01_2014",
+      "file": "frmMultiAppt_01_01_2014.frm",
+      "controlCount": 1,
+      "hasValidation": true,
+      "hasCalculations": true,
+      "hasSQL": true,
+      "lineCount": 3868,
+      "suggestedModule": "core",
+      "jiraEpic": "SCRUM-12"
+    },
+    {
+      "formName": "frmMultiAppt_Aug_10_2014",
+      "file": "frmMultiAppt_Aug_10_2014.frm",
+      "controlCount": 1,
+      "hasValidation": true,
+      "hasCalculations": true,
+      "hasSQL": true,
+      "lineCount": 3749,
+      "suggestedModule": "core",
+      "jiraEpic": "SCRUM-12"
+    },
+    {
+      "formName": "frmNewEnctr",
+      "file": "frmNewEnctr.frm",
+      "controlCount": 1,
+      "hasValidation": true,
+      "hasCalculations": true,
+      "hasSQL": true,
+      "lineCount": 1027,
+      "suggestedModule": "core",
+      "jiraEpic": "SCRUM-12"
+    },
+    {
+      "formName": "frmNurseTemplates",
+      "file": "frmNurseTemplates.frm",
+      "controlCount": 1,
+      "hasValidation": true,
+      "hasCalculations": true,
+      "hasSQL": true,
+      "lineCount": 603,
+      "suggestedModule": "staff",
+      "jiraEpic": "SCRUM-11"
+    },
+    {
+      "formName": "frmNursingHome",
+      "file": "frmNursingHome.frm",
+      "controlCount": 1,
+      "hasValidation": true,
+      "hasCalculations": true,
+      "hasSQL": true,
+      "lineCount": 40371,
+      "suggestedModule": "core",
+      "jiraEpic": "SCRUM-12"
+    },
+    {
+      "formName": "frmNursingHome_Old",
+      "file": "frmNursingHome_Old.frm",
+      "controlCount": 1,
+      "hasValidation": true,
+      "hasCalculations": true,
+      "hasSQL": true,
+      "lineCount": 35551,
+      "suggestedModule": "core",
+      "jiraEpic": "SCRUM-12"
+    },
+    {
+      "formName": "frmObGyn",
+      "file": "frmObGyn.frm",
+      "controlCount": 1,
+      "hasValidation": true,
+      "hasCalculations": true,
+      "hasSQL": true,
+      "lineCount": 1163,
+      "suggestedModule": "core",
+      "jiraEpic": "SCRUM-12"
+    },
+    {
+      "formName": "frmOrders",
+      "file": "frmOrders.frm",
+      "controlCount": 1,
+      "hasValidation": true,
+      "hasCalculations": true,
+      "hasSQL": true,
+      "lineCount": 4004,
+      "suggestedModule": "or-scheduling",
+      "jiraEpic": "SCRUM-7"
+    },
+    {
+      "formName": "frmPatAppHist",
+      "file": "frmPatAppHist.frm",
+      "controlCount": 1,
+      "hasValidation": true,
+      "hasCalculations": true,
+      "hasSQL": false,
+      "lineCount": 844,
+      "suggestedModule": "core",
+      "jiraEpic": "SCRUM-12"
+    },
+    {
+      "formName": "frmPatientAdress",
+      "file": "frmPatientAdress.frm",
+      "controlCount": 1,
+      "hasValidation": true,
+      "hasCalculations": true,
+      "hasSQL": false,
+      "lineCount": 685,
+      "suggestedModule": "intake",
+      "jiraEpic": "SCRUM-6"
+    },
+    {
+      "formName": "frmPatientAppointment",
+      "file": "frmPatientAppointment.frm",
+      "controlCount": 1,
+      "hasValidation": true,
+      "hasCalculations": true,
+      "hasSQL": true,
+      "lineCount": 9649,
+      "suggestedModule": "intake",
+      "jiraEpic": "SCRUM-6"
+    },
+    {
+      "formName": "frmPatientAppointment_Old",
+      "file": "frmPatientAppointment_Old.frm",
+      "controlCount": 1,
+      "hasValidation": true,
+      "hasCalculations": true,
+      "hasSQL": true,
+      "lineCount": 9724,
+      "suggestedModule": "intake",
+      "jiraEpic": "SCRUM-6"
+    },
+    {
+      "formName": "frmPatientForm",
+      "file": "frmPatientForm.frm",
+      "controlCount": 1,
+      "hasValidation": true,
+      "hasCalculations": true,
+      "hasSQL": true,
+      "lineCount": 23121,
+      "suggestedModule": "intake",
+      "jiraEpic": "SCRUM-6"
+    },
+    {
+      "formName": "frmPatientIntake",
+      "file": "frmPatientIntake.frm",
+      "controlCount": 1,
+      "hasValidation": true,
+      "hasCalculations": true,
+      "hasSQL": true,
+      "lineCount": 23335,
+      "suggestedModule": "intake",
+      "jiraEpic": "SCRUM-6"
+    },
+    {
+      "formName": "frmPatientName",
+      "file": "frmPatientName.frm",
+      "controlCount": 1,
+      "hasValidation": true,
+      "hasCalculations": true,
+      "hasSQL": false,
+      "lineCount": 506,
+      "suggestedModule": "intake",
+      "jiraEpic": "SCRUM-6"
+    },
+    {
+      "formName": "frmPatientNote",
+      "file": "frmPatientNote.frm",
+      "controlCount": 1,
+      "hasValidation": true,
+      "hasCalculations": true,
+      "hasSQL": false,
+      "lineCount": 868,
+      "suggestedModule": "intake",
+      "jiraEpic": "SCRUM-6"
+    },
+    {
+      "formName": "frmPatients",
+      "file": "frmPatients.frm",
+      "controlCount": 1,
+      "hasValidation": true,
+      "hasCalculations": true,
+      "hasSQL": true,
+      "lineCount": 2731,
+      "suggestedModule": "intake",
+      "jiraEpic": "SCRUM-6"
+    },
+    {
+      "formName": "frmPatInsurance",
+      "file": "frmPatInsurance.frm",
+      "controlCount": 1,
+      "hasValidation": false,
+      "hasCalculations": true,
+      "hasSQL": false,
+      "lineCount": 379,
+      "suggestedModule": "core",
+      "jiraEpic": "SCRUM-12"
+    },
+    {
+      "formName": "frmPatNotice",
+      "file": "frmPatNotice.frm",
+      "controlCount": 1,
+      "hasValidation": false,
+      "hasCalculations": true,
+      "hasSQL": false,
+      "lineCount": 513,
+      "suggestedModule": "core",
+      "jiraEpic": "SCRUM-12"
+    },
+    {
+      "formName": "frmPatPharm",
+      "file": "frmPatPharm.frm",
+      "controlCount": 1,
+      "hasValidation": false,
+      "hasCalculations": true,
+      "hasSQL": true,
+      "lineCount": 239,
+      "suggestedModule": "core",
+      "jiraEpic": "SCRUM-12"
+    },
+    {
+      "formName": "frmPlasticSurgery",
+      "file": "frmPlasticSurgery.frm",
+      "controlCount": 1,
+      "hasValidation": true,
+      "hasCalculations": true,
+      "hasSQL": true,
+      "lineCount": 2381,
+      "suggestedModule": "or-scheduling",
+      "jiraEpic": "SCRUM-7"
+    },
+    {
+      "formName": "frmPlastiSurg",
+      "file": "frmPlastiSurg.frm",
+      "controlCount": 1,
+      "hasValidation": true,
+      "hasCalculations": true,
+      "hasSQL": true,
+      "lineCount": 1220,
+      "suggestedModule": "or-scheduling",
+      "jiraEpic": "SCRUM-7"
+    },
+    {
+      "formName": "frmPopCalendar",
+      "file": "frmPopCalendar.frm",
+      "controlCount": 1,
+      "hasValidation": true,
+      "hasCalculations": true,
+      "hasSQL": false,
+      "lineCount": 2079,
+      "suggestedModule": "core",
+      "jiraEpic": "SCRUM-12"
+    },
+    {
+      "formName": "frmPopKeyPad",
+      "file": "frmPopKeyPad.frm",
+      "controlCount": 1,
+      "hasValidation": false,
+      "hasCalculations": false,
+      "hasSQL": false,
+      "lineCount": 731,
+      "suggestedModule": "core",
+      "jiraEpic": "SCRUM-12"
+    },
+    {
+      "formName": "frmPracticeReports",
+      "file": "frmPracticeReports.frm",
+      "controlCount": 1,
+      "hasValidation": true,
+      "hasCalculations": true,
+      "hasSQL": false,
+      "lineCount": 236,
+      "suggestedModule": "or-scheduling",
+      "jiraEpic": "SCRUM-7"
+    },
+    {
+      "formName": "frmPreview",
+      "file": "frmPreview.frm",
+      "controlCount": 1,
+      "hasValidation": true,
+      "hasCalculations": true,
+      "hasSQL": true,
+      "lineCount": 380,
+      "suggestedModule": "core",
+      "jiraEpic": "SCRUM-12"
+    },
+    {
+      "formName": "frmProviders",
+      "file": "frmProviders.frm",
+      "controlCount": 1,
+      "hasValidation": true,
+      "hasCalculations": true,
+      "hasSQL": true,
+      "lineCount": 4525,
+      "suggestedModule": "core",
+      "jiraEpic": "SCRUM-12"
+    },
+    {
+      "formName": "frmProvInsurance",
+      "file": "frmProvInsurance.frm",
+      "controlCount": 1,
+      "hasValidation": false,
+      "hasCalculations": true,
+      "hasSQL": true,
+      "lineCount": 228,
+      "suggestedModule": "core",
+      "jiraEpic": "SCRUM-12"
+    },
+    {
+      "formName": "frmPsychiatry",
+      "file": "frmPsychiatry.frm",
+      "controlCount": 1,
+      "hasValidation": true,
+      "hasCalculations": true,
+      "hasSQL": true,
+      "lineCount": 1198,
+      "suggestedModule": "core",
+      "jiraEpic": "SCRUM-12"
+    },
+    {
+      "formName": "frmPsychoSocial",
+      "file": "frmPsychoSocial.frm",
+      "controlCount": 1,
+      "hasValidation": true,
+      "hasCalculations": true,
+      "hasSQL": true,
+      "lineCount": 23030,
+      "suggestedModule": "core",
+      "jiraEpic": "SCRUM-12"
+    },
+    {
+      "formName": "frmReportDate",
+      "file": "frmReportDate.frm",
+      "controlCount": 1,
+      "hasValidation": false,
+      "hasCalculations": true,
+      "hasSQL": false,
+      "lineCount": 114,
+      "suggestedModule": "or-scheduling",
+      "jiraEpic": "SCRUM-7"
+    },
+    {
+      "formName": "frmResource",
+      "file": "frmResource.frm",
+      "controlCount": 1,
+      "hasValidation": true,
+      "hasCalculations": true,
+      "hasSQL": true,
+      "lineCount": 929,
+      "suggestedModule": "core",
+      "jiraEpic": "SCRUM-12"
+    },
+    {
+      "formName": "frmRoomLocations",
+      "file": "frmRoomLocations.frm",
+      "controlCount": 1,
+      "hasValidation": true,
+      "hasCalculations": true,
+      "hasSQL": false,
+      "lineCount": 496,
+      "suggestedModule": "or-scheduling",
+      "jiraEpic": "SCRUM-7"
+    },
+    {
+      "formName": "frmScan",
+      "file": "frmScan.frm",
+      "controlCount": 1,
+      "hasValidation": false,
+      "hasCalculations": true,
+      "hasSQL": false,
+      "lineCount": 173,
+      "suggestedModule": "core",
+      "jiraEpic": "SCRUM-12"
+    },
+    {
+      "formName": "frmScannedImage",
+      "file": "frmScannedImage.frm",
+      "controlCount": 1,
+      "hasValidation": true,
+      "hasCalculations": true,
+      "hasSQL": false,
+      "lineCount": 570,
+      "suggestedModule": "core",
+      "jiraEpic": "SCRUM-12"
+    },
+    {
+      "formName": "frmSchedComment",
+      "file": "frmSchedComment.frm",
+      "controlCount": 1,
+      "hasValidation": true,
+      "hasCalculations": true,
+      "hasSQL": true,
+      "lineCount": 478,
+      "suggestedModule": "core",
+      "jiraEpic": "SCRUM-12"
+    },
+    {
+      "formName": "frmSchedPatient",
+      "file": "frmSchedPatient.frm",
+      "controlCount": 1,
+      "hasValidation": true,
+      "hasCalculations": true,
+      "hasSQL": true,
+      "lineCount": 10724,
+      "suggestedModule": "intake",
+      "jiraEpic": "SCRUM-6"
+    },
+    {
+      "formName": "frmSchedPatient_1",
+      "file": "frmSchedPatient_1.frm",
+      "controlCount": 1,
+      "hasValidation": true,
+      "hasCalculations": true,
+      "hasSQL": true,
+      "lineCount": 7236,
+      "suggestedModule": "intake",
+      "jiraEpic": "SCRUM-6"
+    },
+    {
+      "formName": "frmSchedPatient_II",
+      "file": "frmSchedPatient_II.frm",
+      "controlCount": 1,
+      "hasValidation": true,
+      "hasCalculations": true,
+      "hasSQL": true,
+      "lineCount": 10590,
+      "suggestedModule": "intake",
+      "jiraEpic": "SCRUM-6"
+    },
+    {
+      "formName": "frmSchedPatient_Old",
+      "file": "frmSchedPatient_Old.frm",
+      "controlCount": 1,
+      "hasValidation": true,
+      "hasCalculations": true,
+      "hasSQL": true,
+      "lineCount": 9265,
+      "suggestedModule": "intake",
+      "jiraEpic": "SCRUM-6"
+    },
+    {
+      "formName": "frmSchedResource",
+      "file": "frmSchedResource.frm",
+      "controlCount": 1,
+      "hasValidation": true,
+      "hasCalculations": true,
+      "hasSQL": true,
+      "lineCount": 7392,
+      "suggestedModule": "core",
+      "jiraEpic": "SCRUM-12"
+    },
+    {
+      "formName": "frmSelPractice",
+      "file": "frmSelPractice.frm",
+      "controlCount": 1,
+      "hasValidation": true,
+      "hasCalculations": true,
+      "hasSQL": false,
+      "lineCount": 157,
+      "suggestedModule": "core",
+      "jiraEpic": "SCRUM-12"
+    },
+    {
+      "formName": "frmSpecOrder",
+      "file": "frmSpecOrder.frm",
+      "controlCount": 1,
+      "hasValidation": true,
+      "hasCalculations": true,
+      "hasSQL": false,
+      "lineCount": 1745,
+      "suggestedModule": "or-scheduling",
+      "jiraEpic": "SCRUM-7"
+    },
+    {
+      "formName": "frmSuperBill",
+      "file": "frmSuperBill.frm",
+      "controlCount": 1,
+      "hasValidation": true,
+      "hasCalculations": true,
+      "hasSQL": true,
+      "lineCount": 252,
+      "suggestedModule": "core",
+      "jiraEpic": "SCRUM-12"
+    },
+    {
+      "formName": "frmSurgComment",
+      "file": "frmSurgComment.frm",
+      "controlCount": 1,
+      "hasValidation": false,
+      "hasCalculations": true,
+      "hasSQL": true,
+      "lineCount": 537,
+      "suggestedModule": "or-scheduling",
+      "jiraEpic": "SCRUM-7"
+    },
+    {
+      "formName": "frmSurgLog",
+      "file": "frmSurgLog.frm",
+      "controlCount": 1,
+      "hasValidation": true,
+      "hasCalculations": true,
+      "hasSQL": true,
+      "lineCount": 341,
+      "suggestedModule": "or-scheduling",
+      "jiraEpic": "SCRUM-7"
+    },
+    {
+      "formName": "frmSysConfig",
+      "file": "frmSysConfig.frm",
+      "controlCount": 1,
+      "hasValidation": true,
+      "hasCalculations": true,
+      "hasSQL": true,
+      "lineCount": 3173,
+      "suggestedModule": "core",
+      "jiraEpic": "SCRUM-12"
+    },
+    {
+      "formName": "frmSystemError",
+      "file": "frmSystemError.frm",
+      "controlCount": 1,
+      "hasValidation": true,
+      "hasCalculations": true,
+      "hasSQL": true,
+      "lineCount": 718,
+      "suggestedModule": "or-scheduling",
+      "jiraEpic": "SCRUM-7"
+    },
+    {
+      "formName": "frmSystemErrorLog",
+      "file": "frmSystemErrorLog.frm",
+      "controlCount": 1,
+      "hasValidation": true,
+      "hasCalculations": true,
+      "hasSQL": true,
+      "lineCount": 1152,
+      "suggestedModule": "or-scheduling",
+      "jiraEpic": "SCRUM-7"
+    },
+    {
+      "formName": "frmTask",
+      "file": "frmTask.frm",
+      "controlCount": 1,
+      "hasValidation": true,
+      "hasCalculations": true,
+      "hasSQL": true,
+      "lineCount": 1025,
+      "suggestedModule": "core",
+      "jiraEpic": "SCRUM-12"
+    },
+    {
+      "formName": "frmTB",
+      "file": "frmTB.frm",
+      "controlCount": 1,
+      "hasValidation": true,
+      "hasCalculations": true,
+      "hasSQL": false,
+      "lineCount": 226,
+      "suggestedModule": "core",
+      "jiraEpic": "SCRUM-12"
+    },
+    {
+      "formName": "frmTelephone",
+      "file": "frmTelephone.frm",
+      "controlCount": 1,
+      "hasValidation": false,
+      "hasCalculations": true,
+      "hasSQL": true,
+      "lineCount": 365,
+      "suggestedModule": "core",
+      "jiraEpic": "SCRUM-12"
+    },
+    {
+      "formName": "frmTermsMaint",
+      "file": "frmTermsMaint.frm",
+      "controlCount": 1,
+      "hasValidation": true,
+      "hasCalculations": true,
+      "hasSQL": true,
+      "lineCount": 609,
+      "suggestedModule": "core",
+      "jiraEpic": "SCRUM-12"
+    },
+    {
+      "formName": "frmTreatmentConsent",
+      "file": "frmTreatmentConsent.frm",
+      "controlCount": 1,
+      "hasValidation": true,
+      "hasCalculations": true,
+      "hasSQL": true,
+      "lineCount": 2133,
+      "suggestedModule": "core",
+      "jiraEpic": "SCRUM-12"
+    },
+    {
+      "formName": "frmURL",
+      "file": "frmURL.frm",
+      "controlCount": 1,
+      "hasValidation": true,
+      "hasCalculations": true,
+      "hasSQL": true,
+      "lineCount": 578,
+      "suggestedModule": "core",
+      "jiraEpic": "SCRUM-12"
+    },
+    {
+      "formName": "Help",
+      "file": "Help.frm",
+      "controlCount": 1,
+      "hasValidation": false,
+      "hasCalculations": true,
+      "hasSQL": false,
+      "lineCount": 359,
+      "suggestedModule": "core",
+      "jiraEpic": "SCRUM-12"
+    },
+    {
+      "formName": "ImageCapture",
+      "file": "ImageCapture.frm",
+      "controlCount": 1,
+      "hasValidation": true,
+      "hasCalculations": true,
+      "hasSQL": false,
+      "lineCount": 235,
+      "suggestedModule": "core",
+      "jiraEpic": "SCRUM-12"
+    },
+    {
+      "formName": "Login",
+      "file": "Login.frm",
+      "controlCount": 1,
+      "hasValidation": true,
+      "hasCalculations": true,
+      "hasSQL": true,
+      "lineCount": 1054,
+      "suggestedModule": "core",
+      "jiraEpic": "SCRUM-12"
+    },
+    {
+      "formName": "MDI",
+      "file": "MDI.frm",
+      "controlCount": 1,
+      "hasValidation": true,
+      "hasCalculations": true,
+      "hasSQL": true,
+      "lineCount": 2696,
+      "suggestedModule": "core",
+      "jiraEpic": "SCRUM-12"
+    },
+    {
+      "formName": "MedicationOrder",
+      "file": "MedicationOrder.frm",
+      "controlCount": 1,
+      "hasValidation": false,
+      "hasCalculations": true,
+      "hasSQL": true,
+      "lineCount": 202,
+      "suggestedModule": "or-scheduling",
+      "jiraEpic": "SCRUM-7"
+    },
+    {
+      "formName": "PatientInfo",
+      "file": "PatientInfo.frm",
+      "controlCount": 1,
+      "hasValidation": true,
+      "hasCalculations": true,
+      "hasSQL": true,
+      "lineCount": 5275,
+      "suggestedModule": "intake",
+      "jiraEpic": "SCRUM-6"
+    },
+    {
+      "formName": "PatientInfo_1",
+      "file": "PatientInfo_1.frm",
+      "controlCount": 1,
+      "hasValidation": true,
+      "hasCalculations": true,
+      "hasSQL": true,
+      "lineCount": 4648,
+      "suggestedModule": "intake",
+      "jiraEpic": "SCRUM-6"
+    },
+    {
+      "formName": "PatientInfo_Old",
+      "file": "PatientInfo_Old.frm",
+      "controlCount": 1,
+      "hasValidation": true,
+      "hasCalculations": true,
+      "hasSQL": true,
+      "lineCount": 4468,
+      "suggestedModule": "intake",
+      "jiraEpic": "SCRUM-6"
+    },
+    {
+      "formName": "Report",
+      "file": "Report.frm",
+      "controlCount": 1,
+      "hasValidation": true,
+      "hasCalculations": true,
+      "hasSQL": false,
+      "lineCount": 2139,
+      "suggestedModule": "or-scheduling",
+      "jiraEpic": "SCRUM-7"
+    },
+    {
+      "formName": "ResidentInfo",
+      "file": "ResidentInfo.frm",
+      "controlCount": 1,
+      "hasValidation": true,
+      "hasCalculations": true,
+      "hasSQL": true,
+      "lineCount": 3973,
+      "suggestedModule": "core",
+      "jiraEpic": "SCRUM-12"
+    },
+    {
+      "formName": "SaveAlert",
+      "file": "SaveAlert.frm",
+      "controlCount": 1,
+      "hasValidation": false,
+      "hasCalculations": true,
+      "hasSQL": false,
+      "lineCount": 151,
+      "suggestedModule": "core",
+      "jiraEpic": "SCRUM-12"
+    },
+    {
+      "formName": "SetServers",
+      "file": "SetServers.frm",
+      "controlCount": 1,
+      "hasValidation": true,
+      "hasCalculations": false,
+      "hasSQL": false,
+      "lineCount": 760,
+      "suggestedModule": "core",
+      "jiraEpic": "SCRUM-12"
+    },
+    {
+      "formName": "StimSheet",
+      "file": "StimSheet.frm",
+      "controlCount": 1,
+      "hasValidation": false,
+      "hasCalculations": true,
+      "hasSQL": false,
+      "lineCount": 177,
+      "suggestedModule": "core",
+      "jiraEpic": "SCRUM-12"
+    },
+    {
+      "formName": "UPMC",
+      "file": "UPMC.frm",
+      "controlCount": 1,
+      "hasValidation": true,
+      "hasCalculations": true,
+      "hasSQL": false,
+      "lineCount": 545,
+      "suggestedModule": "core",
+      "jiraEpic": "SCRUM-12"
+    },
+    {
+      "formName": "Viewer",
+      "file": "Viewer.frm",
+      "controlCount": 1,
+      "hasValidation": true,
+      "hasCalculations": true,
+      "hasSQL": false,
+      "lineCount": 1712,
+      "suggestedModule": "core",
+      "jiraEpic": "SCRUM-12"
+    }
+  ],
+  "allValidationRules": [],
+  "allBusinessRules": [],
+  "allCalculations": [],
+  "allSQLQueries": [],
+  "suggestedJiraStories": [
+    {
+      "summary": "Migrate VB6 Basic — extract & implement in React",
+      "description": "Convert VB6 form Basic.frm to React component.\nControls: ~1 | Has validation: true | Has SQL: true\nTarget module: core\nEpic: SCRUM-12",
+      "issueType": "Story",
+      "epic": "SCRUM-12"
+    },
+    {
+      "summary": "Migrate VB6 DialogSetExt — extract & implement in React",
+      "description": "Convert VB6 form DialogSetExt.frm to React component.\nControls: ~1 | Has validation: true | Has SQL: false\nTarget module: core\nEpic: SCRUM-12",
+      "issueType": "Story",
+      "epic": "SCRUM-12"
+    },
+    {
+      "summary": "Migrate VB6 DialogSetFilePath — extract & implement in React",
+      "description": "Convert VB6 form DialogSetFilePath.frm to React component.\nControls: ~1 | Has validation: true | Has SQL: false\nTarget module: core\nEpic: SCRUM-12",
+      "issueType": "Story",
+      "epic": "SCRUM-12"
+    },
+    {
+      "summary": "Migrate VB6 DialogSetURL — extract & implement in React",
+      "description": "Convert VB6 form DialogSetURL.frm to React component.\nControls: ~1 | Has validation: true | Has SQL: false\nTarget module: core\nEpic: SCRUM-12",
+      "issueType": "Story",
+      "epic": "SCRUM-12"
+    },
+    {
+      "summary": "Migrate VB6 etalon — extract & implement in React",
+      "description": "Convert VB6 form etalon.frm to React component.\nControls: ~1 | Has validation: false | Has SQL: false\nTarget module: core\nEpic: SCRUM-12",
+      "issueType": "Story",
+      "epic": "SCRUM-12"
+    },
+    {
+      "summary": "Migrate VB6 fmCareIntrvn — extract & implement in React",
+      "description": "Convert VB6 form fmCareIntrvn.frm to React component.\nControls: ~1 | Has validation: true | Has SQL: true\nTarget module: core\nEpic: SCRUM-12",
+      "issueType": "Story",
+      "epic": "SCRUM-12"
+    },
+    {
+      "summary": "Migrate VB6 fmMseTerms — extract & implement in React",
+      "description": "Convert VB6 form fmMseTerms.frm to React component.\nControls: ~1 | Has validation: true | Has SQL: true\nTarget module: core\nEpic: SCRUM-12",
+      "issueType": "Story",
+      "epic": "SCRUM-12"
+    },
+    {
+      "summary": "Migrate VB6 frmAddEnctr — extract & implement in React",
+      "description": "Convert VB6 form frmAddEnctr.frm to React component.\nControls: ~1 | Has validation: false | Has SQL: false\nTarget module: core\nEpic: SCRUM-12",
+      "issueType": "Story",
+      "epic": "SCRUM-12"
+    },
+    {
+      "summary": "Migrate VB6 frmAdmin — extract & implement in React",
+      "description": "Convert VB6 form frmAdmin.frm to React component.\nControls: ~1 | Has validation: true | Has SQL: true\nTarget module: core\nEpic: SCRUM-12",
+      "issueType": "Story",
+      "epic": "SCRUM-12"
+    },
+    {
+      "summary": "Migrate VB6 frmAdmission — extract & implement in React",
+      "description": "Convert VB6 form frmAdmission.frm to React component.\nControls: ~1 | Has validation: true | Has SQL: false\nTarget module: core\nEpic: SCRUM-12",
+      "issueType": "Story",
+      "epic": "SCRUM-12"
+    },
+    {
+      "summary": "Migrate VB6 frmAdmitHistory — extract & implement in React",
+      "description": "Convert VB6 form frmAdmitHistory.frm to React component.\nControls: ~1 | Has validation: true | Has SQL: false\nTarget module: intake\nEpic: SCRUM-6",
+      "issueType": "Story",
+      "epic": "SCRUM-6"
+    },
+    {
+      "summary": "Migrate VB6 frmAllergy — extract & implement in React",
+      "description": "Convert VB6 form frmAllergy.frm to React component.\nControls: ~1 | Has validation: true | Has SQL: false\nTarget module: core\nEpic: SCRUM-12",
+      "issueType": "Story",
+      "epic": "SCRUM-12"
+    },
+    {
+      "summary": "Migrate VB6 frmApptDate — extract & implement in React",
+      "description": "Convert VB6 form frmApptDate.frm to React component.\nControls: ~1 | Has validation: false | Has SQL: true\nTarget module: core\nEpic: SCRUM-12",
+      "issueType": "Story",
+      "epic": "SCRUM-12"
+    },
+    {
+      "summary": "Migrate VB6 frmApptMaint — extract & implement in React",
+      "description": "Convert VB6 form frmApptMaint.frm to React component.\nControls: ~1 | Has validation: true | Has SQL: true\nTarget module: core\nEpic: SCRUM-12",
+      "issueType": "Story",
+      "epic": "SCRUM-12"
+    },
+    {
+      "summary": "Migrate VB6 frmAssessment — extract & implement in React",
+      "description": "Convert VB6 form frmAssessment.frm to React component.\nControls: ~1 | Has validation: true | Has SQL: true\nTarget module: core\nEpic: SCRUM-12",
+      "issueType": "Story",
+      "epic": "SCRUM-12"
+    },
+    {
+      "summary": "Migrate VB6 frmAssignRoom — extract & implement in React",
+      "description": "Convert VB6 form frmAssignRoom.frm to React component.\nControls: ~1 | Has validation: true | Has SQL: false\nTarget module: or-scheduling\nEpic: SCRUM-7",
+      "issueType": "Story",
+      "epic": "SCRUM-7"
+    },
+    {
+      "summary": "Migrate VB6 frmBlockTime — extract & implement in React",
+      "description": "Convert VB6 form frmBlockTime.frm to React component.\nControls: ~1 | Has validation: true | Has SQL: true\nTarget module: core\nEpic: SCRUM-12",
+      "issueType": "Story",
+      "epic": "SCRUM-12"
+    },
+    {
+      "summary": "Migrate VB6 frmBlockTime_August_1 — extract & implement in React",
+      "description": "Convert VB6 form frmBlockTime_August_1.frm to React component.\nControls: ~1 | Has validation: true | Has SQL: true\nTarget module: core\nEpic: SCRUM-12",
+      "issueType": "Story",
+      "epic": "SCRUM-12"
+    },
+    {
+      "summary": "Migrate VB6 frmBlockTime_August_10_2014 — extract & implement in React",
+      "description": "Convert VB6 form frmBlockTime_August_10_2014.frm to React component.\nControls: ~1 | Has validation: true | Has SQL: true\nTarget module: core\nEpic: SCRUM-12",
+      "issueType": "Story",
+      "epic": "SCRUM-12"
+    },
+    {
+      "summary": "Migrate VB6 frmBlockTime_Old — extract & implement in React",
+      "description": "Convert VB6 form frmBlockTime_Old.frm to React component.\nControls: ~1 | Has validation: true | Has SQL: true\nTarget module: core\nEpic: SCRUM-12",
+      "issueType": "Story",
+      "epic": "SCRUM-12"
+    },
+    {
+      "summary": "Migrate VB6 frmBlockTime_Old2 — extract & implement in React",
+      "description": "Convert VB6 form frmBlockTime_Old2.frm to React component.\nControls: ~1 | Has validation: true | Has SQL: true\nTarget module: core\nEpic: SCRUM-12",
+      "issueType": "Story",
+      "epic": "SCRUM-12"
+    },
+    {
+      "summary": "Migrate VB6 frmBreastExam — extract & implement in React",
+      "description": "Convert VB6 form frmBreastExam.frm to React component.\nControls: ~1 | Has validation: true | Has SQL: true\nTarget module: core\nEpic: SCRUM-12",
+      "issueType": "Story",
+      "epic": "SCRUM-12"
+    },
+    {
+      "summary": "Migrate VB6 frmBrowser — extract & implement in React",
+      "description": "Convert VB6 form frmBrowser.frm to React component.\nControls: ~1 | Has validation: false | Has SQL: true\nTarget module: core\nEpic: SCRUM-12",
+      "issueType": "Story",
+      "epic": "SCRUM-12"
+    },
+    {
+      "summary": "Migrate VB6 frmBrowser_Old — extract & implement in React",
+      "description": "Convert VB6 form frmBrowser_Old.frm to React component.\nControls: ~1 | Has validation: false | Has SQL: true\nTarget module: core\nEpic: SCRUM-12",
+      "issueType": "Story",
+      "epic": "SCRUM-12"
+    },
+    {
+      "summary": "Migrate VB6 frmCheckOut — extract & implement in React",
+      "description": "Convert VB6 form frmCheckOut.frm to React component.\nControls: ~1 | Has validation: true | Has SQL: true\nTarget module: core\nEpic: SCRUM-12",
+      "issueType": "Story",
+      "epic": "SCRUM-12"
+    },
+    {
+      "summary": "Migrate VB6 frmCoding — extract & implement in React",
+      "description": "Convert VB6 form frmCoding.frm to React component.\nControls: ~1 | Has validation: false | Has SQL: false\nTarget module: core\nEpic: SCRUM-12",
+      "issueType": "Story",
+      "epic": "SCRUM-12"
+    },
+    {
+      "summary": "Migrate VB6 frmComment — extract & implement in React",
+      "description": "Convert VB6 form frmComment.frm to React component.\nControls: ~1 | Has validation: true | Has SQL: false\nTarget module: core\nEpic: SCRUM-12",
+      "issueType": "Story",
+      "epic": "SCRUM-12"
+    },
+    {
+      "summary": "Migrate VB6 frmComment_All — extract & implement in React",
+      "description": "Convert VB6 form frmComment_All.frm to React component.\nControls: ~1 | Has validation: true | Has SQL: true\nTarget module: core\nEpic: SCRUM-12",
+      "issueType": "Story",
+      "epic": "SCRUM-12"
+    },
+    {
+      "summary": "Migrate VB6 frmConsent — extract & implement in React",
+      "description": "Convert VB6 form frmConsent.frm to React component.\nControls: ~1 | Has validation: true | Has SQL: true\nTarget module: core\nEpic: SCRUM-12",
+      "issueType": "Story",
+      "epic": "SCRUM-12"
+    },
+    {
+      "summary": "Migrate VB6 frmCPTMaint — extract & implement in React",
+      "description": "Convert VB6 form frmCPTMaint.frm to React component.\nControls: ~1 | Has validation: true | Has SQL: true\nTarget module: core\nEpic: SCRUM-12",
+      "issueType": "Story",
+      "epic": "SCRUM-12"
+    },
+    {
+      "summary": "Migrate VB6 frmCPTMaint_Mine — extract & implement in React",
+      "description": "Convert VB6 form frmCPTMaint_Mine.frm to React component.\nControls: ~1 | Has validation: true | Has SQL: true\nTarget module: core\nEpic: SCRUM-12",
+      "issueType": "Story",
+      "epic": "SCRUM-12"
+    },
+    {
+      "summary": "Migrate VB6 frmDefaultOrder — extract & implement in React",
+      "description": "Convert VB6 form frmDefaultOrder.frm to React component.\nControls: ~1 | Has validation: true | Has SQL: true\nTarget module: or-scheduling\nEpic: SCRUM-7",
+      "issueType": "Story",
+      "epic": "SCRUM-7"
+    },
+    {
+      "summary": "Migrate VB6 frmDiagnosis — extract & implement in React",
+      "description": "Convert VB6 form frmDiagnosis.frm to React component.\nControls: ~1 | Has validation: true | Has SQL: true\nTarget module: core\nEpic: SCRUM-12",
+      "issueType": "Story",
+      "epic": "SCRUM-12"
+    },
+    {
+      "summary": "Migrate VB6 frmDSMIV — extract & implement in React",
+      "description": "Convert VB6 form frmDSMIV.frm to React component.\nControls: ~1 | Has validation: true | Has SQL: true\nTarget module: core\nEpic: SCRUM-12",
+      "issueType": "Story",
+      "epic": "SCRUM-12"
+    },
+    {
+      "summary": "Migrate VB6 frmEmergContact — extract & implement in React",
+      "description": "Convert VB6 form frmEmergContact.frm to React component.\nControls: ~1 | Has validation: true | Has SQL: false\nTarget module: core\nEpic: SCRUM-12",
+      "issueType": "Story",
+      "epic": "SCRUM-12"
+    },
+    {
+      "summary": "Migrate VB6 frmEmployer — extract & implement in React",
+      "description": "Convert VB6 form frmEmployer.frm to React component.\nControls: ~1 | Has validation: false | Has SQL: false\nTarget module: core\nEpic: SCRUM-12",
+      "issueType": "Story",
+      "epic": "SCRUM-12"
+    },
+    {
+      "summary": "Migrate VB6 frmEnctr — extract & implement in React",
+      "description": "Convert VB6 form frmEnctr.frm to React component.\nControls: ~1 | Has validation: true | Has SQL: true\nTarget module: core\nEpic: SCRUM-12",
+      "issueType": "Story",
+      "epic": "SCRUM-12"
+    },
+    {
+      "summary": "Migrate VB6 frmEnctrDefault — extract & implement in React",
+      "description": "Convert VB6 form frmEnctrDefault.frm to React component.\nControls: ~1 | Has validation: false | Has SQL: true\nTarget module: core\nEpic: SCRUM-12",
+      "issueType": "Story",
+      "epic": "SCRUM-12"
+    },
+    {
+      "summary": "Migrate VB6 frmEnctryp — extract & implement in React",
+      "description": "Convert VB6 form frmEnctryp.frm to React component.\nControls: ~1 | Has validation: false | Has SQL: false\nTarget module: core\nEpic: SCRUM-12",
+      "issueType": "Story",
+      "epic": "SCRUM-12"
+    },
+    {
+      "summary": "Migrate VB6 frmEnctr_old — extract & implement in React",
+      "description": "Convert VB6 form frmEnctr_old.frm to React component.\nControls: ~1 | Has validation: true | Has SQL: true\nTarget module: core\nEpic: SCRUM-12",
+      "issueType": "Story",
+      "epic": "SCRUM-12"
+    },
+    {
+      "summary": "Migrate VB6 frmErrorLog — extract & implement in React",
+      "description": "Convert VB6 form frmErrorLog.frm to React component.\nControls: ~1 | Has validation: true | Has SQL: false\nTarget module: or-scheduling\nEpic: SCRUM-7",
+      "issueType": "Story",
+      "epic": "SCRUM-7"
+    },
+    {
+      "summary": "Migrate VB6 frmExamList — extract & implement in React",
+      "description": "Convert VB6 form frmExamList.frm to React component.\nControls: ~1 | Has validation: true | Has SQL: true\nTarget module: core\nEpic: SCRUM-12",
+      "issueType": "Story",
+      "epic": "SCRUM-12"
+    },
+    {
+      "summary": "Migrate VB6 frmFaceSheet — extract & implement in React",
+      "description": "Convert VB6 form frmFaceSheet.frm to React component.\nControls: ~1 | Has validation: false | Has SQL: true\nTarget module: core\nEpic: SCRUM-12",
+      "issueType": "Story",
+      "epic": "SCRUM-12"
+    },
+    {
+      "summary": "Migrate VB6 frmFacilities — extract & implement in React",
+      "description": "Convert VB6 form frmFacilities.frm to React component.\nControls: ~1 | Has validation: true | Has SQL: true\nTarget module: core\nEpic: SCRUM-12",
+      "issueType": "Story",
+      "epic": "SCRUM-12"
+    },
+    {
+      "summary": "Migrate VB6 frmGeneral — extract & implement in React",
+      "description": "Convert VB6 form frmGeneral.frm to React component.\nControls: ~1 | Has validation: true | Has SQL: true\nTarget module: core\nEpic: SCRUM-12",
+      "issueType": "Story",
+      "epic": "SCRUM-12"
+    },
+    {
+      "summary": "Migrate VB6 frmGridList — extract & implement in React",
+      "description": "Convert VB6 form frmGridList.frm to React component.\nControls: ~1 | Has validation: true | Has SQL: true\nTarget module: core\nEpic: SCRUM-12",
+      "issueType": "Story",
+      "epic": "SCRUM-12"
+    },
+    {
+      "summary": "Migrate VB6 frmGridList_Old — extract & implement in React",
+      "description": "Convert VB6 form frmGridList_Old.frm to React component.\nControls: ~1 | Has validation: true | Has SQL: true\nTarget module: core\nEpic: SCRUM-12",
+      "issueType": "Story",
+      "epic": "SCRUM-12"
+    },
+    {
+      "summary": "Migrate VB6 frmInPatient — extract & implement in React",
+      "description": "Convert VB6 form frmInPatient.frm to React component.\nControls: ~1 | Has validation: true | Has SQL: true\nTarget module: intake\nEpic: SCRUM-6",
+      "issueType": "Story",
+      "epic": "SCRUM-6"
+    },
+    {
+      "summary": "Migrate VB6 frmInPatientAppt — extract & implement in React",
+      "description": "Convert VB6 form frmInPatientAppt.frm to React component.\nControls: ~1 | Has validation: true | Has SQL: true\nTarget module: intake\nEpic: SCRUM-6",
+      "issueType": "Story",
+      "epic": "SCRUM-6"
+    },
+    {
+      "summary": "Migrate VB6 frmInsurance — extract & implement in React",
+      "description": "Convert VB6 form frmInsurance.frm to React component.\nControls: ~1 | Has validation: true | Has SQL: true\nTarget module: core\nEpic: SCRUM-12",
+      "issueType": "Story",
+      "epic": "SCRUM-12"
+    },
+    {
+      "summary": "Migrate VB6 frmInternalMed — extract & implement in React",
+      "description": "Convert VB6 form frmInternalMed.frm to React component.\nControls: ~1 | Has validation: true | Has SQL: true\nTarget module: core\nEpic: SCRUM-12",
+      "issueType": "Story",
+      "epic": "SCRUM-12"
+    },
+    {
+      "summary": "Migrate VB6 frmIntraOffice — extract & implement in React",
+      "description": "Convert VB6 form frmIntraOffice.frm to React component.\nControls: ~1 | Has validation: true | Has SQL: false\nTarget module: core\nEpic: SCRUM-12",
+      "issueType": "Story",
+      "epic": "SCRUM-12"
+    },
+    {
+      "summary": "Migrate VB6 frmListPatient — extract & implement in React",
+      "description": "Convert VB6 form frmListPatient.frm to React component.\nControls: ~1 | Has validation: true | Has SQL: true\nTarget module: intake\nEpic: SCRUM-6",
+      "issueType": "Story",
+      "epic": "SCRUM-6"
+    },
+    {
+      "summary": "Migrate VB6 frmLoadControl — extract & implement in React",
+      "description": "Convert VB6 form frmLoadControl.frm to React component.\nControls: ~1 | Has validation: false | Has SQL: false\nTarget module: core\nEpic: SCRUM-12",
+      "issueType": "Story",
+      "epic": "SCRUM-12"
+    },
+    {
+      "summary": "Migrate VB6 frmLogFile — extract & implement in React",
+      "description": "Convert VB6 form frmLogFile.frm to React component.\nControls: ~1 | Has validation: false | Has SQL: false\nTarget module: core\nEpic: SCRUM-12",
+      "issueType": "Story",
+      "epic": "SCRUM-12"
+    },
+    {
+      "summary": "Migrate VB6 frmManage — extract & implement in React",
+      "description": "Convert VB6 form frmManage.frm to React component.\nControls: ~1 | Has validation: false | Has SQL: true\nTarget module: core\nEpic: SCRUM-12",
+      "issueType": "Story",
+      "epic": "SCRUM-12"
+    },
+    {
+      "summary": "Migrate VB6 frmMAR — extract & implement in React",
+      "description": "Convert VB6 form frmMAR.frm to React component.\nControls: ~1 | Has validation: false | Has SQL: false\nTarget module: core\nEpic: SCRUM-12",
+      "issueType": "Story",
+      "epic": "SCRUM-12"
+    },
+    {
+      "summary": "Migrate VB6 frmMDIReport — extract & implement in React",
+      "description": "Convert VB6 form frmMDIReport.frm to React component.\nControls: ~1 | Has validation: true | Has SQL: true\nTarget module: or-scheduling\nEpic: SCRUM-7",
+      "issueType": "Story",
+      "epic": "SCRUM-7"
+    },
+    {
+      "summary": "Migrate VB6 frmMDSign — extract & implement in React",
+      "description": "Convert VB6 form frmMDSign.frm to React component.\nControls: ~1 | Has validation: true | Has SQL: true\nTarget module: core\nEpic: SCRUM-12",
+      "issueType": "Story",
+      "epic": "SCRUM-12"
+    },
+    {
+      "summary": "Migrate VB6 frmMedMaint — extract & implement in React",
+      "description": "Convert VB6 form frmMedMaint.frm to React component.\nControls: ~1 | Has validation: true | Has SQL: true\nTarget module: core\nEpic: SCRUM-12",
+      "issueType": "Story",
+      "epic": "SCRUM-12"
+    },
+    {
+      "summary": "Migrate VB6 frmMeds — extract & implement in React",
+      "description": "Convert VB6 form frmMeds.frm to React component.\nControls: ~1 | Has validation: true | Has SQL: false\nTarget module: core\nEpic: SCRUM-12",
+      "issueType": "Story",
+      "epic": "SCRUM-12"
+    },
+    {
+      "summary": "Migrate VB6 frmMessage — extract & implement in React",
+      "description": "Convert VB6 form frmMessage.frm to React component.\nControls: ~1 | Has validation: false | Has SQL: false\nTarget module: core\nEpic: SCRUM-12",
+      "issueType": "Story",
+      "epic": "SCRUM-12"
+    },
+    {
+      "summary": "Migrate VB6 frmMovePatient — extract & implement in React",
+      "description": "Convert VB6 form frmMovePatient.frm to React component.\nControls: ~1 | Has validation: true | Has SQL: true\nTarget module: intake\nEpic: SCRUM-6",
+      "issueType": "Story",
+      "epic": "SCRUM-6"
+    },
+    {
+      "summary": "Migrate VB6 frmMultiAppt — extract & implement in React",
+      "description": "Convert VB6 form frmMultiAppt.frm to React component.\nControls: ~1 | Has validation: true | Has SQL: true\nTarget module: core\nEpic: SCRUM-12",
+      "issueType": "Story",
+      "epic": "SCRUM-12"
+    },
+    {
+      "summary": "Migrate VB6 frmMultiAppt_01_01_2014 — extract & implement in React",
+      "description": "Convert VB6 form frmMultiAppt_01_01_2014.frm to React component.\nControls: ~1 | Has validation: true | Has SQL: true\nTarget module: core\nEpic: SCRUM-12",
+      "issueType": "Story",
+      "epic": "SCRUM-12"
+    },
+    {
+      "summary": "Migrate VB6 frmMultiAppt_Aug_10_2014 — extract & implement in React",
+      "description": "Convert VB6 form frmMultiAppt_Aug_10_2014.frm to React component.\nControls: ~1 | Has validation: true | Has SQL: true\nTarget module: core\nEpic: SCRUM-12",
+      "issueType": "Story",
+      "epic": "SCRUM-12"
+    },
+    {
+      "summary": "Migrate VB6 frmNewEnctr — extract & implement in React",
+      "description": "Convert VB6 form frmNewEnctr.frm to React component.\nControls: ~1 | Has validation: true | Has SQL: true\nTarget module: core\nEpic: SCRUM-12",
+      "issueType": "Story",
+      "epic": "SCRUM-12"
+    },
+    {
+      "summary": "Migrate VB6 frmNurseTemplates — extract & implement in React",
+      "description": "Convert VB6 form frmNurseTemplates.frm to React component.\nControls: ~1 | Has validation: true | Has SQL: true\nTarget module: staff\nEpic: SCRUM-11",
+      "issueType": "Story",
+      "epic": "SCRUM-11"
+    },
+    {
+      "summary": "Migrate VB6 frmNursingHome — extract & implement in React",
+      "description": "Convert VB6 form frmNursingHome.frm to React component.\nControls: ~1 | Has validation: true | Has SQL: true\nTarget module: core\nEpic: SCRUM-12",
+      "issueType": "Story",
+      "epic": "SCRUM-12"
+    },
+    {
+      "summary": "Migrate VB6 frmNursingHome_Old — extract & implement in React",
+      "description": "Convert VB6 form frmNursingHome_Old.frm to React component.\nControls: ~1 | Has validation: true | Has SQL: true\nTarget module: core\nEpic: SCRUM-12",
+      "issueType": "Story",
+      "epic": "SCRUM-12"
+    },
+    {
+      "summary": "Migrate VB6 frmObGyn — extract & implement in React",
+      "description": "Convert VB6 form frmObGyn.frm to React component.\nControls: ~1 | Has validation: true | Has SQL: true\nTarget module: core\nEpic: SCRUM-12",
+      "issueType": "Story",
+      "epic": "SCRUM-12"
+    },
+    {
+      "summary": "Migrate VB6 frmOrders — extract & implement in React",
+      "description": "Convert VB6 form frmOrders.frm to React component.\nControls: ~1 | Has validation: true | Has SQL: true\nTarget module: or-scheduling\nEpic: SCRUM-7",
+      "issueType": "Story",
+      "epic": "SCRUM-7"
+    },
+    {
+      "summary": "Migrate VB6 frmPatAppHist — extract & implement in React",
+      "description": "Convert VB6 form frmPatAppHist.frm to React component.\nControls: ~1 | Has validation: true | Has SQL: false\nTarget module: core\nEpic: SCRUM-12",
+      "issueType": "Story",
+      "epic": "SCRUM-12"
+    },
+    {
+      "summary": "Migrate VB6 frmPatientAdress — extract & implement in React",
+      "description": "Convert VB6 form frmPatientAdress.frm to React component.\nControls: ~1 | Has validation: true | Has SQL: false\nTarget module: intake\nEpic: SCRUM-6",
+      "issueType": "Story",
+      "epic": "SCRUM-6"
+    },
+    {
+      "summary": "Migrate VB6 frmPatientAppointment — extract & implement in React",
+      "description": "Convert VB6 form frmPatientAppointment.frm to React component.\nControls: ~1 | Has validation: true | Has SQL: true\nTarget module: intake\nEpic: SCRUM-6",
+      "issueType": "Story",
+      "epic": "SCRUM-6"
+    },
+    {
+      "summary": "Migrate VB6 frmPatientAppointment_Old — extract & implement in React",
+      "description": "Convert VB6 form frmPatientAppointment_Old.frm to React component.\nControls: ~1 | Has validation: true | Has SQL: true\nTarget module: intake\nEpic: SCRUM-6",
+      "issueType": "Story",
+      "epic": "SCRUM-6"
+    },
+    {
+      "summary": "Migrate VB6 frmPatientForm — extract & implement in React",
+      "description": "Convert VB6 form frmPatientForm.frm to React component.\nControls: ~1 | Has validation: true | Has SQL: true\nTarget module: intake\nEpic: SCRUM-6",
+      "issueType": "Story",
+      "epic": "SCRUM-6"
+    },
+    {
+      "summary": "Migrate VB6 frmPatientIntake — extract & implement in React",
+      "description": "Convert VB6 form frmPatientIntake.frm to React component.\nControls: ~1 | Has validation: true | Has SQL: true\nTarget module: intake\nEpic: SCRUM-6",
+      "issueType": "Story",
+      "epic": "SCRUM-6"
+    },
+    {
+      "summary": "Migrate VB6 frmPatientName — extract & implement in React",
+      "description": "Convert VB6 form frmPatientName.frm to React component.\nControls: ~1 | Has validation: true | Has SQL: false\nTarget module: intake\nEpic: SCRUM-6",
+      "issueType": "Story",
+      "epic": "SCRUM-6"
+    },
+    {
+      "summary": "Migrate VB6 frmPatientNote — extract & implement in React",
+      "description": "Convert VB6 form frmPatientNote.frm to React component.\nControls: ~1 | Has validation: true | Has SQL: false\nTarget module: intake\nEpic: SCRUM-6",
+      "issueType": "Story",
+      "epic": "SCRUM-6"
+    },
+    {
+      "summary": "Migrate VB6 frmPatients — extract & implement in React",
+      "description": "Convert VB6 form frmPatients.frm to React component.\nControls: ~1 | Has validation: true | Has SQL: true\nTarget module: intake\nEpic: SCRUM-6",
+      "issueType": "Story",
+      "epic": "SCRUM-6"
+    },
+    {
+      "summary": "Migrate VB6 frmPatInsurance — extract & implement in React",
+      "description": "Convert VB6 form frmPatInsurance.frm to React component.\nControls: ~1 | Has validation: false | Has SQL: false\nTarget module: core\nEpic: SCRUM-12",
+      "issueType": "Story",
+      "epic": "SCRUM-12"
+    },
+    {
+      "summary": "Migrate VB6 frmPatNotice — extract & implement in React",
+      "description": "Convert VB6 form frmPatNotice.frm to React component.\nControls: ~1 | Has validation: false | Has SQL: false\nTarget module: core\nEpic: SCRUM-12",
+      "issueType": "Story",
+      "epic": "SCRUM-12"
+    },
+    {
+      "summary": "Migrate VB6 frmPatPharm — extract & implement in React",
+      "description": "Convert VB6 form frmPatPharm.frm to React component.\nControls: ~1 | Has validation: false | Has SQL: true\nTarget module: core\nEpic: SCRUM-12",
+      "issueType": "Story",
+      "epic": "SCRUM-12"
+    },
+    {
+      "summary": "Migrate VB6 frmPlasticSurgery — extract & implement in React",
+      "description": "Convert VB6 form frmPlasticSurgery.frm to React component.\nControls: ~1 | Has validation: true | Has SQL: true\nTarget module: or-scheduling\nEpic: SCRUM-7",
+      "issueType": "Story",
+      "epic": "SCRUM-7"
+    },
+    {
+      "summary": "Migrate VB6 frmPlastiSurg — extract & implement in React",
+      "description": "Convert VB6 form frmPlastiSurg.frm to React component.\nControls: ~1 | Has validation: true | Has SQL: true\nTarget module: or-scheduling\nEpic: SCRUM-7",
+      "issueType": "Story",
+      "epic": "SCRUM-7"
+    },
+    {
+      "summary": "Migrate VB6 frmPopCalendar — extract & implement in React",
+      "description": "Convert VB6 form frmPopCalendar.frm to React component.\nControls: ~1 | Has validation: true | Has SQL: false\nTarget module: core\nEpic: SCRUM-12",
+      "issueType": "Story",
+      "epic": "SCRUM-12"
+    },
+    {
+      "summary": "Migrate VB6 frmPopKeyPad — extract & implement in React",
+      "description": "Convert VB6 form frmPopKeyPad.frm to React component.\nControls: ~1 | Has validation: false | Has SQL: false\nTarget module: core\nEpic: SCRUM-12",
+      "issueType": "Story",
+      "epic": "SCRUM-12"
+    },
+    {
+      "summary": "Migrate VB6 frmPracticeReports — extract & implement in React",
+      "description": "Convert VB6 form frmPracticeReports.frm to React component.\nControls: ~1 | Has validation: true | Has SQL: false\nTarget module: or-scheduling\nEpic: SCRUM-7",
+      "issueType": "Story",
+      "epic": "SCRUM-7"
+    },
+    {
+      "summary": "Migrate VB6 frmPreview — extract & implement in React",
+      "description": "Convert VB6 form frmPreview.frm to React component.\nControls: ~1 | Has validation: true | Has SQL: true\nTarget module: core\nEpic: SCRUM-12",
+      "issueType": "Story",
+      "epic": "SCRUM-12"
+    },
+    {
+      "summary": "Migrate VB6 frmProviders — extract & implement in React",
+      "description": "Convert VB6 form frmProviders.frm to React component.\nControls: ~1 | Has validation: true | Has SQL: true\nTarget module: core\nEpic: SCRUM-12",
+      "issueType": "Story",
+      "epic": "SCRUM-12"
+    },
+    {
+      "summary": "Migrate VB6 frmProvInsurance — extract & implement in React",
+      "description": "Convert VB6 form frmProvInsurance.frm to React component.\nControls: ~1 | Has validation: false | Has SQL: true\nTarget module: core\nEpic: SCRUM-12",
+      "issueType": "Story",
+      "epic": "SCRUM-12"
+    },
+    {
+      "summary": "Migrate VB6 frmPsychiatry — extract & implement in React",
+      "description": "Convert VB6 form frmPsychiatry.frm to React component.\nControls: ~1 | Has validation: true | Has SQL: true\nTarget module: core\nEpic: SCRUM-12",
+      "issueType": "Story",
+      "epic": "SCRUM-12"
+    },
+    {
+      "summary": "Migrate VB6 frmPsychoSocial — extract & implement in React",
+      "description": "Convert VB6 form frmPsychoSocial.frm to React component.\nControls: ~1 | Has validation: true | Has SQL: true\nTarget module: core\nEpic: SCRUM-12",
+      "issueType": "Story",
+      "epic": "SCRUM-12"
+    },
+    {
+      "summary": "Migrate VB6 frmReportDate — extract & implement in React",
+      "description": "Convert VB6 form frmReportDate.frm to React component.\nControls: ~1 | Has validation: false | Has SQL: false\nTarget module: or-scheduling\nEpic: SCRUM-7",
+      "issueType": "Story",
+      "epic": "SCRUM-7"
+    },
+    {
+      "summary": "Migrate VB6 frmResource — extract & implement in React",
+      "description": "Convert VB6 form frmResource.frm to React component.\nControls: ~1 | Has validation: true | Has SQL: true\nTarget module: core\nEpic: SCRUM-12",
+      "issueType": "Story",
+      "epic": "SCRUM-12"
+    },
+    {
+      "summary": "Migrate VB6 frmRoomLocations — extract & implement in React",
+      "description": "Convert VB6 form frmRoomLocations.frm to React component.\nControls: ~1 | Has validation: true | Has SQL: false\nTarget module: or-scheduling\nEpic: SCRUM-7",
+      "issueType": "Story",
+      "epic": "SCRUM-7"
+    },
+    {
+      "summary": "Migrate VB6 frmScan — extract & implement in React",
+      "description": "Convert VB6 form frmScan.frm to React component.\nControls: ~1 | Has validation: false | Has SQL: false\nTarget module: core\nEpic: SCRUM-12",
+      "issueType": "Story",
+      "epic": "SCRUM-12"
+    },
+    {
+      "summary": "Migrate VB6 frmScannedImage — extract & implement in React",
+      "description": "Convert VB6 form frmScannedImage.frm to React component.\nControls: ~1 | Has validation: true | Has SQL: false\nTarget module: core\nEpic: SCRUM-12",
+      "issueType": "Story",
+      "epic": "SCRUM-12"
+    },
+    {
+      "summary": "Migrate VB6 frmSchedComment — extract & implement in React",
+      "description": "Convert VB6 form frmSchedComment.frm to React component.\nControls: ~1 | Has validation: true | Has SQL: true\nTarget module: core\nEpic: SCRUM-12",
+      "issueType": "Story",
+      "epic": "SCRUM-12"
+    },
+    {
+      "summary": "Migrate VB6 frmSchedPatient — extract & implement in React",
+      "description": "Convert VB6 form frmSchedPatient.frm to React component.\nControls: ~1 | Has validation: true | Has SQL: true\nTarget module: intake\nEpic: SCRUM-6",
+      "issueType": "Story",
+      "epic": "SCRUM-6"
+    },
+    {
+      "summary": "Migrate VB6 frmSchedPatient_1 — extract & implement in React",
+      "description": "Convert VB6 form frmSchedPatient_1.frm to React component.\nControls: ~1 | Has validation: true | Has SQL: true\nTarget module: intake\nEpic: SCRUM-6",
+      "issueType": "Story",
+      "epic": "SCRUM-6"
+    },
+    {
+      "summary": "Migrate VB6 frmSchedPatient_II — extract & implement in React",
+      "description": "Convert VB6 form frmSchedPatient_II.frm to React component.\nControls: ~1 | Has validation: true | Has SQL: true\nTarget module: intake\nEpic: SCRUM-6",
+      "issueType": "Story",
+      "epic": "SCRUM-6"
+    },
+    {
+      "summary": "Migrate VB6 frmSchedPatient_Old — extract & implement in React",
+      "description": "Convert VB6 form frmSchedPatient_Old.frm to React component.\nControls: ~1 | Has validation: true | Has SQL: true\nTarget module: intake\nEpic: SCRUM-6",
+      "issueType": "Story",
+      "epic": "SCRUM-6"
+    },
+    {
+      "summary": "Migrate VB6 frmSchedResource — extract & implement in React",
+      "description": "Convert VB6 form frmSchedResource.frm to React component.\nControls: ~1 | Has validation: true | Has SQL: true\nTarget module: core\nEpic: SCRUM-12",
+      "issueType": "Story",
+      "epic": "SCRUM-12"
+    },
+    {
+      "summary": "Migrate VB6 frmSelPractice — extract & implement in React",
+      "description": "Convert VB6 form frmSelPractice.frm to React component.\nControls: ~1 | Has validation: true | Has SQL: false\nTarget module: core\nEpic: SCRUM-12",
+      "issueType": "Story",
+      "epic": "SCRUM-12"
+    },
+    {
+      "summary": "Migrate VB6 frmSpecOrder — extract & implement in React",
+      "description": "Convert VB6 form frmSpecOrder.frm to React component.\nControls: ~1 | Has validation: true | Has SQL: false\nTarget module: or-scheduling\nEpic: SCRUM-7",
+      "issueType": "Story",
+      "epic": "SCRUM-7"
+    },
+    {
+      "summary": "Migrate VB6 frmSuperBill — extract & implement in React",
+      "description": "Convert VB6 form frmSuperBill.frm to React component.\nControls: ~1 | Has validation: true | Has SQL: true\nTarget module: core\nEpic: SCRUM-12",
+      "issueType": "Story",
+      "epic": "SCRUM-12"
+    },
+    {
+      "summary": "Migrate VB6 frmSurgComment — extract & implement in React",
+      "description": "Convert VB6 form frmSurgComment.frm to React component.\nControls: ~1 | Has validation: false | Has SQL: true\nTarget module: or-scheduling\nEpic: SCRUM-7",
+      "issueType": "Story",
+      "epic": "SCRUM-7"
+    },
+    {
+      "summary": "Migrate VB6 frmSurgLog — extract & implement in React",
+      "description": "Convert VB6 form frmSurgLog.frm to React component.\nControls: ~1 | Has validation: true | Has SQL: true\nTarget module: or-scheduling\nEpic: SCRUM-7",
+      "issueType": "Story",
+      "epic": "SCRUM-7"
+    },
+    {
+      "summary": "Migrate VB6 frmSysConfig — extract & implement in React",
+      "description": "Convert VB6 form frmSysConfig.frm to React component.\nControls: ~1 | Has validation: true | Has SQL: true\nTarget module: core\nEpic: SCRUM-12",
+      "issueType": "Story",
+      "epic": "SCRUM-12"
+    },
+    {
+      "summary": "Migrate VB6 frmSystemError — extract & implement in React",
+      "description": "Convert VB6 form frmSystemError.frm to React component.\nControls: ~1 | Has validation: true | Has SQL: true\nTarget module: or-scheduling\nEpic: SCRUM-7",
+      "issueType": "Story",
+      "epic": "SCRUM-7"
+    },
+    {
+      "summary": "Migrate VB6 frmSystemErrorLog — extract & implement in React",
+      "description": "Convert VB6 form frmSystemErrorLog.frm to React component.\nControls: ~1 | Has validation: true | Has SQL: true\nTarget module: or-scheduling\nEpic: SCRUM-7",
+      "issueType": "Story",
+      "epic": "SCRUM-7"
+    },
+    {
+      "summary": "Migrate VB6 frmTask — extract & implement in React",
+      "description": "Convert VB6 form frmTask.frm to React component.\nControls: ~1 | Has validation: true | Has SQL: true\nTarget module: core\nEpic: SCRUM-12",
+      "issueType": "Story",
+      "epic": "SCRUM-12"
+    },
+    {
+      "summary": "Migrate VB6 frmTB — extract & implement in React",
+      "description": "Convert VB6 form frmTB.frm to React component.\nControls: ~1 | Has validation: true | Has SQL: false\nTarget module: core\nEpic: SCRUM-12",
+      "issueType": "Story",
+      "epic": "SCRUM-12"
+    },
+    {
+      "summary": "Migrate VB6 frmTelephone — extract & implement in React",
+      "description": "Convert VB6 form frmTelephone.frm to React component.\nControls: ~1 | Has validation: false | Has SQL: true\nTarget module: core\nEpic: SCRUM-12",
+      "issueType": "Story",
+      "epic": "SCRUM-12"
+    },
+    {
+      "summary": "Migrate VB6 frmTermsMaint — extract & implement in React",
+      "description": "Convert VB6 form frmTermsMaint.frm to React component.\nControls: ~1 | Has validation: true | Has SQL: true\nTarget module: core\nEpic: SCRUM-12",
+      "issueType": "Story",
+      "epic": "SCRUM-12"
+    },
+    {
+      "summary": "Migrate VB6 frmTreatmentConsent — extract & implement in React",
+      "description": "Convert VB6 form frmTreatmentConsent.frm to React component.\nControls: ~1 | Has validation: true | Has SQL: true\nTarget module: core\nEpic: SCRUM-12",
+      "issueType": "Story",
+      "epic": "SCRUM-12"
+    },
+    {
+      "summary": "Migrate VB6 frmURL — extract & implement in React",
+      "description": "Convert VB6 form frmURL.frm to React component.\nControls: ~1 | Has validation: true | Has SQL: true\nTarget module: core\nEpic: SCRUM-12",
+      "issueType": "Story",
+      "epic": "SCRUM-12"
+    },
+    {
+      "summary": "Migrate VB6 Help — extract & implement in React",
+      "description": "Convert VB6 form Help.frm to React component.\nControls: ~1 | Has validation: false | Has SQL: false\nTarget module: core\nEpic: SCRUM-12",
+      "issueType": "Story",
+      "epic": "SCRUM-12"
+    },
+    {
+      "summary": "Migrate VB6 ImageCapture — extract & implement in React",
+      "description": "Convert VB6 form ImageCapture.frm to React component.\nControls: ~1 | Has validation: true | Has SQL: false\nTarget module: core\nEpic: SCRUM-12",
+      "issueType": "Story",
+      "epic": "SCRUM-12"
+    },
+    {
+      "summary": "Migrate VB6 Login — extract & implement in React",
+      "description": "Convert VB6 form Login.frm to React component.\nControls: ~1 | Has validation: true | Has SQL: true\nTarget module: core\nEpic: SCRUM-12",
+      "issueType": "Story",
+      "epic": "SCRUM-12"
+    },
+    {
+      "summary": "Migrate VB6 MDI — extract & implement in React",
+      "description": "Convert VB6 form MDI.frm to React component.\nControls: ~1 | Has validation: true | Has SQL: true\nTarget module: core\nEpic: SCRUM-12",
+      "issueType": "Story",
+      "epic": "SCRUM-12"
+    },
+    {
+      "summary": "Migrate VB6 MedicationOrder — extract & implement in React",
+      "description": "Convert VB6 form MedicationOrder.frm to React component.\nControls: ~1 | Has validation: false | Has SQL: true\nTarget module: or-scheduling\nEpic: SCRUM-7",
+      "issueType": "Story",
+      "epic": "SCRUM-7"
+    },
+    {
+      "summary": "Migrate VB6 PatientInfo — extract & implement in React",
+      "description": "Convert VB6 form PatientInfo.frm to React component.\nControls: ~1 | Has validation: true | Has SQL: true\nTarget module: intake\nEpic: SCRUM-6",
+      "issueType": "Story",
+      "epic": "SCRUM-6"
+    },
+    {
+      "summary": "Migrate VB6 PatientInfo_1 — extract & implement in React",
+      "description": "Convert VB6 form PatientInfo_1.frm to React component.\nControls: ~1 | Has validation: true | Has SQL: true\nTarget module: intake\nEpic: SCRUM-6",
+      "issueType": "Story",
+      "epic": "SCRUM-6"
+    },
+    {
+      "summary": "Migrate VB6 PatientInfo_Old — extract & implement in React",
+      "description": "Convert VB6 form PatientInfo_Old.frm to React component.\nControls: ~1 | Has validation: true | Has SQL: true\nTarget module: intake\nEpic: SCRUM-6",
+      "issueType": "Story",
+      "epic": "SCRUM-6"
+    },
+    {
+      "summary": "Migrate VB6 Report — extract & implement in React",
+      "description": "Convert VB6 form Report.frm to React component.\nControls: ~1 | Has validation: true | Has SQL: false\nTarget module: or-scheduling\nEpic: SCRUM-7",
+      "issueType": "Story",
+      "epic": "SCRUM-7"
+    },
+    {
+      "summary": "Migrate VB6 ResidentInfo — extract & implement in React",
+      "description": "Convert VB6 form ResidentInfo.frm to React component.\nControls: ~1 | Has validation: true | Has SQL: true\nTarget module: core\nEpic: SCRUM-12",
+      "issueType": "Story",
+      "epic": "SCRUM-12"
+    },
+    {
+      "summary": "Migrate VB6 SaveAlert — extract & implement in React",
+      "description": "Convert VB6 form SaveAlert.frm to React component.\nControls: ~1 | Has validation: false | Has SQL: false\nTarget module: core\nEpic: SCRUM-12",
+      "issueType": "Story",
+      "epic": "SCRUM-12"
+    },
+    {
+      "summary": "Migrate VB6 SetServers — extract & implement in React",
+      "description": "Convert VB6 form SetServers.frm to React component.\nControls: ~1 | Has validation: true | Has SQL: false\nTarget module: core\nEpic: SCRUM-12",
+      "issueType": "Story",
+      "epic": "SCRUM-12"
+    },
+    {
+      "summary": "Migrate VB6 StimSheet — extract & implement in React",
+      "description": "Convert VB6 form StimSheet.frm to React component.\nControls: ~1 | Has validation: false | Has SQL: false\nTarget module: core\nEpic: SCRUM-12",
+      "issueType": "Story",
+      "epic": "SCRUM-12"
+    },
+    {
+      "summary": "Migrate VB6 UPMC — extract & implement in React",
+      "description": "Convert VB6 form UPMC.frm to React component.\nControls: ~1 | Has validation: true | Has SQL: false\nTarget module: core\nEpic: SCRUM-12",
+      "issueType": "Story",
+      "epic": "SCRUM-12"
+    },
+    {
+      "summary": "Migrate VB6 Viewer — extract & implement in React",
+      "description": "Convert VB6 form Viewer.frm to React component.\nControls: ~1 | Has validation: true | Has SQL: false\nTarget module: core\nEpic: SCRUM-12",
+      "issueType": "Story",
+      "epic": "SCRUM-12"
+    }
+  ]
+}

@@ -1,0 +1,159 @@
+{
+  "generatedAt": "2026-04-23T00:00:00.000Z",
+  "totalForms": 8,
+  "forms": [
+    {
+      "formName": "frmPlasticSurgery",
+      "file": "frmPlasticSurgery.frm",
+      "lines": 2380,
+      "caption": "Plastic Surgery (main navigation hub)",
+      "panels": ["fraConsult", "fraOR", "fraOrders", "frPatientInfo", "fraAdmin", "fraLogs"],
+      "totalModuleButtons": 34,
+      "hasValidation": true,
+      "hasSQL": false,
+      "suggestedModule": "or-scheduling",
+      "jiraEpic": "SCRUM-7",
+      "jiraStory": "Migrate frmPlasticSurgery navigation hub — implement panel/module routing in React",
+      "tsFiles": [
+        "src/types/vb6-domain.ts",
+        "src/lib/rules/plasticSurgeryNav.ts",
+        "src/hooks/useVB6Forms.ts (usePlasticSurgeryNav)"
+      ],
+      "status": "converted"
+    },
+    {
+      "formName": "frmPlastiSurg",
+      "file": "frmPlastiSurg.frm",
+      "lines": 1219,
+      "caption": "Surgeon Clinical Data",
+      "description": "Child-form host — Load_ChildForm pattern routes to FN_Orders OCX controls",
+      "childForms": ["Administration","AnesEvaluation","Anesthesia","OpRoomRecord","CosmeticOrders","OpReport","SurgSet","Prescription"],
+      "hasValidation": true,
+      "hasSQL": true,
+      "suggestedModule": "intake",
+      "jiraEpic": "SCRUM-6",
+      "jiraStory": "Migrate frmPlastiSurg — implement surgeon clinical data routing and child form loading",
+      "tsFiles": [
+        "src/types/vb6-domain.ts (SurgeonClinicalData, SURGEON_CHILD_FORMS)",
+        "src/lib/rules/plasticSurgeryNav.ts (resolveModuleRoute)"
+      ],
+      "status": "converted"
+    },
+    {
+      "formName": "frmBreastExam",
+      "file": "frmBreastExam.frm",
+      "lines": 1232,
+      "caption": "Breast Examination",
+      "description": "Loads FN_BreastExam.BreastMeasSim OCX; Set_Default saves to DEFAULT_CLINICAL table",
+      "hasValidation": true,
+      "hasSQL": true,
+      "sqlTables": ["DEFAULT_CLINICAL"],
+      "suggestedModule": "intake",
+      "jiraEpic": "SCRUM-6",
+      "jiraStory": "Migrate frmBreastExam — implement breast exam form with AI flag detection and measurement capture",
+      "tsFiles": [
+        "src/types/vb6-domain.ts (BreastExamRecord, BreastFinding)",
+        "src/lib/rules/breastExamAndMentalStatus.ts",
+        "src/hooks/useVB6Forms.ts (useBreastExam)"
+      ],
+      "status": "converted"
+    },
+    {
+      "formName": "frmDiagnosis",
+      "file": "frmDiagnosis.frm",
+      "lines": 997,
+      "caption": "Diagnosis",
+      "description": "ICD code search and multi-select; reads from ICD_TEMPLATE, saves to EVALUATION_MANAGEMENT",
+      "hasValidation": true,
+      "hasSQL": true,
+      "sqlTables": ["ICD_TEMPLATE", "EVALUATION_MANAGEMENT"],
+      "suggestedModule": "intake",
+      "jiraEpic": "SCRUM-6",
+      "jiraStory": "Migrate frmDiagnosis — implement ICD search, multi-select, and EVALUATION_MANAGEMENT persistence",
+      "tsFiles": [
+        "src/types/vb6-domain.ts (DiagnosisCode, PatientDiagnosis)",
+        "src/lib/rules/diagnosis.ts",
+        "src/hooks/useVB6Forms.ts (useDiagnosis)"
+      ],
+      "status": "converted"
+    },
+    {
+      "formName": "frmEmergContact",
+      "file": "frmEmergContact.frm",
+      "lines": 208,
+      "caption": "Patient Emergency Contact",
+      "description": "Loads FN_PP_PS.PatEmergencyInfN OCX; WriteClinicalData/ReadClinicalData pattern",
+      "hasValidation": false,
+      "hasSQL": false,
+      "suggestedModule": "intake",
+      "jiraEpic": "SCRUM-6",
+      "jiraStory": "Migrate frmEmergContact — implement emergency contact capture in patient intake flow",
+      "tsFiles": [
+        "src/types/vb6-domain.ts (EmergencyContact)"
+      ],
+      "status": "converted"
+    },
+    {
+      "formName": "fmCareIntrvn",
+      "file": "fmCareIntrvn.frm",
+      "lines": 1022,
+      "caption": "Mental Status Selection",
+      "description": "Spreadsheet-style grid with ComboBox cells; groups: Orientation, Memory, Affect, Behavior, Cognition, Speech, Mood",
+      "hasValidation": true,
+      "hasSQL": false,
+      "suggestedModule": "intake",
+      "jiraEpic": "SCRUM-6",
+      "jiraStory": "Migrate fmCareIntrvn (Mental Status) — implement group-based term selection with clinical note generation",
+      "tsFiles": [
+        "src/types/vb6-domain.ts (MentalStatusAssessment)",
+        "src/lib/rules/breastExamAndMentalStatus.ts",
+        "src/hooks/useVB6Forms.ts (useMentalStatus)"
+      ],
+      "status": "converted"
+    },
+    {
+      "formName": "frmInPatientAppt",
+      "file": "frmInPatientAppt.frm",
+      "lines": 13031,
+      "caption": "Appointments",
+      "description": "Large form with FPSpread grids for visit history, DTPicker for time, facilities panel",
+      "hasValidation": true,
+      "hasSQL": true,
+      "suggestedModule": "or-scheduling",
+      "jiraEpic": "SCRUM-7",
+      "jiraStory": "Migrate frmInPatientAppt — implement appointment scheduling with visit history and status workflow",
+      "tsFiles": [
+        "src/types/vb6-domain.ts (InPatientAppointment)",
+        "src/lib/rules/nursingHomeAndAppointments.ts",
+        "src/hooks/useVB6Forms.ts (useAppointment)"
+      ],
+      "status": "converted"
+    },
+    {
+      "formName": "frmNursingHome",
+      "file": "frmNursingHome.frm",
+      "lines": 40370,
+      "caption": "Electronic Medical Record",
+      "description": "Largest form — full inpatient EMR with patient roster, progress notes (tablet + standard), encounter management, coding, spell checker",
+      "hasValidation": true,
+      "hasSQL": true,
+      "suggestedModule": "intake",
+      "jiraEpic": "SCRUM-6",
+      "jiraStory": "Migrate frmNursingHome — implement full inpatient EMR with roster, progress notes, and encounter management",
+      "tsFiles": [
+        "src/types/vb6-domain.ts (NursingHomeRecord)",
+        "src/lib/rules/nursingHomeAndAppointments.ts",
+        "src/hooks/useVB6Forms.ts (useNursingHome)"
+      ],
+      "status": "converted",
+      "notes": "40K line form — recommend splitting into sub-components by section for Sprint 2-3"
+    }
+  ],
+  "summary": {
+    "totalLinesConverted": 60459,
+    "tablesIdentified": ["DEFAULT_CLINICAL", "ICD_TEMPLATE", "EVALUATION_MANAGEMENT"],
+    "ocxControlsIdentified": ["FN_BreastExam.BreastMeasSim", "FN_PP_PS.PatEmergencyInfN", "FN_Orders.*", "PT_Medication.Prescription"],
+    "jiraStoriesGenerated": 8,
+    "outputFiles": 5
+  }
+}
