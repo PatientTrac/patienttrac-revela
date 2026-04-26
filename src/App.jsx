@@ -30,8 +30,7 @@ export default function App() {
     const init = async () => {
       let s = parseSessionFromUrl()
       if (!s && IS_DEV) { s = DEV_SESSION }
-      if (!s) { window.location.href = 'https://patienttracforge.com'; return }
-      setSession(s)
+if (!s) { setStatus('error'); setError('No session. Launch Revela from PatientTracForge scheduling.'); return }      setSession(s)
       try {
         const data = await validateBridgeSession(s.token, s.encounter_id, s.patient_id, s.provider_id, s.org_id)
         setCtx(data)
