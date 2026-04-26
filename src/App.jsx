@@ -30,7 +30,7 @@ export default function App() {
     const init = async () => {
       let s = parseSessionFromUrl()
       if (!s && IS_DEV) { s = DEV_SESSION }
-      if (!s) { setStatus('error'); setError('No session. Launch Revela from PatientTracForge scheduling.'); return }
+      if (!s) { window.location.href = 'https://patienttracforge.com'; return }
       setSession(s)
       try {
         const data = await validateBridgeSession(s.token, s.encounter_id, s.patient_id, s.provider_id, s.org_id)
@@ -38,7 +38,6 @@ export default function App() {
         setStatus('ready')
       } catch {
         if (IS_DEV) {
-          // Dev mock context
           setCtx({
             patient: { patient_id:1, first_name:'Jane', last_name:'Doe', birth:'1975-06-15', gender:'F' },
             encounter: { encounter_id:1, encounter_date:new Date().toISOString(), appointment_type:'Breast Augmentation Consult', chief_complaint:'Augmentation consultation', encounter_status:'open' },
@@ -90,7 +89,6 @@ export default function App() {
     <div style={{minHeight:'100vh',display:'flex',flexDirection:'column',background:'#060e1c'}}>
       <RevelaHeader ctx={ctx} session={session} />
 
-      {/* Tab navigation */}
       <nav style={{display:'flex',borderBottom:'1px solid rgba(0,212,255,0.1)',background:'rgba(10,22,40,0.95)',flexShrink:0,overflowX:'auto'}}>
         {TABS.map(t => (
           <button key={t.id} onClick={() => setTab(t.id)}
@@ -101,7 +99,6 @@ export default function App() {
         ))}
       </nav>
 
-      {/* Tab content */}
       <main style={{flex:1,overflowY:'auto'}}>
         {tab === 'chart'    && <TabChart    {...tabProps} />}
         {tab === 'prognote' && <TabProgNote {...tabProps} />}
