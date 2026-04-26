@@ -1,9 +1,19 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+# Marketing homepage at root — no token
+[[redirects]]
+  from = "/"
+  to = "/landing.html"
+  status = 200
+  conditions = {Query = {token = ""}}
+
+# Clinical app — all other routes including ?token=
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
-[build]
-  command = "npm run build"
-  publish = "dist"
-[build.environment]
-  NODE_VERSION = "20"
