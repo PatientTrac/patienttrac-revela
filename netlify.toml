@@ -10,7 +10,7 @@
   from = "/"
   to = "/landing.html"
   status = 200
-  conditions = {Query = {token = ""}}
+
 
 # Clinical app — all other routes including ?token=
 [[redirects]]
