@@ -1,0 +1,32 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "useDefineForClassFields": true,
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "skipLibCheck": true,
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "strict": true,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "noFallthroughCasesInSwitch": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"],
+      "@patienttrac/ui":             ["../packages/ui/src/types/index.ts"],
+      "@patienttrac/ui/medications": ["../packages/ui/src/medications/index.ts"],
+      "@patienttrac/ui/allergies":   ["../packages/ui/src/allergies/index.ts"],
+      "@patienttrac/ui/diagnoses":   ["../packages/ui/src/diagnoses/index.ts"],
+      "@patienttrac/ui/scales":      ["../packages/ui/src/scales/index.ts"],
+      "@patienttrac/ui/compliance":  ["../packages/ui/src/Compliance/index.ts"],
+      "@patienttrac/ui/types":       ["../packages/ui/src/types/index.ts"]
+    }
+  },
+  "include": ["src"],
+  "references": [{ "path": "./tsconfig.node.json" }]
+}
