@@ -4,7 +4,6 @@
 
 import { useState, useRef, useEffect } from 'react'
 import { supabase } from './lib/supabase.js'
-import * as OTPAuth from 'otpauth'
 
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || 'https://mskormozwekezjmtcylv.supabase.co'
 const MFA_REQUIRED_ROLES = ['super_admin', 'admin', 'provider']
@@ -121,21 +120,13 @@ export default function RevelaLogin({ onAuthenticated }) {
   const verifyTOTP = async (codeStr) => {
     setTotpLoading(true); setTotpError(null)
     try {
-      const totp = new OTPAuth.TOTP({
-        secret: OTPAuth.Secret.fromBase32(mfaSecret),
-        algorithm: 'SHA1', digits: 6, period: 30,
-      })
-      const delta = totp.validate({ token: codeStr, window: 1 })
-      if (delta === null) {
-        setTotpError('Invalid code. Check Google Authenticator and try again.')
-        setCode('')
-        codeRef.current?.focus()
-        return
-      }
-      callTotp('challenge', { token: codeStr }).catch(() => {})
+      // Server-side validation via edge function (audit-logged)
+      await callTotp('challenge', { token: codeStr })
       onAuthenticated?.({ user_id: authedUser.id, org_id: authedUser.org_id, role: authedUser.role })
     } catch (err) {
-      setTotpError('Verification failed. Please try again.')
+      setTotpError(err.message?.includes('Invalid') ? 'Invalid code. Check Google Authenticator and try again.' : 'Verification failed. Please try again.')
+      setCode('')
+      codeRef.current?.focus()
     } finally { setTotpLoading(false) }
   }
 
