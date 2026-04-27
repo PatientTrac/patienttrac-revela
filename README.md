@@ -1,30 +1,74 @@
-# PatientTrac Revela — Surgical Drawing Tool
+# PatientTrac Revela — 4 New Features
 
-## Files
-- `src/components/SurgicalDrawingTool.tsx` → drop into `patienttrac-revela/src/components/`
-- `024_surgical_photos_drawings.sql` → already applied to Supabase (migration 024)
+## Files to deploy → patienttrac-revela/src/components/
 
-## Setup
-1. Install Fabric.js: `npm install fabric`
-2. Create Supabase Storage buckets:
-   - `patient-photos` (private)
-   - `revela-templates` (public)
-3. Download SVG templates from smart.servier.com and upload to `revela-templates` bucket
-4. Import component: `import SurgicalDrawingTool from '../components/SurgicalDrawingTool'`
+1. RevelaLogin.tsx         — Email + password + Google Authenticator TOTP only
+2. NewPatientRevela.tsx    — Create new patients directly from Revela
+3. RevelaAIAssistant.tsx   — HUD AI Avatar demo + Interactive AI assistant
 
-## Usage
+## How to integrate in App.tsx
+
 ```tsx
-<SurgicalDrawingTool
-  encounterId={encounter.id}
-  patientId={patient.id}
-  procedureType="breast"
-  onSave={(drawingId) => console.log('Saved:', drawingId)}
+import RevelaLogin from './components/RevelaLogin'
+import NewPatientRevela from './components/NewPatientRevela'
+import RevelaAIAssistant from './components/RevelaAIAssistant'
+
+// In your App component:
+// 1. If no token and not authenticated → show RevelaLogin
+// 2. Add + New Patient button → opens NewPatientRevela modal
+// 3. Always render RevelaAIAssistant (fixed position, bottom-right)
+
+<RevelaAIAssistant
+  orgId={orgId}
+  providerId={userId}
+  providerEmail={userEmail}
+/>
+
+<NewPatientRevela
+  orgId={orgId}
+  providerId={userId}
+  onPatientCreated={(pt) => console.log('Created:', pt)}
+  onClose={() => setShowNewPatient(false)}
 />
 ```
 
-## Template keys
-breast | body_female | face_female | pectoral | body_male | face_male
+## Features
 
-## Attribution (required by CC BY 4.0)
-"Illustrations by Servier Medical Art (smart.servier.com), CC BY 4.0"
-Already included in component footer.
+### 1. RevelaLogin
+- Email + password + Google Authenticator TOTP
+- First login: QR code appears automatically → scan once → done
+- Every login after: email + password + 6-digit code
+- NO Google OAuth, NO SSO
+
+### 2. NewPatientRevela
+- Full patient registration form inside Revela
+- Demographics, contact, emergency contact, clinical notes, insurance
+- Writes directly to cr.patient in Supabase
+- Tags patient as created_source = 'revela'
+
+### 3. RevelaAIAssistant (HUD Avatar + Demo)
+
+#### Demo Mode
+- Click "▶ Start Demo" button (bottom-right)
+- 10-step guided tour with voice narration
+- Highlights each EMR feature with description
+- Progress bar, step dots, skip/next controls
+- Text-to-speech using browser Web Speech API
+
+#### AI Assistant
+- Click the diamond avatar button (bottom-right)
+- Ask questions by TEXT or VOICE (🎤 button)
+- Select feedback type: question / suggestion / feature_request / bug
+- All interactions saved to cr.revela_ai_feedback in Supabase
+- Suggestions automatically emailed to wayne@patienttracforge.com
+
+## Database
+Migration 025 already applied:
+- Table: cr.revela_ai_feedback
+- Fields: org_id, provider_id, provider_email, feedback_type, 
+          input_method, content, ai_response, status, email_sent
+- RLS: org isolation enforced
+
+## Review Dashboard
+Query cr.revela_ai_feedback in Supabase dashboard:
+SELECT * FROM cr.revela_ai_feedback ORDER BY created_at DESC;
