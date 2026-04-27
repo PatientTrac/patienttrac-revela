@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react'
 import RevelaLogin from './components/RevelaLogin'
+import NewPatientRevela from './components/NewPatientRevela'
+import RevelaAIAssistant from './components/RevelaAIAssistant'
 
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL
 const ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY
@@ -17,7 +19,6 @@ async function bridge(action: string, body: Record<string, any> = {}) {
 type AuthMode = 'loading' | 'direct_login' | 'bridge' | 'authenticated'
 
 export default function App() {
-  // ── Detect auth mode ────────────────────────────────────────────────────
   const urlToken = new URLSearchParams(location.search).get('token')
   const [mode, setMode] = useState<AuthMode>('loading')
   const [session, setSession] = useState<any>(null)
@@ -30,15 +31,15 @@ export default function App() {
   const [error, setError] = useState('')
   const [userId, setUserId] = useState('')
   const [orgId, setOrgId] = useState('')
+  const [userEmail, setUserEmail] = useState('')
+  const [showNewPatient, setShowNewPatient] = useState(false)
 
-  // Note state
   const [prognote, setPrognote] = useState({ pain_level: 0, progress_notes: '', plan: '' })
   const [opnote, setOpnote] = useState({ procedure_name: '', anesthesia: '', duration_mins: 0, complications: '', notes: '' })
   const [postop, setPostop] = useState({ follow_up_date: '', wound_status: '', instructions: '' })
 
   useEffect(() => {
     if (urlToken) {
-      // ── MODE 1: Bridge token from PatientTracForge ──────────────────────
       setMode('bridge')
       bridge('get_encounter', { token: urlToken }).then(data => {
         if (data.error) { setError(data.error); return }
@@ -46,32 +47,35 @@ export default function App() {
         setEncounter(data.encounter)
         setIntake(data.intake)
         setMeds(data.medications ?? [])
+        if (data.session?.org_id) setOrgId(data.session.org_id)
+        if (data.session?.provider_id) setUserId(data.session.provider_id)
+        if (data.session?.provider_email) setUserEmail(data.session.provider_email)
         if (data.encounter?.progress_notes) setPrognote(p => ({ ...p, progress_notes: data.encounter.progress_notes }))
         setMode('authenticated')
       })
     } else {
-      // ── MODE 2: Direct login — no token in URL ──────────────────────────
       setMode('direct_login')
     }
   }, [])
 
-  // ── Direct login callback ────────────────────────────────────────────────
-  const handleDirectAuth = (uid: string, oid: string, role: string) => {
+  const handleDirectAuth = async (uid: string, oid: string, _role: string) => {
     setUserId(uid)
     setOrgId(oid)
+    try {
+      const { supabase } = await import('./lib/supabaseClient')
+      const { data: { user } } = await supabase.auth.getUser()
+      if (user?.email) setUserEmail(user.email)
+    } catch {}
     setMode('authenticated')
   }
 
-  // ── Save note ────────────────────────────────────────────────────────────
   const saveNote = async (noteType: string, noteData: any) => {
     setSaving(true); setSaved(false)
     try {
       if (urlToken) {
-        // Bridge mode — save via cross-app bridge
         const res = await bridge('save_note', { token: urlToken, note_type: noteType, note_data: noteData })
         if (res.error) throw new Error(res.error)
       } else {
-        // Direct mode — save directly to Supabase
         const { supabase } = await import('./lib/supabaseClient')
         const table = noteType === 'surgical_prognote' ? 'surgical_prognote'
           : noteType === 'operative_notes' ? 'operative_notes'
@@ -86,7 +90,6 @@ export default function App() {
     finally { setSaving(false) }
   }
 
-  // ── Loading ──────────────────────────────────────────────────────────────
   if (mode === 'loading') {
     return (
       <div style={{ minHeight: '100vh', background: '#060e1c', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -95,7 +98,6 @@ export default function App() {
     )
   }
 
-  // ── Direct Login ─────────────────────────────────────────────────────────
   if (mode === 'direct_login') {
     return <RevelaLogin onAuthenticated={handleDirectAuth} />
   }
@@ -120,11 +122,11 @@ export default function App() {
     inp:    { width: '100%', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, padding: '10px 14px', color: '#fff', fontSize: 14, outline: 'none', boxSizing: 'border-box' as const, marginBottom: 12 },
     ta:     { width: '100%', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, padding: '10px 14px', color: '#fff', fontSize: 14, outline: 'none', boxSizing: 'border-box' as const, marginBottom: 12, minHeight: 100, resize: 'vertical' as const },
     save:   { padding: '10px 28px', background: '#c9a96e', border: 'none', borderRadius: 8, color: '#060e1c', fontSize: 13, fontWeight: 700, cursor: 'pointer' } as React.CSSProperties,
+    newPtBtn: { padding: '7px 16px', background: 'rgba(201,169,110,0.12)', border: '1px solid rgba(201,169,110,0.3)', borderRadius: 8, color: '#c9a96e', fontSize: 12, fontWeight: 600, cursor: 'pointer', letterSpacing: '0.5px' } as React.CSSProperties,
   }
 
   return (
     <div style={S.app}>
-      {/* Top bar */}
       <div style={S.bar}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
           <svg width="22" height="22" viewBox="0 0 32 32" fill="none">
@@ -136,10 +138,13 @@ export default function App() {
           <span style={{ color: 'rgba(255,255,255,0.2)', fontSize: 12 }}>Plastic Surgery EMR</span>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+          {!urlToken && (
+            <button onClick={() => setShowNewPatient(true)} style={S.newPtBtn}>+ New Patient</button>
+          )}
           {saved && <span style={{ fontSize: 12, color: '#34c759' }}>✓ Saved</span>}
           {error && <span style={{ fontSize: 12, color: '#f87171' }}>{error}</span>}
           <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)' }}>
-            {pt.patient_name ?? 'No patient'} {pt.mrn ? `· MRN ${pt.mrn}` : ''}
+            {pt.patient_name ?? (urlToken ? 'No patient' : userEmail || 'Provider')} {pt.mrn ? `· MRN ${pt.mrn}` : ''}
           </span>
           {urlToken
             ? <span style={{ fontSize: 11, background: 'rgba(0,212,255,0.1)', color: '#00d4ff', padding: '3px 8px', borderRadius: 4 }}>Bridge</span>
@@ -148,33 +153,39 @@ export default function App() {
         </div>
       </div>
 
-      {/* Tabs */}
       <div style={S.tabs}>
         {tabs.map(t => <button key={t.id} style={S.tab(tab === t.id)} onClick={() => setTab(t.id as any)}>{t.label}</button>)}
       </div>
 
       <div style={S.body}>
-
-        {/* ── CHART TAB ── */}
         {tab === 'chart' && (
           <>
-            <div style={S.card}>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 20 }}>
-                {[
-                  { l: 'Patient', v: pt.patient_name ?? '—' },
-                  { l: 'MRN', v: pt.mrn ?? '—' },
-                  { l: 'DOB', v: pt.dob ?? '—' },
-                  { l: 'Provider', v: pt.provider_name ?? '—' },
-                  { l: 'Facility', v: pt.facility_name ?? '—' },
-                  { l: 'Encounter', v: pt.encounter_id ?? '—' },
-                ].map(f => (
-                  <div key={f.l}>
-                    <span style={S.lbl}>{f.l}</span>
-                    <span style={S.val}>{f.v}</span>
-                  </div>
-                ))}
+            {!encounter && !urlToken && (
+              <div style={{ ...S.card, textAlign: 'center', padding: '40px 24px' }}>
+                <div style={{ fontSize: 14, color: 'rgba(255,255,255,0.5)', marginBottom: 12 }}>No patient selected</div>
+                <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.3)', marginBottom: 20 }}>Click + New Patient to register a patient, or access an encounter via PatientTracForge.</div>
+                <button onClick={() => setShowNewPatient(true)} style={S.save}>+ New Patient</button>
               </div>
-            </div>
+            )}
+            {(encounter || urlToken) && (
+              <div style={S.card}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 20 }}>
+                  {[
+                    { l: 'Patient', v: pt.patient_name ?? '—' },
+                    { l: 'MRN', v: pt.mrn ?? '—' },
+                    { l: 'DOB', v: pt.dob ?? '—' },
+                    { l: 'Provider', v: pt.provider_name ?? '—' },
+                    { l: 'Facility', v: pt.facility_name ?? '—' },
+                    { l: 'Encounter', v: pt.encounter_id ?? '—' },
+                  ].map(f => (
+                    <div key={f.l}>
+                      <span style={S.lbl}>{f.l}</span>
+                      <span style={S.val}>{f.v}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
             {intake && (
               <div style={S.card}>
                 <span style={S.lbl}>AI Intake Summary</span>
@@ -201,7 +212,6 @@ export default function App() {
           </>
         )}
 
-        {/* ── PRO NOTE TAB ── */}
         {tab === 'prognote' && (
           <div style={S.card}>
             <span style={S.lbl}>Progress Note</span>
@@ -220,7 +230,6 @@ export default function App() {
           </div>
         )}
 
-        {/* ── OP NOTE TAB ── */}
         {tab === 'opnote' && (
           <div style={S.card}>
             <span style={S.lbl}>Operative Note</span>
@@ -245,7 +254,6 @@ export default function App() {
           </div>
         )}
 
-        {/* ── POST-OP TAB ── */}
         {tab === 'postop' && (
           <div style={S.card}>
             <span style={S.lbl}>Post-Op Plan</span>
@@ -263,8 +271,27 @@ export default function App() {
             </button>
           </div>
         )}
-
       </div>
+
+      {showNewPatient && orgId && (
+        <NewPatientRevela
+          orgId={orgId}
+          providerId={userId}
+          onPatientCreated={() => {
+            setShowNewPatient(false)
+            setSaved(true)
+            setTimeout(() => setSaved(false), 3000)
+          }}
+          onClose={() => setShowNewPatient(false)}
+        />
+      )}
+
+      <RevelaAIAssistant
+        orgId={orgId || '00000000-0000-0000-0000-000000000001'}
+        providerId={userId}
+        providerEmail={userEmail}
+      />
+
     </div>
   )
 }
