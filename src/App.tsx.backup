@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react'
-import { BrowserRouter, Routes, Route, Navigate, useSearchParams } from 'react-router-dom'
-import RevelaLogin from './RevelaLogin'
+import RevelaLogin from './components/RevelaLogin'
 import NewPatientRevela from './components/NewPatientRevela'
-import RevelaDashboard from './pages/RevelaDashboard'
+import RevelaAIAssistant from './components/RevelaAIAssistant'
 
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL
 const ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY
@@ -19,9 +18,8 @@ async function bridge(action: string, body: Record<string, any> = {}) {
 
 type AuthMode = 'loading' | 'direct_login' | 'bridge' | 'authenticated'
 
-function LegacyRevelaApp() {
-  const [searchParams] = useSearchParams()
-  const urlToken = searchParams.get('token')
+export default function App() {
+  const urlToken = new URLSearchParams(location.search).get('token')
   const [mode, setMode] = useState<AuthMode>('loading')
   const [session, setSession] = useState<any>(null)
   const [encounter, setEncounter] = useState<any>(null)
@@ -58,7 +56,7 @@ function LegacyRevelaApp() {
     } else {
       setMode('direct_login')
     }
-  }, [urlToken])
+  }, [])
 
   const handleDirectAuth = async (uid: string, oid: string, _role: string) => {
     setUserId(uid)
@@ -287,18 +285,13 @@ function LegacyRevelaApp() {
           onClose={() => setShowNewPatient(false)}
         />
       )}
-    </div>
-  )
-}
 
-export default function App() {
-  return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/dashboard" element={<RevelaDashboard />} />
-        <Route path="/legacy" element={<LegacyRevelaApp />} />
-        <Route path="/" element={<Navigate to="/legacy" replace />} />
-      </Routes>
-    </BrowserRouter>
+      <RevelaAIAssistant
+        orgId={orgId || '00000000-0000-0000-0000-000000000001'}
+        providerId={userId}
+        providerEmail={userEmail}
+      />
+
+    </div>
   )
 }
