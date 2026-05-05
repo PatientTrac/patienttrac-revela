@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import App from './App'
 import './styles/index.css'
 import { supabase } from './lib/supabase'
+import { tryGetOrgId } from './lib/orgResolver'
 import { initAudit } from './lib/audit'
 import { useAppStore } from './lib/store'
 import { registerAppStore } from '../../packages/ui/src/store'
@@ -17,8 +18,9 @@ registerAppStore(useAppStore)
 function hydrateStore(session: { user: { id: string; email?: string; user_metadata?: Record<string, unknown> }; access_token: string } | null) {
   if (!session) return
   const meta = session.user.user_metadata || {}
+  const orgId = tryGetOrgId()
   useAppStore.getState().setSession({
-    org_id:       (meta.org_id as string)      || '00000000-0000-0000-0000-000000000001',
+    org_id:       orgId || 'unknown',
     provider_id:  (meta.provider_id as string) || session.user.id,
     access_token: session.access_token,
   })
@@ -37,10 +39,12 @@ const queryClient = new QueryClient({
 async function setupAudit() {
   const { data: { session } } = await supabase.auth.getSession()
   hydrateStore(session)
+  const orgId = tryGetOrgId()
+  
   if (session?.user) {
     const meta = session.user.user_metadata || {}
     initAudit({
-      org_id:     (meta.org_id as string)   || '00000000-0000-0000-0000-000000000001',
+      org_id:     orgId || 'unknown',
       user_id:    session.user.id,
       user_email: session.user.email        || '',
       user_role:  (meta.role as string)     || 'provider',
@@ -49,11 +53,10 @@ async function setupAudit() {
     })
   } else {
     // Cross-app bridge token from PatientTracForge
-    const params    = new URLSearchParams(window.location.search)
-    const orgId     = params.get('org_id')      || '00000000-0000-0000-0000-000000000001'
+    const params = new URLSearchParams(window.location.search)
     const providerId = params.get('provider_id') || ''
-    useAppStore.getState().setSession({ org_id: orgId, provider_id: providerId })
-    initAudit({ org_id: orgId, user_id: providerId, user_role: 'provider', app_source: 'revela' })
+    useAppStore.getState().setSession({ org_id: orgId || 'unknown', provider_id: providerId })
+    initAudit({ org_id: orgId || 'unknown', user_id: providerId, user_role: 'provider', app_source: 'revela' })
   }
 }
 
@@ -63,8 +66,9 @@ supabase.auth.onAuthStateChange((_event, session) => {
   hydrateStore(session)
   if (session?.user) {
     const meta = session.user.user_metadata || {}
+    const orgId = tryGetOrgId()
     initAudit({
-      org_id:     (meta.org_id as string)   || '00000000-0000-0000-0000-000000000001',
+      org_id:     orgId || 'unknown',
       user_id:    session.user.id,
       user_email: session.user.email        || '',
       user_role:  (meta.role as string)     || 'provider',
