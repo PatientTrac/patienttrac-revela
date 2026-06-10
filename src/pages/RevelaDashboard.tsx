@@ -3,6 +3,8 @@ import { useSearchParams, useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { User, Calendar, AlertCircle, CheckCircle, ShieldAlert, LogOut } from 'lucide-react';
 import type { RiskScore } from '../lib/riskEngine';
+import { getSurgicalFlags } from '../lib/revelai';
+import type { SurgicalFlag } from '../lib/revelai';
 
 // Import body region modules
 import InitialExamModule from '../components/revela/InitialExamModule';
@@ -39,7 +41,10 @@ export default function RevelaDashboard() {
   const [orClearance, setOrClearance] = useState<'clear' | 'conditional' | 'hold' | 'pending' | null>(null);
   const [closingEncounter, setClosingEncounter] = useState(false);
   const [showCloseConfirm, setShowCloseConfirm] = useState(false);
-  
+  const [surgicalFlags, setSurgicalFlags] = useState<SurgicalFlag[]>([]);
+  const [flagsLoading, setFlagsLoading] = useState(false);
+  const [flagsPanelOpen, setFlagsPanelOpen] = useState(true);
+
   // Get parameters from URL (cross-app bridge from PatientTracForge)
   const encounterId = searchParams.get('encounter_id');
   const patientId = searchParams.get('patient_id');
@@ -99,6 +104,26 @@ export default function RevelaDashboard() {
         .maybeSingle();
       if (consult?.risk_score) setRiskScore(consult.risk_score as RiskScore);
       if (consult?.or_clearance) setOrClearance(consult.or_clearance as 'clear' | 'conditional' | 'hold' | 'pending');
+
+      // Load AI surgical flags
+      if (consult) {
+        setFlagsLoading(true);
+        getSurgicalFlags({
+          procedureType: encounterData.chief_complaint || 'plastic_surgery',
+          procedureName: encounterData.chief_complaint || 'Consultation',
+          capriniScore: (consult.risk_score as any)?.caprini ?? undefined,
+          stopBangScore: (consult.risk_score as any)?.stopBang ?? undefined,
+          rcriScore: (consult.risk_score as any)?.rcri ?? undefined,
+          asaClass: (consult as any).asa_class ?? undefined,
+          orClearance: (consult.or_clearance as string) ?? undefined,
+          encounterId: encounterId ?? undefined,
+          orgId: encounterData.org_id,
+          providerId: encounterData.provider_id?.toString(),
+        }).then(flags => {
+          setSurgicalFlags(flags);
+          setFlagsLoading(false);
+        }).catch(() => setFlagsLoading(false));
+      }
 
       setLoading(false);
     } catch (err) {
@@ -239,6 +264,79 @@ export default function RevelaDashboard() {
 
       {/* Body Region Navigator */}
       <div className="max-w-7xl mx-auto px-4 py-6">
+        {/* Surgical Safety Flags Panel */}
+        {(flagsLoading || surgicalFlags.length > 0) && (
+          <div className="bg-[#0a1628] rounded-lg border border-[#c9a96e]/30 mb-6 overflow-hidden">
+            <button
+              onClick={() => setFlagsPanelOpen(o => !o)}
+              className="w-full flex items-center justify-between px-6 py-4 text-left hover:bg-[#0d1e38] transition-colors"
+            >
+              <div className="flex items-center gap-3">
+                <ShieldAlert className="w-5 h-5 text-[#c9a96e]" />
+                <span className="font-rajdhani font-semibold text-white">AI Surgical Safety Analysis</span>
+                {surgicalFlags.filter(f => f.severity === 'critical').length > 0 && (
+                  <span className="px-2 py-0.5 bg-red-800/60 border border-red-500/50 text-red-300 text-xs rounded-full font-rajdhani">
+                    {surgicalFlags.filter(f => f.severity === 'critical').length} Critical
+                  </span>
+                )}
+                {surgicalFlags.filter(f => f.severity === 'warning').length > 0 && (
+                  <span className="px-2 py-0.5 bg-amber-800/60 border border-amber-500/50 text-amber-300 text-xs rounded-full font-rajdhani">
+                    {surgicalFlags.filter(f => f.severity === 'warning').length} Warning
+                  </span>
+                )}
+              </div>
+              <span className="text-gray-500 text-sm">{flagsPanelOpen ? '▲' : '▼'}</span>
+            </button>
+
+            {flagsPanelOpen && (
+              <div className="px-6 pb-5">
+                {flagsLoading ? (
+                  <div className="flex items-center gap-3 py-4 text-gray-400 text-sm">
+                    <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-[#c9a96e]" />
+                    Analyzing patient profile for surgical safety flags…
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    {surgicalFlags.map((flag, i) => (
+                      <div key={i} className={`rounded-lg p-4 border ${
+                        flag.severity === 'critical' ? 'bg-red-900/20 border-red-500/40' :
+                        flag.severity === 'warning'  ? 'bg-amber-900/20 border-amber-500/40' :
+                        'bg-gray-800/40 border-gray-700'
+                      }`}>
+                        <div className="flex items-start gap-3">
+                          <span className={`mt-0.5 text-base ${
+                            flag.severity === 'critical' ? 'text-red-400' :
+                            flag.severity === 'warning'  ? 'text-amber-400' :
+                            'text-gray-400'
+                          }`}>
+                            {flag.severity === 'critical' ? '⛔' : flag.severity === 'warning' ? '⚠' : 'ℹ'}
+                          </span>
+                          <div className="flex-1 min-w-0">
+                            <div className={`font-rajdhani font-semibold text-sm ${
+                              flag.severity === 'critical' ? 'text-red-300' :
+                              flag.severity === 'warning'  ? 'text-amber-300' :
+                              'text-gray-300'
+                            }`}>
+                              {flag.title}
+                              <span className="ml-2 text-xs font-normal opacity-60 capitalize">{flag.category.replace('_', ' ')}</span>
+                            </div>
+                            <p className="text-gray-400 text-xs mt-1 leading-relaxed">{flag.detail}</p>
+                            <p className={`text-xs mt-1.5 font-medium ${
+                              flag.severity === 'critical' ? 'text-red-400' :
+                              flag.severity === 'warning'  ? 'text-amber-400' :
+                              'text-[#c9a96e]'
+                            }`}>→ {flag.action}</p>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        )}
+
         <div className="bg-[#0a1628] rounded-lg border border-[#c9a96e]/30 p-6 mb-6">
           <h2 className="text-lg font-rajdhani font-semibold text-[#c9a96e] mb-4">
             SELECT DOCUMENTATION AREA

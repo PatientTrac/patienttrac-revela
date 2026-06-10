@@ -87,6 +87,8 @@ export default function LiposuctionDocumentation({ patientContext }: Props) {
     physical_function: 0,
     satisfaction_with_outcome: 0,
   });
+  const [lipoQInsights, setLipoQInsights] = useState<import('../../lib/revelai').PromsInsightsResult | null>(null);
+  const [lipoQInsightsLoading, setLipoQInsightsLoading] = useState(false);
 
   useEffect(() => {
     loadExistingDocumentation();
@@ -125,6 +127,23 @@ export default function LiposuctionDocumentation({ patientContext }: Props) {
   const lidocaineUnsafe = patientWeightKg > 0 && lidocaineMgPerKg > 35;
   const fluidRatio = totalAspirateML > 0 && tumescentVolumeML > 0
     ? parseFloat((tumescentVolumeML / totalAspirateML).toFixed(2)) : 0;
+
+  const handleLipoQInsights = async () => {
+    setLipoQInsightsLoading(true);
+    try {
+      const { getPromsInsights } = await import('../../lib/revelai');
+      const insights = await getPromsInsights({
+        instrument: 'BODY-Q-lipo',
+        domains: bodyQlipo,
+        procedureName: 'Liposuction',
+        procedureType: 'liposuction',
+        encounterId: patientContext.encounter_id?.toString(),
+        orgId: patientContext.org_id,
+      });
+      setLipoQInsights(insights);
+    } catch (err) { console.error('BODY-Q-lipo insights error:', err); }
+    finally { setLipoQInsightsLoading(false); }
+  };
 
   const loadExistingDocumentation = async () => {
     try {
@@ -562,6 +581,43 @@ export default function LiposuctionDocumentation({ patientContext }: Props) {
               ))}
             </div>
           </div>
+
+          {/* BODY-Q Lipo AI Insights */}
+          {Object.values(bodyQlipo).some(v => v > 0) && (
+            <div className="border border-gray-700 rounded-lg p-4">
+              <div className="flex items-center justify-between mb-3">
+                <span className="text-sm font-rajdhani font-semibold text-white">BODY-Q Clinical Insights</span>
+                <button onClick={handleLipoQInsights} disabled={lipoQInsightsLoading}
+                  className="flex items-center gap-1.5 px-3 py-1.5 bg-[#c9a96e]/20 hover:bg-[#c9a96e]/30 border border-[#c9a96e]/40 text-[#c9a96e] text-xs font-rajdhani rounded transition-colors disabled:opacity-50">
+                  {lipoQInsightsLoading ? <><div className="animate-spin h-3 w-3 border border-[#c9a96e] border-t-transparent rounded-full"/>Analyzing…</> : <>✦ Get AI Insights</>}
+                </button>
+              </div>
+              {lipoQInsights && (
+                <div className="space-y-3 text-sm">
+                  <div className={`px-3 py-2 rounded text-xs font-medium ${
+                    lipoQInsights.proceedWithSurgery === 'yes' ? 'bg-green-900/30 text-green-400 border border-green-700/40' :
+                    lipoQInsights.proceedWithSurgery === 'with_caution' ? 'bg-amber-900/30 text-amber-400 border border-amber-700/40' :
+                    'bg-red-900/30 text-red-400 border border-red-700/40'
+                  }`}>
+                    {lipoQInsights.proceedWithSurgery === 'yes' ? '✓' : lipoQInsights.proceedWithSurgery === 'with_caution' ? '⚠' : '⛔'} {lipoQInsights.proceedRationale}
+                  </div>
+                  <p className="text-gray-400 text-xs">{lipoQInsights.overallInterpretation}</p>
+                  {lipoQInsights.clinicalConcerns.length > 0 && (
+                    <div>
+                      <div className="text-xs text-amber-400 font-medium mb-1">Clinical Concerns</div>
+                      <ul className="space-y-1">{lipoQInsights.clinicalConcerns.map((c, i) => <li key={i} className="text-xs text-gray-400">• {c}</li>)}</ul>
+                    </div>
+                  )}
+                  {lipoQInsights.providerRecommendations.length > 0 && (
+                    <div>
+                      <div className="text-xs text-[#c9a96e] font-medium mb-1">Recommendations</div>
+                      <ul className="space-y-1">{lipoQInsights.providerRecommendations.map((r, i) => <li key={i} className="text-xs text-gray-400">→ {r}</li>)}</ul>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          )}
 
           {/* Surgical Informed Consent */}
           <div className="border border-amber-700/50 rounded-lg p-5 bg-amber-900/10">

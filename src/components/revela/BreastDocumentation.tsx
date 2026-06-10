@@ -140,6 +140,8 @@ export default function BreastDocumentation({ patientContext }: Props) {
     physical_wellbeing_chest: 0,
     satisfaction_with_outcome: 0,
   });
+  const [breastQInsights, setBreastQInsights] = useState<import('../../lib/revelai').PromsInsightsResult | null>(null);
+  const [breastQInsightsLoading, setBreastQInsightsLoading] = useState(false);
 
   useEffect(() => {
     loadExistingDocumentation();
@@ -245,6 +247,26 @@ export default function BreastDocumentation({ patientContext }: Props) {
       alert('Error saving. Please try again.');
     } finally {
       setSaving(false);
+    }
+  };
+
+  const handleBreastQInsights = async () => {
+    setBreastQInsightsLoading(true);
+    try {
+      const { getPromsInsights } = await import('../../lib/revelai');
+      const insights = await getPromsInsights({
+        instrument: 'BREAST-Q',
+        domains: breastQ,
+        procedureName: 'Breast procedure',
+        procedureType: 'breast',
+        encounterId: patientContext.encounter_id?.toString(),
+        orgId: patientContext.org_id,
+      });
+      setBreastQInsights(insights);
+    } catch (err) {
+      console.error('BREAST-Q insights error:', err);
+    } finally {
+      setBreastQInsightsLoading(false);
     }
   };
 
@@ -754,6 +776,43 @@ export default function BreastDocumentation({ patientContext }: Props) {
           </p>
         )}
       </div>
+
+      {/* BREAST-Q AI Insights */}
+      {Object.values(breastQ).some(v => v > 0) && (
+        <div className="border border-gray-700 rounded-lg p-4">
+          <div className="flex items-center justify-between mb-3">
+            <span className="text-sm font-rajdhani font-semibold text-white">BREAST-Q Clinical Insights</span>
+            <button onClick={handleBreastQInsights} disabled={breastQInsightsLoading}
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-[#c9a96e]/20 hover:bg-[#c9a96e]/30 border border-[#c9a96e]/40 text-[#c9a96e] text-xs font-rajdhani rounded transition-colors disabled:opacity-50">
+              {breastQInsightsLoading ? <><div className="animate-spin h-3 w-3 border border-[#c9a96e] border-t-transparent rounded-full"/>Analyzing…</> : <>✦ Get AI Insights</>}
+            </button>
+          </div>
+          {breastQInsights && (
+            <div className="space-y-3 text-sm">
+              <div className={`px-3 py-2 rounded text-xs font-medium ${
+                breastQInsights.proceedWithSurgery === 'yes' ? 'bg-green-900/30 text-green-400 border border-green-700/40' :
+                breastQInsights.proceedWithSurgery === 'with_caution' ? 'bg-amber-900/30 text-amber-400 border border-amber-700/40' :
+                'bg-red-900/30 text-red-400 border border-red-700/40'
+              }`}>
+                {breastQInsights.proceedWithSurgery === 'yes' ? '✓' : breastQInsights.proceedWithSurgery === 'with_caution' ? '⚠' : '⛔'} {breastQInsights.proceedRationale}
+              </div>
+              <p className="text-gray-400 text-xs">{breastQInsights.overallInterpretation}</p>
+              {breastQInsights.clinicalConcerns.length > 0 && (
+                <div>
+                  <div className="text-xs text-amber-400 font-medium mb-1">Clinical Concerns</div>
+                  <ul className="space-y-1">{breastQInsights.clinicalConcerns.map((c, i) => <li key={i} className="text-xs text-gray-400">• {c}</li>)}</ul>
+                </div>
+              )}
+              {breastQInsights.providerRecommendations.length > 0 && (
+                <div>
+                  <div className="text-xs text-[#c9a96e] font-medium mb-1">Recommendations</div>
+                  <ul className="space-y-1">{breastQInsights.providerRecommendations.map((r, i) => <li key={i} className="text-xs text-gray-400">→ {r}</li>)}</ul>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Photo Upload */}
       <div className="border border-gray-700 rounded-lg p-6">

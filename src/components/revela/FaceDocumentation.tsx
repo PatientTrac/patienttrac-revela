@@ -103,6 +103,8 @@ export default function FaceDocumentation({ patientContext }: Props) {
     psychological_wellbeing: 0,
     satisfaction_with_outcome: 0,
   });
+  const [faceQInsights, setFaceQInsights] = useState<import('../../lib/revelai').PromsInsightsResult | null>(null);
+  const [faceQInsightsLoading, setFaceQInsightsLoading] = useState(false);
 
   useEffect(() => {
     loadExistingDocumentation();
@@ -150,6 +152,23 @@ export default function FaceDocumentation({ patientContext }: Props) {
     
     setSuggestedProcedures(suggestions);
   }, [formData]);
+
+  const handleFaceQInsights = async () => {
+    setFaceQInsightsLoading(true);
+    try {
+      const { getPromsInsights } = await import('../../lib/revelai');
+      const insights = await getPromsInsights({
+        instrument: 'FACE-Q',
+        domains: faceQ,
+        procedureName: 'Facial procedure',
+        procedureType: 'face',
+        encounterId: patientContext.encounter_id?.toString(),
+        orgId: patientContext.org_id,
+      });
+      setFaceQInsights(insights);
+    } catch (err) { console.error('FACE-Q insights error:', err); }
+    finally { setFaceQInsightsLoading(false); }
+  };
 
   const loadExistingDocumentation = async () => {
     try {
@@ -801,6 +820,43 @@ export default function FaceDocumentation({ patientContext }: Props) {
           ))}
         </div>
       </div>
+
+      {/* FACE-Q AI Insights */}
+      {Object.values(faceQ).some(v => v > 0) && (
+        <div className="border border-gray-700 rounded-lg p-4">
+          <div className="flex items-center justify-between mb-3">
+            <span className="text-sm font-rajdhani font-semibold text-white">FACE-Q Clinical Insights</span>
+            <button onClick={handleFaceQInsights} disabled={faceQInsightsLoading}
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-[#c9a96e]/20 hover:bg-[#c9a96e]/30 border border-[#c9a96e]/40 text-[#c9a96e] text-xs font-rajdhani rounded transition-colors disabled:opacity-50">
+              {faceQInsightsLoading ? <><div className="animate-spin h-3 w-3 border border-[#c9a96e] border-t-transparent rounded-full"/>Analyzing…</> : <>✦ Get AI Insights</>}
+            </button>
+          </div>
+          {faceQInsights && (
+            <div className="space-y-3 text-sm">
+              <div className={`px-3 py-2 rounded text-xs font-medium ${
+                faceQInsights.proceedWithSurgery === 'yes' ? 'bg-green-900/30 text-green-400 border border-green-700/40' :
+                faceQInsights.proceedWithSurgery === 'with_caution' ? 'bg-amber-900/30 text-amber-400 border border-amber-700/40' :
+                'bg-red-900/30 text-red-400 border border-red-700/40'
+              }`}>
+                {faceQInsights.proceedWithSurgery === 'yes' ? '✓' : faceQInsights.proceedWithSurgery === 'with_caution' ? '⚠' : '⛔'} {faceQInsights.proceedRationale}
+              </div>
+              <p className="text-gray-400 text-xs">{faceQInsights.overallInterpretation}</p>
+              {faceQInsights.clinicalConcerns.length > 0 && (
+                <div>
+                  <div className="text-xs text-amber-400 font-medium mb-1">Clinical Concerns</div>
+                  <ul className="space-y-1">{faceQInsights.clinicalConcerns.map((c, i) => <li key={i} className="text-xs text-gray-400">• {c}</li>)}</ul>
+                </div>
+              )}
+              {faceQInsights.providerRecommendations.length > 0 && (
+                <div>
+                  <div className="text-xs text-[#c9a96e] font-medium mb-1">Recommendations</div>
+                  <ul className="space-y-1">{faceQInsights.providerRecommendations.map((r, i) => <li key={i} className="text-xs text-gray-400">→ {r}</li>)}</ul>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Surgical Informed Consent */}
       <div className="border border-amber-700/50 rounded-lg p-5 bg-amber-900/10">

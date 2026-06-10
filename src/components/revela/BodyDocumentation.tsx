@@ -116,6 +116,8 @@ export default function BodyDocumentation({ patientContext }: Props) {
     psychological_wellbeing: 0,
     satisfaction_with_outcome: 0,
   });
+  const [bodyQInsights, setBodyQInsights] = useState<import('../../lib/revelai').PromsInsightsResult | null>(null);
+  const [bodyQInsightsLoading, setBodyQInsightsLoading] = useState(false);
 
   useEffect(() => {
     loadExistingDocumentation();
@@ -168,6 +170,23 @@ export default function BodyDocumentation({ patientContext }: Props) {
     
     setSuggestedProcedures(suggestions);
   }, [formData]);
+
+  const handleBodyQInsights = async () => {
+    setBodyQInsightsLoading(true);
+    try {
+      const { getPromsInsights } = await import('../../lib/revelai');
+      const insights = await getPromsInsights({
+        instrument: 'BODY-Q',
+        domains: bodyQ,
+        procedureName: 'Body contouring procedure',
+        procedureType: 'body',
+        encounterId: patientContext.encounter_id?.toString(),
+        orgId: patientContext.org_id,
+      });
+      setBodyQInsights(insights);
+    } catch (err) { console.error('BODY-Q insights error:', err); }
+    finally { setBodyQInsightsLoading(false); }
+  };
 
   const loadExistingDocumentation = async () => {
     try {
@@ -866,6 +885,43 @@ export default function BodyDocumentation({ patientContext }: Props) {
           ))}
         </div>
       </div>
+
+      {/* BODY-Q AI Insights */}
+      {Object.values(bodyQ).some(v => v > 0) && (
+        <div className="border border-gray-700 rounded-lg p-4">
+          <div className="flex items-center justify-between mb-3">
+            <span className="text-sm font-rajdhani font-semibold text-white">BODY-Q Clinical Insights</span>
+            <button onClick={handleBodyQInsights} disabled={bodyQInsightsLoading}
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-[#c9a96e]/20 hover:bg-[#c9a96e]/30 border border-[#c9a96e]/40 text-[#c9a96e] text-xs font-rajdhani rounded transition-colors disabled:opacity-50">
+              {bodyQInsightsLoading ? <><div className="animate-spin h-3 w-3 border border-[#c9a96e] border-t-transparent rounded-full"/>Analyzing…</> : <>✦ Get AI Insights</>}
+            </button>
+          </div>
+          {bodyQInsights && (
+            <div className="space-y-3 text-sm">
+              <div className={`px-3 py-2 rounded text-xs font-medium ${
+                bodyQInsights.proceedWithSurgery === 'yes' ? 'bg-green-900/30 text-green-400 border border-green-700/40' :
+                bodyQInsights.proceedWithSurgery === 'with_caution' ? 'bg-amber-900/30 text-amber-400 border border-amber-700/40' :
+                'bg-red-900/30 text-red-400 border border-red-700/40'
+              }`}>
+                {bodyQInsights.proceedWithSurgery === 'yes' ? '✓' : bodyQInsights.proceedWithSurgery === 'with_caution' ? '⚠' : '⛔'} {bodyQInsights.proceedRationale}
+              </div>
+              <p className="text-gray-400 text-xs">{bodyQInsights.overallInterpretation}</p>
+              {bodyQInsights.clinicalConcerns.length > 0 && (
+                <div>
+                  <div className="text-xs text-amber-400 font-medium mb-1">Clinical Concerns</div>
+                  <ul className="space-y-1">{bodyQInsights.clinicalConcerns.map((c, i) => <li key={i} className="text-xs text-gray-400">• {c}</li>)}</ul>
+                </div>
+              )}
+              {bodyQInsights.providerRecommendations.length > 0 && (
+                <div>
+                  <div className="text-xs text-[#c9a96e] font-medium mb-1">Recommendations</div>
+                  <ul className="space-y-1">{bodyQInsights.providerRecommendations.map((r, i) => <li key={i} className="text-xs text-gray-400">→ {r}</li>)}</ul>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Surgical Informed Consent */}
       <div className="border border-amber-700/50 rounded-lg p-5 bg-amber-900/10">

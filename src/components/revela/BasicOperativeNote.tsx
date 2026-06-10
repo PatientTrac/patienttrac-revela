@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../../lib/supabase';
 import { Save, CheckCircle, Search, Plus, X } from 'lucide-react';
+import { getOpNoteDraft } from '../../lib/revelai';
+import type { OpNoteDraftResult } from '../../lib/revelai';
 
 interface PatientContext {
   patient_id: number;
@@ -155,6 +157,11 @@ export default function BasicOperativeNote({ patientContext }: Props) {
   const [asaClass, setAsaClass] = useState<'I'|'II'|'III'|'IV'|'V'|null>(null);
   const [woundClass, setWoundClass] = useState<'I_clean'|'II_clean_contaminated'|'III_contaminated'|'IV_dirty'|''>('');
   const [fireRisk, setFireRisk] = useState<'low'|'high'|''>('');
+
+  const [narrativeDraft, setNarrativeDraft] = useState<OpNoteDraftResult | null>(null);
+  const [generatingDraft, setGeneratingDraft] = useState(false);
+  const [narrativeText, setNarrativeText] = useState('');
+  const [showNarrative, setShowNarrative] = useState(false);
 
   useEffect(() => {
     loadExistingNote();
@@ -376,6 +383,53 @@ export default function BasicOperativeNote({ patientContext }: Props) {
         .upsert(superbillData, { onConflict: 'encounter_id' });
     } catch (err) {
       console.error('Error auto-populating superbill:', err);
+    }
+  };
+
+  const handleGenerateDraft = async () => {
+    setGeneratingDraft(true);
+    setShowNarrative(true);
+    try {
+      const draft = await getOpNoteDraft({
+        procedureName: formData.procedures_performed_cpt?.map((p: any) => p.description || p).join(', ') || 'Procedure',
+        procedureType: formData.pre_op_diagnosis_icd10 || 'plastic_surgery',
+        laterality: formData.laterality,
+        anesthesiaType: formData.anesthesia_type,
+        anesthesiaProvider: formData.anesthesia_provider,
+        surgeonPrimary: formData.surgeon_primary,
+        positioning: formData.positioning,
+        prepSolution: formData.prep_solution,
+        estimatedBloodLossML: formData.estimated_blood_loss_ml ? Number(formData.estimated_blood_loss_ml) : undefined,
+        crystalloidGivenML: formData.crystalloid_given_ml ? Number(formData.crystalloid_given_ml) : undefined,
+        drainsPlaced: formData.drains_placed,
+        drainDetails: formData.drain_details,
+        implantDetails: formData.implant_details,
+        tissueRemovedDetails: formData.tissue_removed,
+        fatHarvestedDetails: formData.fat_harvested,
+        complications: formData.complications,
+        condition: formData.condition,
+        disposition: formData.disposition,
+        asaClass: asaClass ?? undefined,
+        capriniScore: Object.values(caprini).filter(Boolean).length,
+        stopBangScore: Object.values(stopBang).filter(Boolean).length,
+        rcriScore: Object.values(rcri).filter(Boolean).length,
+        woundClass: woundClass || undefined,
+        universalProtocolComplete: universalProtocol.patient_identity_verified &&
+          universalProtocol.procedure_verified && universalProtocol.site_marked &&
+          universalProtocol.timeout_performed,
+        ssiAntibiotic: ssiProphylaxis.antibiotic_given ? ssiProphylaxis.antibiotic_agent : undefined,
+        encounterId: patientContext.encounter_id?.toString(),
+        orgId: patientContext.org_id,
+        providerId: patientContext.provider_id?.toString(),
+      });
+      setNarrativeDraft(draft);
+      // Pre-populate narrative text area with the operative narrative paragraph
+      setNarrativeText(draft.operativeNarrative);
+    } catch (err) {
+      console.error('Draft generation error:', err);
+      setNarrativeText('Error generating draft. Please try again.');
+    } finally {
+      setGeneratingDraft(false);
     }
   };
 
@@ -972,6 +1026,65 @@ export default function BasicOperativeNote({ patientContext }: Props) {
             Written informed consent has been obtained, signed, and placed in the chart.
           </span>
         </label>
+      </div>
+
+      {/* AI Op Note Draft */}
+      <div className="border border-[#c9a96e]/30 rounded-lg p-6">
+        <div className="flex items-center justify-between mb-4">
+          <div>
+            <h3 className="text-lg font-rajdhani font-semibold text-white">AI Narrative Draft</h3>
+            <p className="text-xs text-gray-500 mt-0.5">Generate a dictation-quality operative note from the data above. Review and edit before saving.</p>
+          </div>
+          <button
+            onClick={handleGenerateDraft}
+            disabled={generatingDraft}
+            className="flex items-center gap-2 px-4 py-2 bg-[#c9a96e] hover:bg-[#b39960] disabled:opacity-50 text-[#060e1c] font-rajdhani font-bold text-sm rounded transition-colors"
+          >
+            {generatingDraft ? (
+              <>
+                <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-[#060e1c]" />
+                Generating…
+              </>
+            ) : (
+              <>✦ Generate Draft</>
+            )}
+          </button>
+        </div>
+
+        {showNarrative && (
+          <div className="space-y-4">
+            {narrativeDraft && (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
+                <div className="bg-[#060e1c] rounded p-3 border border-gray-800">
+                  <div className="text-xs text-[#c9a96e] mb-1">Pre-op Diagnosis</div>
+                  <div className="text-gray-200">{narrativeDraft.preoperativeDiagnosis}</div>
+                </div>
+                <div className="bg-[#060e1c] rounded p-3 border border-gray-800">
+                  <div className="text-xs text-[#c9a96e] mb-1">Procedure Performed</div>
+                  <div className="text-gray-200">{narrativeDraft.procedurePerformed}</div>
+                </div>
+                <div className="bg-[#060e1c] rounded p-3 border border-gray-800">
+                  <div className="text-xs text-[#c9a96e] mb-1">Intraoperative Findings</div>
+                  <div className="text-gray-200">{narrativeDraft.findings}</div>
+                </div>
+                <div className="bg-[#060e1c] rounded p-3 border border-gray-800">
+                  <div className="text-xs text-[#c9a96e] mb-1">Complications / EBL / Disposition</div>
+                  <div className="text-gray-200">{narrativeDraft.complications} · EBL {narrativeDraft.ebl} · {narrativeDraft.disposition}</div>
+                </div>
+              </div>
+            )}
+            <div>
+              <label className="block text-xs text-[#c9a96e] mb-2">Operative Narrative <span className="text-gray-500">(editable — review before signing)</span></label>
+              <textarea
+                value={narrativeText}
+                onChange={e => setNarrativeText(e.target.value)}
+                rows={10}
+                placeholder={generatingDraft ? 'Generating narrative…' : 'Click Generate Draft to create AI-assisted operative note…'}
+                className="w-full bg-[#060e1c] border border-gray-700 rounded px-4 py-3 text-white text-sm leading-relaxed font-mono focus:border-[#c9a96e] focus:outline-none"
+              />
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Electronic Signature */}
