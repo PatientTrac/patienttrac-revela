@@ -141,7 +141,7 @@ export default function LiposuctionDocumentation({ patientContext }: Props) {
         ai_suggested_procedures: cptCodes.map(c => `Liposuction CPT ${c}`),
         ai_suggested_cpt_codes: cptCodes,
         surgical_consent_obtained: consentObtained,
-        created_at: new Date().toISOString()
+        // created_at — let DB default now() set server-side timestamp
       };
 
       const { error } = await supabase

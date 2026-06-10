@@ -203,7 +203,7 @@ export default function BreastDocumentation({ patientContext }: Props) {
         surgical_consent_obtained: consentObtained,
         ai_suggested_procedures: suggestedProcedures,
         ai_suggested_cpt_codes: extractCptCodes(suggestedProcedures),
-        created_at: new Date().toISOString()
+        // created_at — let DB default now() set server-side timestamp
       };
 
       const { error } = await supabase

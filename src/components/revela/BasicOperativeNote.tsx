@@ -111,14 +111,45 @@ export default function BasicOperativeNote({ patientContext }: Props) {
 
   // STOP-BANG OSA screen (each = 1 point)
   const [stopBang, setStopBang] = useState({
-    snoring: false,        // S — Do you snore loudly?
-    tired: false,          // T — Do you often feel tired/fatigued?
-    observed: false,       // O — Observed stop breathing during sleep?
-    pressure: false,       // P — High blood pressure or treatment?
-    bmi_gt35: false,       // B — BMI > 35?
-    age_gt50: false,       // A — Age > 50?
-    neck_gt40: false,      // N — Neck circumference > 40 cm?
-    gender_male: false,    // G — Male gender?
+    snoring: false,
+    tired: false,
+    observed: false,
+    pressure: false,
+    bmi_gt35: false,
+    age_gt50: false,
+    neck_gt40: false,
+    gender_male: false,
+  });
+
+  // RCRI — Revised Cardiac Risk Index (each = 1 point; Lee 1999)
+  const [rcri, setRcri] = useState({
+    high_risk_surgery: false,       // supra-inguinal vascular, intraperitoneal, intrathoracic
+    ischemic_heart_disease: false,  // h/o MI, positive stress test, use of nitrates, ECG Q-waves
+    congestive_heart_failure: false,// pulmonary edema, PND, bilateral rales, S3, CXR vascular redistribution
+    cerebrovascular_disease: false, // h/o stroke or TIA
+    insulin_dependent_dm: false,    // pre-op insulin use
+    creatinine_gt2: false,          // pre-op creatinine > 2.0 mg/dL (>177 μmol/L)
+  });
+
+  // Universal Protocol — Joint Commission (NPSG.01.01.01, UP.01.01.01–UP.01.03.01)
+  const [universalProtocol, setUniversalProtocol] = useState({
+    patient_identity_verified: false,   // two identifiers confirmed
+    procedure_verified: false,          // consent matches planned procedure
+    site_marked: false,                 // site/side marked by surgeon
+    timeout_performed: false,           // team time-out performed
+    sponge_count_correct: false,        // sponge count verified correct
+    instrument_count_correct: false,    // instrument count verified correct
+    needle_count_correct: false,        // needle/sharps count verified correct
+    timeout_time: '',                   // time time-out was performed
+  });
+
+  // SSI Prophylaxis — SCIP Inf-1/Inf-2 (antibiotic within 60 min of incision, d/c within 24h)
+  const [ssiProphylaxis, setSsiProphylaxis] = useState({
+    antibiotic_given: false,
+    antibiotic_agent: 'cefazolin' as 'cefazolin' | 'clindamycin' | 'vancomycin' | 'other',
+    antibiotic_other: '',
+    minutes_before_incision: '' as string,
+    discontinued_within_24h: false,
   });
 
   useEffect(() => {
@@ -239,6 +270,17 @@ export default function BasicOperativeNote({ patientContext }: Props) {
   const stopBangScore = Object.values(stopBang).filter(Boolean).length
   const stopBangRisk = stopBangScore <= 2 ? 'Low' : stopBangScore <= 4 ? 'Intermediate' : 'High'
 
+  // RCRI score (Lee 1999) — predicts major adverse cardiac events (MACE)
+  const rcriScore = Object.values(rcri).filter(Boolean).length
+  const rcriRisk = rcriScore === 0 ? 'Very Low (0.4%)' : rcriScore === 1 ? 'Low (1.0%)' : rcriScore === 2 ? 'Moderate (2.4%)' : 'High (≥5.4%)'
+  const rcriClass = rcriScore === 0 ? 'green' : rcriScore === 1 ? 'green' : rcriScore === 2 ? 'amber' : 'red'
+
+  // Universal Protocol — all 7 checkboxes required before completing
+  const upComplete = universalProtocol.patient_identity_verified && universalProtocol.procedure_verified &&
+    universalProtocol.site_marked && universalProtocol.timeout_performed &&
+    universalProtocol.sponge_count_correct && universalProtocol.instrument_count_correct &&
+    universalProtocol.needle_count_correct
+
   const handleSign = () => {
     const now = new Date().toISOString()
     setSigned(true)
@@ -278,6 +320,10 @@ export default function BasicOperativeNote({ patientContext }: Props) {
         caprini_risk: capriniRisk,
         stop_bang_score: stopBangScore,
         stop_bang_risk: stopBangRisk,
+        rcri_score: rcriScore,
+        rcri_risk: rcriRisk,
+        universal_protocol: universalProtocol,
+        ssi_prophylaxis: ssiProphylaxis,
         electronically_signed: signed,
         signed_at: signedAt ?? null,
       };
@@ -661,6 +707,130 @@ export default function BasicOperativeNote({ patientContext }: Props) {
             </select>
           </div>
         </div>
+      </div>
+
+      {/* ── RCRI — Revised Cardiac Risk Index ── */}
+      <div className="border border-gray-700 rounded-lg p-6">
+        <div className="flex items-center justify-between mb-3">
+          <h3 className="text-lg font-rajdhani font-semibold text-white">RCRI — Revised Cardiac Risk Index</h3>
+          <div className={`px-3 py-1 rounded text-xs font-bold ${
+            rcriClass === 'red' ? 'bg-red-900/40 text-red-400' :
+            rcriClass === 'amber' ? 'bg-amber-900/40 text-amber-400' :
+            'bg-green-900/40 text-green-400'
+          }`}>
+            {rcriScore}/6 — {rcriRisk} MACE Risk
+          </div>
+        </div>
+        <p className="text-xs text-gray-500 mb-3">Lee 1999. Predicts major adverse cardiac events (MI, pulmonary edema, VF/VT, heart block, cardiac arrest) within 30 days of non-cardiac surgery.</p>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+          {([
+            ['high_risk_surgery',        'High-risk surgery (suprainguinal vascular, intraperitoneal, intrathoracic)'],
+            ['ischemic_heart_disease',   'History of ischemic heart disease (MI, nitrates, Q-waves, positive stress test)'],
+            ['congestive_heart_failure', 'History of congestive heart failure (pulmonary edema, PND, S3, bilateral rales)'],
+            ['cerebrovascular_disease',  'History of cerebrovascular disease (stroke or TIA)'],
+            ['insulin_dependent_dm',     'Insulin-dependent diabetes mellitus'],
+            ['creatinine_gt2',           'Pre-op creatinine > 2.0 mg/dL (> 177 μmol/L)'],
+          ] as [keyof typeof rcri, string][]).map(([key, label]) => (
+            <label key={key} className="flex items-start gap-2 cursor-pointer text-sm text-gray-300">
+              <input type="checkbox" checked={rcri[key]}
+                onChange={e => setRcri(p => ({ ...p, [key]: e.target.checked }))}
+                className="mt-0.5 w-4 h-4 accent-[#c9a96e]" />
+              {label}
+            </label>
+          ))}
+        </div>
+      </div>
+
+      {/* ── Universal Protocol — Joint Commission ── */}
+      <div className={`border rounded-lg p-6 ${upComplete ? 'border-green-700/50 bg-green-900/10' : 'border-red-700/40 bg-red-900/10'}`}>
+        <div className="flex items-center justify-between mb-3">
+          <h3 className="text-lg font-rajdhani font-semibold text-white">Universal Protocol <span className="text-xs text-gray-500 font-normal ml-2">Joint Commission NPSG · UP.01.01–UP.01.03</span></h3>
+          {upComplete
+            ? <span className="text-green-400 text-xs font-bold flex items-center gap-1"><CheckCircle className="w-4 h-4" /> Complete</span>
+            : <span className="text-red-400 text-xs font-bold">Incomplete — required before proceeding</span>
+          }
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
+          {([
+            ['patient_identity_verified',  'Patient identity verified (2 identifiers)'],
+            ['procedure_verified',         'Consent matches planned procedure'],
+            ['site_marked',                'Surgical site/side marked by surgeon'],
+            ['timeout_performed',          'Team time-out performed'],
+            ['sponge_count_correct',       'Sponge count verified correct'],
+            ['instrument_count_correct',   'Instrument count verified correct'],
+            ['needle_count_correct',       'Needle/sharps count verified correct'],
+          ] as [keyof typeof universalProtocol, string][]).map(([key, label]) => (
+            <label key={key} className="flex items-center gap-2 cursor-pointer text-sm text-gray-300">
+              <input type="checkbox" checked={universalProtocol[key] as boolean}
+                onChange={e => setUniversalProtocol(p => ({ ...p, [key]: e.target.checked }))}
+                className="w-4 h-4 accent-green-500" />
+              {label}
+            </label>
+          ))}
+        </div>
+        <div className="flex items-center gap-3">
+          <label className="text-xs text-gray-400 whitespace-nowrap">Time-out time:</label>
+          <input type="time" value={universalProtocol.timeout_time}
+            onChange={e => setUniversalProtocol(p => ({ ...p, timeout_time: e.target.value }))}
+            className="bg-[#060e1c] border border-gray-700 rounded px-3 py-1 text-white text-sm w-36" />
+        </div>
+      </div>
+
+      {/* ── SSI Prophylaxis — SCIP Inf-1/Inf-2 ── */}
+      <div className="border border-gray-700 rounded-lg p-6">
+        <h3 className="text-lg font-rajdhani font-semibold text-white mb-3">
+          SSI Prophylaxis <span className="text-xs text-gray-500 font-normal ml-2">SCIP Inf-1 / Inf-2</span>
+        </h3>
+        <label className="flex items-center gap-3 mb-4 cursor-pointer">
+          <input type="checkbox" checked={ssiProphylaxis.antibiotic_given}
+            onChange={e => setSsiProphylaxis(p => ({ ...p, antibiotic_given: e.target.checked }))}
+            className="w-4 h-4 accent-[#c9a96e]" />
+          <span className="text-white text-sm">Prophylactic antibiotic administered</span>
+        </label>
+        {ssiProphylaxis.antibiotic_given && (
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-2">
+            <div>
+              <label className="block text-xs text-[#c9a96e] mb-1">Agent</label>
+              <select value={ssiProphylaxis.antibiotic_agent}
+                onChange={e => setSsiProphylaxis(p => ({ ...p, antibiotic_agent: e.target.value as any }))}
+                className="w-full bg-[#060e1c] border border-gray-700 rounded px-3 py-2 text-white text-sm">
+                <option value="cefazolin">Cefazolin (Ancef)</option>
+                <option value="clindamycin">Clindamycin (PCN allergy)</option>
+                <option value="vancomycin">Vancomycin (MRSA risk)</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+            {ssiProphylaxis.antibiotic_agent === 'other' && (
+              <div>
+                <label className="block text-xs text-[#c9a96e] mb-1">Specify</label>
+                <input type="text" value={ssiProphylaxis.antibiotic_other}
+                  onChange={e => setSsiProphylaxis(p => ({ ...p, antibiotic_other: e.target.value }))}
+                  className="w-full bg-[#060e1c] border border-gray-700 rounded px-3 py-2 text-white text-sm"
+                  placeholder="Drug name" />
+              </div>
+            )}
+            <div>
+              <label className="block text-xs text-[#c9a96e] mb-1">Min before incision</label>
+              <input type="number" value={ssiProphylaxis.minutes_before_incision}
+                onChange={e => setSsiProphylaxis(p => ({ ...p, minutes_before_incision: e.target.value }))}
+                className={`w-full bg-[#060e1c] border rounded px-3 py-2 text-white text-sm ${
+                  Number(ssiProphylaxis.minutes_before_incision) > 60 ? 'border-red-500' : 'border-gray-700'
+                }`}
+                placeholder="e.g. 30" />
+              {Number(ssiProphylaxis.minutes_before_incision) > 60 && (
+                <p className="text-red-400 text-xs mt-1">SCIP: must be ≤ 60 min (≤ 120 for vanco)</p>
+              )}
+            </div>
+            <div className="flex items-end pb-2">
+              <label className="flex items-center gap-2 cursor-pointer text-sm text-gray-300">
+                <input type="checkbox" checked={ssiProphylaxis.discontinued_within_24h}
+                  onChange={e => setSsiProphylaxis(p => ({ ...p, discontinued_within_24h: e.target.checked }))}
+                  className="w-4 h-4 accent-[#c9a96e]" />
+                Discontinued within 24h
+              </label>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* ── Pre-Op Safety Screening ── */}
