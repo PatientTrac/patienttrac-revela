@@ -1,15 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
-import { supabase } from '@/lib/supabase';
-import { User, Calendar, AlertCircle, CheckCircle } from 'lucide-react';
+import { supabase } from '../lib/supabase';
+import { User, Calendar, AlertCircle, CheckCircle, ShieldAlert, LogOut } from 'lucide-react';
+import type { RiskScore } from '../lib/riskEngine';
 
 // Import body region modules
-import InitialExamModule from '@/components/revela/InitialExamModule';
-import BreastDocumentation from '@/components/revela/BreastDocumentation';
-import BodyDocumentation from '@/components/revela/BodyDocumentation';
-import LiposuctionDocumentation from '@/components/revela/LiposuctionDocumentation';
-import FaceDocumentation from '@/components/revela/FaceDocumentation';
-import BasicOperativeNote from '@/components/revela/BasicOperativeNote';
+import InitialExamModule from '../components/revela/InitialExamModule';
+import BreastDocumentation from '../components/revela/BreastDocumentation';
+import BodyDocumentation from '../components/revela/BodyDocumentation';
+import LiposuctionDocumentation from '../components/revela/LiposuctionDocumentation';
+import FaceDocumentation from '../components/revela/FaceDocumentation';
+import BasicOperativeNote from '../components/revela/BasicOperativeNote';
 
 interface PatientContext {
   patient_id: number;
@@ -34,6 +35,10 @@ export default function RevelaDashboard() {
   const [error, setError] = useState<string | null>(null);
   const [patientContext, setPatientContext] = useState<PatientContext | null>(null);
   const [selectedRegion, setSelectedRegion] = useState<BodyRegion>('initial_exam');
+  const [riskScore, setRiskScore] = useState<RiskScore | null>(null);
+  const [orClearance, setOrClearance] = useState<'clear' | 'conditional' | 'hold' | 'pending' | null>(null);
+  const [closingEncounter, setClosingEncounter] = useState(false);
+  const [showCloseConfirm, setShowCloseConfirm] = useState(false);
   
   // Get parameters from URL (cross-app bridge from PatientTracForge)
   const encounterId = searchParams.get('encounter_id');
@@ -83,11 +88,43 @@ export default function RevelaDashboard() {
         org_id: encounterData.org_id
       });
 
+      // Load most recent risk score from consultation (if exists)
+      const { data: consult } = await supabase
+        .from('cr.surgical_consultation')
+        .select('risk_score, or_clearance')
+        .eq('encounter_id', encounterId)
+        .eq('patient_id', patientId)
+        .order('consultation_date', { ascending: false })
+        .limit(1)
+        .maybeSingle();
+      if (consult?.risk_score) setRiskScore(consult.risk_score as RiskScore);
+      if (consult?.or_clearance) setOrClearance(consult.or_clearance as 'clear' | 'conditional' | 'hold' | 'pending');
+
       setLoading(false);
     } catch (err) {
       console.error('Error loading patient context:', err);
       setError(err.message || 'Failed to load patient information');
       setLoading(false);
+    }
+  };
+
+  const handleCompleteEncounter = async () => {
+    if (!patientContext) return;
+    setClosingEncounter(true);
+    try {
+      const { error } = await supabase
+        .from('cr.encounter')
+        .update({ status: 'completed', end_time: new Date().toISOString(), update_date: new Date().toISOString() })
+        .eq('encounter_id', patientContext.encounter_id);
+
+      if (error) throw error;
+
+      window.location.href = `https://patienttracforge.com/schedule/checkin/${patientContext.encounter_id}?status=completed`;
+    } catch (err) {
+      console.error('Error closing encounter:', err);
+      alert('Error closing encounter. Please try again.');
+      setClosingEncounter(false);
+      setShowCloseConfirm(false);
     }
   };
 
@@ -164,6 +201,29 @@ export default function RevelaDashboard() {
                 )}
               </div>
             </div>
+
+            {/* Risk Score Badge */}
+            {riskScore && (
+              <div className="flex flex-col items-center gap-1">
+                <div className={`flex items-center gap-2 px-4 py-2 rounded-lg border ${
+                  orClearance === 'hold' ? 'bg-red-900/30 border-red-500 text-red-400' :
+                  orClearance === 'conditional' ? 'bg-amber-900/30 border-amber-500 text-amber-400' :
+                  'bg-green-900/30 border-green-500 text-green-400'
+                }`}>
+                  <ShieldAlert className="w-4 h-4" />
+                  <span className="font-rajdhani font-bold text-sm uppercase tracking-wider">
+                    OR {orClearance ?? 'Pending'}
+                  </span>
+                </div>
+                <div className="text-xs text-gray-500">
+                  Risk Score: <span className={
+                    riskScore.level === 'critical' ? 'text-red-400' :
+                    riskScore.level === 'high' ? 'text-amber-400' :
+                    riskScore.level === 'moderate' ? 'text-yellow-400' : 'text-green-400'
+                  }>{riskScore.composite} · {riskScore.level}</span>
+                </div>
+              </div>
+            )}
 
             {/* Provider Info */}
             <div className="text-right">
@@ -242,21 +302,60 @@ export default function RevelaDashboard() {
           >
             ← Back to Check-In
           </button>
-          
+
           <div className="flex items-center gap-4">
             <button
-              className="px-6 py-2 bg-[#c9a96e]/20 hover:bg-[#c9a96e]/30 text-[#c9a96e] font-rajdhani rounded transition-colors"
+              onClick={() => setShowCloseConfirm(true)}
+              disabled={closingEncounter}
+              className="flex items-center gap-2 px-6 py-2 bg-[#c9a96e] hover:bg-[#b39960] text-[#060e1c] font-rajdhani font-bold rounded transition-colors disabled:opacity-50"
             >
-              Save Draft
-            </button>
-            <button
-              className="px-6 py-2 bg-[#c9a96e] hover:bg-[#b39960] text-[#060e1c] font-rajdhani font-bold rounded transition-colors"
-            >
-              Complete & Close Encounter
+              <LogOut className="w-4 h-4" />
+              Complete &amp; Close Encounter
             </button>
           </div>
         </div>
       </div>
+
+      {/* Close Encounter Confirmation Modal */}
+      {showCloseConfirm && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60">
+          <div className="bg-[#0a1628] border border-[#c9a96e]/40 rounded-xl p-8 max-w-md w-full mx-4 shadow-2xl">
+            <div className="flex items-center gap-3 mb-4">
+              <LogOut className="w-6 h-6 text-[#c9a96e]" />
+              <h2 className="text-xl font-rajdhani font-bold text-white">Close Encounter</h2>
+            </div>
+            <p className="text-gray-300 text-sm mb-2">
+              This will mark the encounter as <strong className="text-[#c9a96e]">completed</strong> and return you to PatientTracForge.
+            </p>
+            <p className="text-gray-500 text-xs mb-6">
+              Ensure all documentation has been saved and the operative note is signed before closing.
+            </p>
+            <div className="flex gap-3">
+              <button
+                onClick={() => setShowCloseConfirm(false)}
+                disabled={closingEncounter}
+                className="flex-1 px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white font-rajdhani rounded transition-colors disabled:opacity-50"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleCompleteEncounter}
+                disabled={closingEncounter}
+                className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-[#c9a96e] hover:bg-[#b39960] text-[#060e1c] font-rajdhani font-bold rounded transition-colors disabled:opacity-50"
+              >
+                {closingEncounter ? (
+                  <>
+                    <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-[#060e1c]" />
+                    Closing…
+                  </>
+                ) : (
+                  'Complete & Close'
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

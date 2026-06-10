@@ -1,4 +1,4 @@
-import { sessionStore } from './supabase'
+import { useAppStore } from './store'
 
 /**
  * Securely resolve organization ID from authenticated context.
@@ -28,7 +28,7 @@ import { sessionStore } from './supabase'
  */
 export function getOrgId(): string {
   // 1. Check cross-app session (most reliable in Mind/Revela)
-  const session = sessionStore.get()
+  const session = useAppStore.getState().session
   if (session?.org_id) {
     return session.org_id
   }

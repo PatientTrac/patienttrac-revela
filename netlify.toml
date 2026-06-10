@@ -5,15 +5,58 @@
 [build.environment]
   NODE_VERSION = "20"
 
-# Marketing homepage at root — no token
+[functions]
+  directory = "netlify/functions"
+  # 30s required — Fable 5 responses take 15-25s for clinical reasoning tasks
+  timeout = 30
+  node_bundler = "esbuild"
+
+# ── SPA routing ───────────────────────────────────────────────────────────────
 [[redirects]]
   from = "/"
   to = "/index.html"
   status = 200
 
-
-# Clinical app — all other routes including ?token=
 [[redirects]]
   from = "/*"
-  to = "/app.html"
+  to = "/index.html"
   status = 200
+
+# ── Security headers ──────────────────────────────────────────────────────────
+[[headers]]
+  for = "/*"
+  [headers.values]
+    # Prevent clickjacking — no iframes
+    X-Frame-Options = "DENY"
+
+    # Block MIME-type sniffing
+    X-Content-Type-Options = "nosniff"
+
+    # HSTS — enforce HTTPS for 1 year, include subdomains, preload
+    Strict-Transport-Security = "max-age=31536000; includeSubDomains; preload"
+
+    # Only send full referrer on same origin; strip on cross-origin requests
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+    # Disable hardware APIs — not needed, reduces attack surface
+    Permissions-Policy = "camera=(), microphone=(), geolocation=(), payment=(), usb=()"
+
+    # Content Security Policy
+    # IMPORTANT: api.anthropic.com must NOT be in connect-src — all AI calls through Netlify Functions only
+    Content-Security-Policy = """
+      default-src 'self';
+      script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com;
+      connect-src 'self' https://*.supabase.co https://*.supabase.in wss://*.supabase.co;
+      style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+      font-src 'self' https://fonts.gstatic.com data:;
+      img-src 'self' data: blob: https://*.supabase.co https://*.supabase.in;
+      media-src 'self' blob:;
+      worker-src 'self' blob:;
+      frame-ancestors 'none';
+      base-uri 'self';
+      form-action 'self';
+      upgrade-insecure-requests;
+    """
+
+    # XSS filter (legacy browsers)
+    X-XSS-Protection = "1; mode=block"

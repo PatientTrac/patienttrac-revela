@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
 
-const SUPABASE_URL = 'https://mskormozwekezjmtcylv.supabase.co'
-const ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1za29ybW96d2VrZXpqbXRjeWx2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY5NzMzMzAsImV4cCI6MjA5MjU0OTMzMH0.nO9Q31CZJWRSIieLdLYVMkdu5NDDWjf1z0TgwCjBpp0'
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL as string
+const ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY as string
 const BRIDGE = `${SUPABASE_URL}/functions/v1/cross-app-bridge`
 const DEVICES_FN = `${SUPABASE_URL}/functions/v1/implantable-devices`
 

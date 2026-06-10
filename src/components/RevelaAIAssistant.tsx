@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
-import { supabase } from '../lib/supabaseClient'
+import { supabase } from '../lib/supabase'
 
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL
 const ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY
@@ -205,38 +205,18 @@ export default function RevelaAIAssistant({ orgId, providerId, providerEmail }: 
     setMessages(prev => [...prev, { role: 'user', content: userMsg }])
 
     try {
-      const response = await fetch('https://api.anthropic.com/v1/messages', {
+      const response = await fetch('/.netlify/functions/ai-chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          model: 'claude-sonnet-4-20250514',
-          max_tokens: 1000,
-          system: `You are the AI assistant for PatientTrac Revela, a HIPAA-compliant plastic surgery EMR. 
-You help providers with:
-- Questions about EMR features (Chart, Progress Notes, Operative Notes, Post-Op Plans, Surgical Drawing Tool)
-- Clinical documentation guidance
-- Navigation and feature explanations
-- Receiving suggestions and feedback to route to the PatientTrac team
-
-Revela features:
-- Patient Chart: demographics, AI intake summary, medications, insurance
-- Progress Notes: pain level, clinical observations, treatment plans
-- Operative Notes: procedure, anesthesia, duration, complications
-- Post-Op Plans: follow-up dates, wound status, patient instructions
-- Surgical Drawing Tool: Fabric.js annotation on Servier Medical Art body templates
-- New Patient Registration: create patients directly in Revela
-- Bridge integration with PatientTracForge via cross-app session tokens
-- Direct login with email + password + Google Authenticator TOTP
-
-When a user submits a suggestion or feature request, acknowledge it warmly and let them know it will be routed to the PatientTrac team at wayne@patienttracforge.com.
-
-Be concise, professional, and clinically appropriate. Max 3 sentences per response unless more detail is needed.`,
           messages: [...messages, { role: 'user', content: userMsg }],
+          orgId,
+          providerId,
         }),
       })
 
       const data = await response.json()
-      const aiText = data.content?.[0]?.text ?? 'I encountered an error. Please try again.'
+      const aiText = data.reply ?? 'I encountered an error. Please try again.'
       setMessages(prev => [...prev, { role: 'assistant', content: aiText }])
       speak(aiText)
 

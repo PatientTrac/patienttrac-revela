@@ -1,17 +1,19 @@
-// patienttrac-revela/src/lib/store.ts
-// Minimal zustand store satisfying the @patienttrac/ui AppStore interface.
-// Revela's clinical state lives in VB6 hooks (useVB6Forms.ts) — this store
-// exists solely to provide session/context to shared package components
-// (MedicationsModule, AllergyModule, DiagnosisModule, Compliance, etc.)
-
 import { create } from 'zustand'
-import type { AppSession, AppContext } from '../../../packages/ui/src/types'
+
+export interface AppSession {
+  org_id: string
+  provider_id: string
+  access_token?: string
+}
+
+export interface AppContext {
+  encounter_id?: string
+  patient_id?: string
+}
 
 interface RevelaStore {
   session: AppSession | null
   context: AppContext | null
-
-  // Setters — called from App.tsx or auth listeners
   setSession: (s: AppSession) => void
   setContext:  (c: AppContext)  => void
   clearSession: () => void

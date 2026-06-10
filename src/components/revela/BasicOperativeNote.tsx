@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '../../lib/supabase';
 import { Save, CheckCircle, Search, Plus, X } from 'lucide-react';
 
 interface PatientContext {
@@ -92,6 +92,34 @@ export default function BasicOperativeNote({ patientContext }: Props) {
   const [cptResults, setCptResults] = useState<any[]>([]);
   const [icdSearch, setIcdSearch] = useState('');
   const [icdResults, setIcdResults] = useState<any[]>([]);
+  const [signed, setSigned] = useState(false);
+  const [signedAt, setSignedAt] = useState<string | null>(null);
+  const [consentObtained, setConsentObtained] = useState(false);
+
+  // Caprini VTE risk factors (each checked = points shown)
+  const [caprini, setCaprini] = useState({
+    age_41_60: false, age_61_74: false, age_75_plus: false,
+    minor_surgery: false, major_surgery_lt45: false, major_surgery_gt45: false,
+    prior_dvt_pe: false, family_history_clot: false,
+    obesity_bmi_gt25: false, varicose_veins: false,
+    immobility_gt72h: false, central_line: false,
+    malignancy: false, congestive_heart_failure: false,
+    sepsis: false, inflammatory_bowel: false,
+    oral_contraceptives: false, hrt: false,
+    thrombophilia: false, stroke: false,
+  });
+
+  // STOP-BANG OSA screen (each = 1 point)
+  const [stopBang, setStopBang] = useState({
+    snoring: false,        // S — Do you snore loudly?
+    tired: false,          // T — Do you often feel tired/fatigued?
+    observed: false,       // O — Observed stop breathing during sleep?
+    pressure: false,       // P — High blood pressure or treatment?
+    bmi_gt35: false,       // B — BMI > 35?
+    age_gt50: false,       // A — Age > 50?
+    neck_gt40: false,      // N — Neck circumference > 40 cm?
+    gender_male: false,    // G — Male gender?
+  });
 
   useEffect(() => {
     loadExistingNote();
@@ -107,25 +135,25 @@ export default function BasicOperativeNote({ patientContext }: Props) {
 
       if (data) {
         setFormData({
-          pre_op_diagnosis_icd10: data.pre_op_diagnosis_icd10 || [],
-          procedures_performed: data.procedures_performed || [],
+          pre_op_diagnosis_icd10:   data.pre_op_diagnosis_icd10 || [],
+          procedures_performed:     data.procedures_performed_cpt?.map((_: string, i: number) => data.procedures_performed_cpt[i]) || [],
           procedures_performed_cpt: data.procedures_performed_cpt || [],
-          laterality: data.laterality || 'na',
-          anesthesia_type: data.anesthesia_type || 'general_endotracheal',
-          anesthesia_provider: data.anesthesia_provider || '',
-          surgeon_primary: data.surgeon_primary || '',
-          positioning: data.positioning || 'supine',
-          prep_solution: data.prep_solution || 'betadine',
-          implant_details: data.implant_details,
-          tissue_removed: data.tissue_removed,
-          fat_harvested: data.fat_harvested,
-          estimated_blood_loss_ml: data.estimated_blood_loss_ml || 0,
-          crystalloid_given_ml: data.crystalloid_given_ml || 0,
-          drains_placed: data.drains_placed || false,
-          drain_details: data.drain_details,
-          complications: data.complications || 'none',
-          condition: data.condition || 'stable',
-          disposition: data.disposition || 'pacu'
+          laterality:               data.laterality || 'na',
+          anesthesia_type:          data.anesthesia_type || 'general_endotracheal',
+          anesthesia_provider:      data.anesthesia_provider || '',
+          surgeon_primary:          data.surgeon_primary || '',
+          positioning:              data.positioning || 'supine',
+          prep_solution:            data.prep_solution || 'betadine',
+          implant_details:          data.implant_details,
+          tissue_removed:           data.tissue_removed_details,
+          fat_harvested:            data.fat_harvested_details,
+          estimated_blood_loss_ml:  data.estimated_blood_loss_ml || 0,
+          crystalloid_given_ml:     data.crystalloid_given_ml || 0,
+          drains_placed:            data.drains_placed || false,
+          drain_details:            data.drain_details,
+          complications:            data.complications || 'none',
+          condition:                data.condition || 'stable',
+          disposition:              data.disposition || 'pacu',
         });
       }
     } catch (err) {
@@ -190,6 +218,33 @@ export default function BasicOperativeNote({ patientContext }: Props) {
     setIcdResults([]);
   };
 
+  // Caprini score: age points + factor points
+  const capriniScore = (() => {
+    let s = 0
+    if (caprini.age_41_60) s += 1; if (caprini.age_61_74) s += 2; if (caprini.age_75_plus) s += 3
+    if (caprini.minor_surgery) s += 1; if (caprini.major_surgery_lt45) s += 2; if (caprini.major_surgery_gt45) s += 3
+    if (caprini.prior_dvt_pe) s += 3; if (caprini.family_history_clot) s += 3
+    if (caprini.obesity_bmi_gt25) s += 1; if (caprini.varicose_veins) s += 1
+    if (caprini.immobility_gt72h) s += 1; if (caprini.central_line) s += 2
+    if (caprini.malignancy) s += 2; if (caprini.congestive_heart_failure) s += 1
+    if (caprini.sepsis) s += 1; if (caprini.inflammatory_bowel) s += 1
+    if (caprini.oral_contraceptives) s += 1; if (caprini.hrt) s += 1
+    if (caprini.thrombophilia) s += 3; if (caprini.stroke) s += 5
+    return s
+  })()
+  const capriniRisk = capriniScore <= 1 ? 'Low' : capriniScore <= 2 ? 'Moderate' : capriniScore <= 4 ? 'High' : 'Highest'
+  const capriniProphylaxis = capriniScore <= 1 ? 'Early ambulation' : capriniScore <= 2 ? 'SCDs + ambulation' : 'SCDs + pharmacologic (LMWH/UFH)'
+
+  // STOP-BANG score
+  const stopBangScore = Object.values(stopBang).filter(Boolean).length
+  const stopBangRisk = stopBangScore <= 2 ? 'Low' : stopBangScore <= 4 ? 'Intermediate' : 'High'
+
+  const handleSign = () => {
+    const now = new Date().toISOString()
+    setSigned(true)
+    setSignedAt(now)
+  }
+
   const handleSave = async () => {
     setSaving(true);
     try {
@@ -198,10 +253,33 @@ export default function BasicOperativeNote({ patientContext }: Props) {
         patient_id: patientContext.patient_id,
         encounter_id: patientContext.encounter_id,
         provider_id: patientContext.provider_id,
-        ...formData,
+        // explicit column mapping — avoids tissue_removed boolean conflict and unknown columns
+        pre_op_diagnosis_icd10:   formData.pre_op_diagnosis_icd10,
+        procedures_performed_cpt: formData.procedures_performed_cpt,
+        laterality:               formData.laterality,
+        anesthesia_type:          formData.anesthesia_type,
+        anesthesia_provider:      formData.anesthesia_provider,
+        surgeon_primary:          formData.surgeon_primary,
+        positioning:              formData.positioning,
+        prep_solution:            formData.prep_solution,
+        estimated_blood_loss_ml:  formData.estimated_blood_loss_ml,
+        crystalloid_given_ml:     formData.crystalloid_given_ml,
+        drains_placed:            formData.drains_placed,
+        implant_details:          formData.implant_details ?? null,
+        tissue_removed_details:   formData.tissue_removed ?? null,
+        fat_harvested_details:    formData.fat_harvested ?? null,
+        drain_details:            formData.drain_details ?? null,
+        complications:            formData.complications,
+        condition:                formData.condition,
+        disposition:              formData.disposition,
         operative_date: new Date().toISOString(),
-        electronically_signed: true,
-        signed_at: new Date().toISOString()
+        surgical_consent_obtained: consentObtained,
+        caprini_score: capriniScore,
+        caprini_risk: capriniRisk,
+        stop_bang_score: stopBangScore,
+        stop_bang_risk: stopBangRisk,
+        electronically_signed: signed,
+        signed_at: signedAt ?? null,
       };
 
       const { error } = await supabase
@@ -583,6 +661,112 @@ export default function BasicOperativeNote({ patientContext }: Props) {
             </select>
           </div>
         </div>
+      </div>
+
+      {/* ── Pre-Op Safety Screening ── */}
+      <div className="border border-gray-700 rounded-lg p-6 space-y-6">
+        <h3 className="text-lg font-rajdhani font-semibold text-white">Pre-Op Safety Screening</h3>
+
+        {/* Caprini VTE */}
+        <div>
+          <div className="flex items-center justify-between mb-3">
+            <h4 className="text-sm font-rajdhani font-semibold text-[#c9a96e] uppercase tracking-wider">Caprini VTE Risk Score</h4>
+            <div className={`px-3 py-1 rounded text-xs font-bold ${
+              capriniRisk === 'Low' ? 'bg-green-900/40 text-green-400' :
+              capriniRisk === 'Moderate' ? 'bg-yellow-900/40 text-yellow-400' :
+              capriniRisk === 'High' ? 'bg-orange-900/40 text-orange-400' :
+              'bg-red-900/40 text-red-400'
+            }`}>
+              {capriniScore} pts — {capriniRisk} · {capriniProphylaxis}
+            </div>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+            {([
+              ['age_41_60','Age 41–60 (+1)'], ['age_61_74','Age 61–74 (+2)'], ['age_75_plus','Age ≥75 (+3)'],
+              ['minor_surgery','Minor surgery (+1)'], ['major_surgery_lt45','Major surgery <45 min (+2)'], ['major_surgery_gt45','Major surgery >45 min (+3)'],
+              ['prior_dvt_pe','Prior DVT/PE (+3)'], ['family_history_clot','Family Hx clot (+3)'], ['thrombophilia','Thrombophilia (+3)'],
+              ['obesity_bmi_gt25','BMI >25 (+1)'], ['varicose_veins','Varicose veins (+1)'], ['immobility_gt72h','Immobility >72h (+1)'],
+              ['central_line','Central line (+2)'], ['malignancy','Active malignancy (+2)'], ['stroke','Prior stroke (+5)'],
+              ['congestive_heart_failure','CHF (+1)'], ['sepsis','Sepsis (+1)'], ['inflammatory_bowel','IBD (+1)'],
+              ['oral_contraceptives','OCP use (+1)'], ['hrt','HRT (+1)'],
+            ] as [keyof typeof caprini, string][]).map(([key, label]) => (
+              <label key={key} className="flex items-center gap-2 cursor-pointer text-xs text-gray-300">
+                <input type="checkbox" checked={caprini[key]}
+                  onChange={e => setCaprini(p => ({ ...p, [key]: e.target.checked }))}
+                  className="w-3.5 h-3.5 accent-[#c9a96e]" />
+                {label}
+              </label>
+            ))}
+          </div>
+        </div>
+
+        {/* STOP-BANG */}
+        <div>
+          <div className="flex items-center justify-between mb-3">
+            <h4 className="text-sm font-rajdhani font-semibold text-[#c9a96e] uppercase tracking-wider">STOP-BANG OSA Screen</h4>
+            <div className={`px-3 py-1 rounded text-xs font-bold ${
+              stopBangRisk === 'Low' ? 'bg-green-900/40 text-green-400' :
+              stopBangRisk === 'Intermediate' ? 'bg-yellow-900/40 text-yellow-400' :
+              'bg-red-900/40 text-red-400'
+            }`}>
+              {stopBangScore}/8 — {stopBangRisk} OSA Risk
+            </div>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+            {([
+              ['snoring','S — Loud snoring'],
+              ['tired','T — Tired/fatigued daytime'],
+              ['observed','O — Observed apnea'],
+              ['pressure','P — Hypertension/treatment'],
+              ['bmi_gt35','B — BMI > 35'],
+              ['age_gt50','A — Age > 50'],
+              ['neck_gt40','N — Neck circ. > 40 cm'],
+              ['gender_male','G — Male gender'],
+            ] as [keyof typeof stopBang, string][]).map(([key, label]) => (
+              <label key={key} className="flex items-center gap-2 cursor-pointer text-xs text-gray-300">
+                <input type="checkbox" checked={stopBang[key]}
+                  onChange={e => setStopBang(p => ({ ...p, [key]: e.target.checked }))}
+                  className="w-3.5 h-3.5 accent-[#c9a96e]" />
+                {label}
+              </label>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Surgical Informed Consent */}
+      <div className="border border-amber-700/50 rounded-lg p-5 bg-amber-900/10">
+        <h3 className="text-base font-rajdhani font-semibold text-amber-400 mb-3">Surgical Informed Consent</h3>
+        <label className="flex items-start gap-3 cursor-pointer">
+          <input type="checkbox" checked={consentObtained}
+            onChange={e => setConsentObtained(e.target.checked)}
+            className="mt-1 w-4 h-4 accent-amber-400" />
+          <span className="text-sm text-gray-300 leading-relaxed">
+            Patient has been counseled on procedure risks, benefits, alternatives, and expected outcomes.
+            Written informed consent has been obtained, signed, and placed in the chart.
+          </span>
+        </label>
+      </div>
+
+      {/* Electronic Signature */}
+      <div className="border border-gray-700 rounded-lg p-5">
+        <h3 className="text-base font-rajdhani font-semibold text-white mb-3">Provider Attestation</h3>
+        {signed ? (
+          <div className="flex items-center gap-3 text-green-400">
+            <CheckCircle className="w-5 h-5" />
+            <span className="text-sm">Electronically signed by provider — {signedAt ? new Date(signedAt).toLocaleString() : ''}</span>
+          </div>
+        ) : (
+          <div className="flex items-center gap-4">
+            <span className="text-sm text-gray-400">
+              By clicking "Sign Note" you attest that this operative note is accurate and complete to the best of your knowledge.
+            </span>
+            <button onClick={handleSign}
+              className="flex-shrink-0 px-5 py-2 bg-green-700 hover:bg-green-600 text-white font-rajdhani font-semibold rounded transition-colors text-sm">
+              Sign Note
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Billing Preview */}

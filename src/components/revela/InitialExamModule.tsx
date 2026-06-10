@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '../../lib/supabase';
 import { Save, AlertCircle, CheckCircle, Upload } from 'lucide-react';
+import { generateClinicalFlags, calculateRiskScore, determineORClearance, type PatientRiskInput } from '../../lib/riskEngine';
 
 interface PatientContext {
   patient_id: number;
@@ -165,22 +166,45 @@ export default function InitialExamModule({ patientContext }: Props) {
         photo_consent: formData.photo_consent
       };
 
+      // ── Risk engine computation ────────────────────────────────
+      const bpParts = formData.physical_exam.blood_pressure.split('/').map(Number)
+      const riskInput: PatientRiskInput = {
+        bpSystolic: bpParts[0] || undefined,
+        bpDiastolic: bpParts[1] || undefined,
+        bmi: formData.physical_exam.bmi || undefined,
+        medications: formData.medications,
+        smokingStatus: formData.social_history.smoking_status,
+        alcoholUse: formData.social_history.alcohol_use === 'occasional' ? 'light' : formData.social_history.alcohol_use,
+        priorAbdominalSurgeries: formData.surgical_history,
+        psychiatricStability: formData.body_dysmorphia_screening.significant_distress ? 'unstable' : 'stable',
+      }
+      const riskFlags = generateClinicalFlags(riskInput)
+      const riskScore = calculateRiskScore(riskInput, riskFlags)
+      const orClearance = determineORClearance(riskFlags, riskScore)
+
+      const consultationWithRisk = {
+        ...consultationData,
+        risk_score: riskScore,
+        or_clearance: orClearance,
+        clinical_flags: riskFlags,
+      }
+
       if (formData.consultation_id) {
         // Update existing
         const { error } = await supabase
           .from('cr.surgical_consultation')
-          .update(consultationData)
+          .update(consultationWithRisk)
           .eq('consultation_id', formData.consultation_id);
-        
+
         if (error) throw error;
       } else {
         // Insert new
         const { data, error } = await supabase
           .from('cr.surgical_consultation')
-          .insert(consultationData)
+          .insert(consultationWithRisk)
           .select('consultation_id')
           .single();
-        
+
         if (error) throw error;
         setFormData(prev => ({ ...prev, consultation_id: data.consultation_id }));
       }

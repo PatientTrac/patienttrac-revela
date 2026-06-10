@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '../../lib/supabase';
 import { Save, CheckCircle, AlertTriangle } from 'lucide-react';
 
 interface PatientContext {
@@ -103,6 +103,7 @@ export default function BodyDocumentation({ patientContext }: Props) {
   });
 
   const [suggestedProcedures, setSuggestedProcedures] = useState<string[]>([]);
+  const [consentObtained, setConsentObtained] = useState(false);
 
   useEffect(() => {
     loadExistingDocumentation();
@@ -190,7 +191,7 @@ export default function BodyDocumentation({ patientContext }: Props) {
         physical_findings: formData,
         ai_suggested_procedures: suggestedProcedures,
         ai_suggested_cpt_codes: extractCptCodes(suggestedProcedures),
-        ai_confidence_score: 0.88,
+        surgical_consent_obtained: consentObtained,
         created_at: new Date().toISOString()
       };
 
@@ -754,11 +755,25 @@ export default function BodyDocumentation({ patientContext }: Props) {
               </div>
             ))}
           </div>
-          <p className="text-xs text-gray-400 mt-3">
-            Confidence: 88% • Based on physical examination findings
-          </p>
         </div>
       )}
+
+      {/* Surgical Informed Consent */}
+      <div className="border border-amber-700/50 rounded-lg p-5 bg-amber-900/10">
+        <h3 className="text-base font-rajdhani font-semibold text-amber-400 mb-3">Surgical Informed Consent</h3>
+        <label className="flex items-start gap-3 cursor-pointer">
+          <input
+            type="checkbox"
+            checked={consentObtained}
+            onChange={e => setConsentObtained(e.target.checked)}
+            className="mt-1 w-4 h-4 accent-amber-400"
+          />
+          <span className="text-sm text-gray-300 leading-relaxed">
+            Patient has been counseled on procedure risks, benefits, alternatives, and expected outcomes.
+            Written informed consent has been obtained, signed, and placed in the chart.
+          </span>
+        </label>
+      </div>
     </div>
   );
 }

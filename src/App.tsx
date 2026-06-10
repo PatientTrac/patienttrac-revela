@@ -64,7 +64,7 @@ function LegacyRevelaApp() {
     setUserId(uid)
     setOrgId(oid)
     try {
-      const { supabase } = await import('./lib/supabaseClient')
+      const { supabase } = await import('./lib/supabase')
       const { data: { user } } = await supabase.auth.getUser()
       if (user?.email) setUserEmail(user.email)
     } catch {}
@@ -78,7 +78,7 @@ function LegacyRevelaApp() {
         const res = await bridge('save_note', { token: urlToken, note_type: noteType, note_data: noteData })
         if (res.error) throw new Error(res.error)
       } else {
-        const { supabase } = await import('./lib/supabaseClient')
+        const { supabase } = await import('./lib/supabase')
         const table = noteType === 'surgical_prognote' ? 'surgical_prognote'
           : noteType === 'operative_notes' ? 'operative_notes'
           : 'postop_plan'

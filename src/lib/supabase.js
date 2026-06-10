@@ -1,7 +1,8 @@
 import { createClient } from '@supabase/supabase-js'
 
-const url  = import.meta.env.VITE_SUPABASE_URL  || 'https://mskormozwekezjmtcylv.supabase.co'
-const anon = import.meta.env.VITE_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1za29ybW96d2VrZXpqbXRjeWx2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY5NzMzMzAsImV4cCI6MjA5MjU0OTMzMH0.nO9Q31CZJWRSIieLdLYVMkdu5NDDWjf1z0TgwCjBpp0'
+const url  = import.meta.env.VITE_SUPABASE_URL
+const anon = import.meta.env.VITE_SUPABASE_ANON_KEY
+if (!url || !anon) throw new Error('VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY are required')
 
 export const supabase = createClient(url, anon, {
   auth: { persistSession: false },

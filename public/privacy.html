@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Privacy Policy — PatientTrac Revela</title>
+  <style>
+    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+           background: #060e1c; color: #e2e8f0; line-height: 1.7; }
+    .container { max-width: 760px; margin: 0 auto; padding: 48px 24px 80px; }
+    .logo { display: flex; align-items: center; gap: 10px; margin-bottom: 48px; }
+    .logo svg { flex-shrink: 0; }
+    .logo span { color: #c9a96e; font-size: 20px; font-weight: 700; letter-spacing: 1px; }
+    h1 { color: #c9a96e; font-size: 28px; font-weight: 700; margin: 0 0 8px; }
+    .updated { color: rgba(255,255,255,0.4); font-size: 13px; margin-bottom: 40px; }
+    h2 { color: #ffffff; font-size: 17px; font-weight: 600; margin: 36px 0 12px;
+         border-bottom: 1px solid rgba(201,169,110,0.2); padding-bottom: 8px; }
+    p, li { color: rgba(255,255,255,0.72); font-size: 14px; margin: 0 0 12px; }
+    ul { padding-left: 22px; }
+    a { color: #c9a96e; text-decoration: none; }
+    .badge { display: inline-block; background: rgba(201,169,110,0.12); border: 1px solid rgba(201,169,110,0.3);
+             color: #c9a96e; font-size: 11px; letter-spacing: 1px; padding: 3px 10px;
+             border-radius: 20px; margin-bottom: 16px; }
+    footer { margin-top: 64px; border-top: 1px solid rgba(255,255,255,0.08);
+             padding-top: 24px; font-size: 12px; color: rgba(255,255,255,0.3);
+             display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="logo">
+    <svg width="26" height="26" viewBox="0 0 32 32" fill="none">
+      <polygon points="16,2 30,16 16,30 2,16" fill="none" stroke="#c9a96e" stroke-width="1.5"/>
+      <polygon points="16,7 25,16 16,25 7,16" fill="#c9a96e" opacity="0.3"/>
+      <polygon points="16,11 21,16 16,21 11,16" fill="#c9a96e"/>
+    </svg>
+    <span>PATIENTTRAC REVELA</span>
+  </div>
+
+  <div class="badge">HIPAA COMPLIANT</div>
+  <h1>Privacy Policy</h1>
+  <p class="updated">Effective Date: June 10, 2026 &nbsp;·&nbsp; Last Updated: June 10, 2026</p>
+
+  <p>PatientTrac Revela ("Revela", "we", "us") is a HIPAA-compliant electronic medical record (EMR) platform
+  for plastic and reconstructive surgery. This Privacy Policy describes how we collect, use, disclose, and
+  protect information in connection with our services.</p>
+
+  <h2>1. Protected Health Information (PHI)</h2>
+  <p>Revela operates as a <strong>HIPAA Business Associate</strong> and/or <strong>Covered Entity</strong>
+  depending on deployment context. All Protected Health Information (PHI) — including patient demographics,
+  clinical documentation, operative notes, and surgical drawings — is:</p>
+  <ul>
+    <li>Stored encrypted at rest (AES-256) in Supabase PostgreSQL (US region)</li>
+    <li>Transmitted encrypted in transit (TLS 1.2+)</li>
+    <li>Accessible only to authenticated providers and authorized personnel</li>
+    <li>Subject to a signed Business Associate Agreement (BAA) with all subprocessors</li>
+    <li>Never used to train AI models or shared with third parties without authorization</li>
+  </ul>
+
+  <h2>2. AI Services and PHI</h2>
+  <p>Revela's AI features (clinical flags, surgical proposals, operative note assistance) are powered by
+  Anthropic Claude. All AI calls are routed through server-side Netlify Functions. <strong>Patient PHI
+  (name, DOB, SSN, MRN, address, insurance ID) is scrubbed before transmission to any AI model.</strong>
+  A BAA with Anthropic is required before PHI-adjacent data flows to Claude API.</p>
+
+  <h2>3. Audit Logging — ONC §170.315(d)(2)</h2>
+  <p>In compliance with the ONC 21st Century Cures Act, Revela maintains tamper-evident audit logs of all
+  PHI access, modifications, and AI interactions. Audit records are stored in <code>cr.ai_audit_log</code>
+  and include timestamp, provider ID, action, and encounter reference. No clinical content is logged.</p>
+
+  <h2>4. Data Retention</h2>
+  <p>Clinical records are retained for a minimum of <strong>7 years</strong> from the date of last service
+  (or 3 years after a minor patient reaches age 18, whichever is longer), consistent with applicable state
+  and federal requirements.</p>
+
+  <h2>5. Your Rights (HIPAA Notice of Privacy Practices)</h2>
+  <p>Patients have the right to access, amend, and receive an accounting of disclosures of their PHI.
+  Requests should be submitted in writing to the covered healthcare provider (your physician's practice).</p>
+
+  <h2>6. Contact</h2>
+  <p>Privacy Officer: <a href="mailto:privacy@patienttracforge.com">privacy@patienttracforge.com</a><br>
+  PatientTrac, LLC &nbsp;·&nbsp; HIPAA Compliance Department</p>
+
+  <footer>
+    <span>© 2026 PatientTrac, LLC. All rights reserved.</span>
+    <span>
+      <a href="/privacy.html">Privacy</a> &nbsp;·&nbsp;
+      <a href="/terms.html">Terms</a> &nbsp;·&nbsp;
+      <a href="/hipaa.html">HIPAA Notice</a>
+    </span>
+  </footer>
+</div>
+</body>
+</html>

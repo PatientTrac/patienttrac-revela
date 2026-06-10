@@ -3,16 +3,11 @@ import ReactDOM from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import App from './App'
-import './styles/index.css'
+import './styles/globals.css'
 import { supabase } from './lib/supabase'
 import { tryGetOrgId } from './lib/orgResolver'
 import { initAudit } from './lib/audit'
 import { useAppStore } from './lib/store'
-import { registerAppStore } from '../../packages/ui/src/store'
-
-// ── Shared package store registration ────────────────────────
-// Must run before any @patienttrac/ui component is rendered
-registerAppStore(useAppStore)
 
 // ── Session → store hydration ─────────────────────────────────
 function hydrateStore(session: { user: { id: string; email?: string; user_metadata?: Record<string, unknown> }; access_token: string } | null) {
@@ -25,10 +20,6 @@ function hydrateStore(session: { user: { id: string; email?: string; user_metada
     access_token: session.access_token,
   })
 }
-
-const queryClient = new QueryClient({
-  defaultOptions: { queries: { staleTime: 1000 * 60 * 5, retry: 1 } },
-})
 
 const queryClient = new QueryClient({
   defaultOptions: { queries: { staleTime: 1000 * 60 * 5, retry: 1 } },

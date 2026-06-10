@@ -4,8 +4,8 @@
 //         §170.315(b)(10) EHI Export
 //         §170.315(d)(3) Audit Report
 
-const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL ||
-  'https://mskormozwekezjmtcylv.supabase.co'
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL
+if (!SUPABASE_URL) throw new Error('VITE_SUPABASE_URL is required')
 
 const INTERCEPTOR = `${SUPABASE_URL}/functions/v1/phi-audit-interceptor`
 const EHI_EXPORT  = `${SUPABASE_URL}/functions/v1/ehi-export`

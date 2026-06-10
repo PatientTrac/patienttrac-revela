@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '../../lib/supabase';
 import { Save, Camera, AlertTriangle, CheckCircle, Ruler } from 'lucide-react';
 
 interface PatientContext {
@@ -123,6 +123,11 @@ export default function BreastDocumentation({ patientContext }: Props) {
 
   const [photoUrls, setPhotoUrls] = useState<string[]>([]);
   const [suggestedProcedures, setSuggestedProcedures] = useState<string[]>([]);
+  const [gynecomastia, setGynecomastia] = useState<{ simon_grade: string; pectoral_definition: string }>({
+    simon_grade: 'none',
+    pectoral_definition: 'excellent',
+  });
+  const [consentObtained, setConsentObtained] = useState(false);
 
   useEffect(() => {
     loadExistingDocumentation();
@@ -192,11 +197,12 @@ export default function BreastDocumentation({ patientContext }: Props) {
         patient_sex: patientContext.patient_sex,
         measurements: measurements,
         physical_findings: findings,
+        gynecomastia_assessment: patientContext.patient_sex === 'male' ? gynecomastia : null,
         photo_urls: photoUrls,
         photo_consent_obtained: photoUrls.length > 0,
+        surgical_consent_obtained: consentObtained,
         ai_suggested_procedures: suggestedProcedures,
         ai_suggested_cpt_codes: extractCptCodes(suggestedProcedures),
-        ai_confidence_score: 0.85,
         created_at: new Date().toISOString()
       };
 
@@ -548,7 +554,11 @@ export default function BreastDocumentation({ patientContext }: Props) {
               <label className="block text-sm font-rajdhani text-[#c9a96e] mb-2">
                 Simon Grade
               </label>
-              <select className="w-full bg-[#060e1c] border border-gray-700 rounded px-4 py-2 text-white">
+              <select
+                value={gynecomastia.simon_grade}
+                onChange={e => setGynecomastia(prev => ({ ...prev, simon_grade: e.target.value }))}
+                className="w-full bg-[#060e1c] border border-gray-700 rounded px-4 py-2 text-white"
+              >
                 <option value="none">No Gynecomastia</option>
                 <option value="I">Grade I - Minimal</option>
                 <option value="IIA">Grade IIA - Moderate, no skin excess</option>
@@ -561,7 +571,11 @@ export default function BreastDocumentation({ patientContext }: Props) {
               <label className="block text-sm font-rajdhani text-[#c9a96e] mb-2">
                 Pectoral Definition
               </label>
-              <select className="w-full bg-[#060e1c] border border-gray-700 rounded px-4 py-2 text-white">
+              <select
+                value={gynecomastia.pectoral_definition}
+                onChange={e => setGynecomastia(prev => ({ ...prev, pectoral_definition: e.target.value }))}
+                className="w-full bg-[#060e1c] border border-gray-700 rounded px-4 py-2 text-white"
+              >
                 <option value="excellent">Excellent</option>
                 <option value="good">Good</option>
                 <option value="fair">Fair</option>
@@ -586,11 +600,25 @@ export default function BreastDocumentation({ patientContext }: Props) {
               </div>
             ))}
           </div>
-          <p className="text-xs text-gray-400 mt-3">
-            Confidence: 85% • Based on physical examination findings
-          </p>
         </div>
       )}
+
+      {/* Surgical Informed Consent */}
+      <div className="border border-amber-700/50 rounded-lg p-5 bg-amber-900/10">
+        <h3 className="text-base font-rajdhani font-semibold text-amber-400 mb-3">Surgical Informed Consent</h3>
+        <label className="flex items-start gap-3 cursor-pointer">
+          <input
+            type="checkbox"
+            checked={consentObtained}
+            onChange={e => setConsentObtained(e.target.checked)}
+            className="mt-1 w-4 h-4 accent-amber-400"
+          />
+          <span className="text-sm text-gray-300 leading-relaxed">
+            Patient has been counseled on procedure risks, benefits, alternatives, and expected outcomes.
+            Written informed consent has been obtained, signed, and placed in the chart.
+          </span>
+        </label>
+      </div>
 
       {/* Photo Upload */}
       <div className="border border-gray-700 rounded-lg p-6">
