@@ -92,6 +92,17 @@ export default function FaceDocumentation({ patientContext }: Props) {
 
   const [suggestedProcedures, setSuggestedProcedures] = useState<string[]>([]);
   const [consentObtained, setConsentObtained] = useState(false);
+  const [asaClass, setAsaClass] = useState<'I'|'II'|'III'|'IV'|'V'|null>(null);
+  const [priorFacialProcedures, setPriorFacialProcedures] = useState('');
+  const [smasInvolvement, setSmasInvolvement] = useState<'superficial'|'deep_plane'|'composite'|'not_applicable'|''>('');
+  const [faceQ, setFaceQ] = useState({
+    appearance_distress: 0,
+    facial_appearance: 0,
+    aging_concern: 0,
+    social_confidence: 0,
+    psychological_wellbeing: 0,
+    satisfaction_with_outcome: 0,
+  });
 
   useEffect(() => {
     loadExistingDocumentation();
@@ -153,6 +164,12 @@ export default function FaceDocumentation({ patientContext }: Props) {
       if (data && data.physical_findings) {
         setFormData(data.physical_findings);
       }
+      if (data) {
+        if (data.asa_class) setAsaClass(data.asa_class);
+        if (data.prior_procedures?.facial) setPriorFacialProcedures(data.prior_procedures.facial);
+        if (data.smas_involvement) setSmasInvolvement(data.smas_involvement);
+        if (data.prom_score?.domains) setFaceQ(data.prom_score.domains);
+      }
     } catch (err) {
       console.error('Error loading face documentation:', err);
     } finally {
@@ -175,6 +192,10 @@ export default function FaceDocumentation({ patientContext }: Props) {
         ai_suggested_procedures: suggestedProcedures,
         ai_suggested_cpt_codes: extractCptCodes(suggestedProcedures),
         surgical_consent_obtained: consentObtained,
+        asa_class: asaClass,
+        prior_procedures: priorFacialProcedures ? { facial: priorFacialProcedures } : null,
+        smas_involvement: smasInvolvement || null,
+        prom_score: { instrument: 'FACE-Q', domains: faceQ, date: new Date().toISOString().split('T')[0] },
         // created_at — let DB default now() set server-side timestamp
       };
 
@@ -704,6 +725,82 @@ export default function FaceDocumentation({ patientContext }: Props) {
           </div>
         </div>
       )}
+
+      {/* ASA Physical Status */}
+      <div className="border border-gray-700 rounded-lg p-5">
+        <h3 className="text-base font-rajdhani font-semibold text-white mb-3">ASA Physical Status</h3>
+        <div className="flex flex-wrap gap-2">
+          {(['I','II','III','IV','V'] as const).map(cls => (
+            <button key={cls} onClick={() => setAsaClass(cls)}
+              className={`px-4 py-2 rounded border font-rajdhani font-semibold text-sm transition-colors ${
+                asaClass === cls ? 'bg-[#c9a96e] border-[#c9a96e] text-[#060e1c]' : 'border-gray-600 text-gray-300 hover:border-[#c9a96e]'
+              }`}>ASA {cls}</button>
+          ))}
+        </div>
+        <p className="text-xs text-gray-500 mt-2">
+          {asaClass === 'I' && 'Normal healthy patient'}{asaClass === 'II' && 'Mild systemic disease'}
+          {asaClass === 'III' && 'Severe systemic disease'}{asaClass === 'IV' && 'Severe, constant threat to life'}
+          {asaClass === 'V' && 'Moribund'}
+        </p>
+      </div>
+
+      {/* Prior Facial Procedures */}
+      <div className="border border-gray-700 rounded-lg p-5">
+        <h3 className="text-base font-rajdhani font-semibold text-white mb-3">Prior Facial Procedures</h3>
+        <textarea value={priorFacialProcedures}
+          onChange={e => setPriorFacialProcedures(e.target.value)}
+          placeholder="e.g., Rhinoplasty 2015, filler (hyaluronic acid) cheeks and lips 2023, Botox forehead annually since 2020, blepharoplasty upper lids 2019..."
+          rows={3}
+          className="w-full bg-[#060e1c] border border-gray-700 rounded px-3 py-2 text-white text-sm" />
+      </div>
+
+      {/* SMAS / Plane Assessment */}
+      <div className="border border-gray-700 rounded-lg p-5">
+        <h3 className="text-base font-rajdhani font-semibold text-white mb-3">
+          SMAS Involvement / Surgical Plane <span className="text-xs text-gray-500 font-normal">Rhytidectomy standard</span>
+        </h3>
+        <div className="flex flex-wrap gap-2">
+          {([
+            ['superficial',    'Superficial (skin only)'],
+            ['deep_plane',     'Deep plane (SMAS elevation)'],
+            ['composite',      'Composite / extended deep plane'],
+            ['not_applicable', 'Not applicable'],
+          ] as const).map(([val, label]) => (
+            <button key={val} onClick={() => setSmasInvolvement(val)}
+              className={`px-4 py-2 rounded border text-sm transition-colors ${
+                smasInvolvement === val ? 'bg-[#c9a96e] border-[#c9a96e] text-[#060e1c] font-semibold' : 'border-gray-600 text-gray-300 hover:border-gray-400'
+              }`}>{label}</button>
+          ))}
+        </div>
+      </div>
+
+      {/* FACE-Q Patient-Reported Outcomes */}
+      <div className="border border-gray-700 rounded-lg p-5">
+        <h3 className="text-base font-rajdhani font-semibold text-white mb-1">FACE-Q — Patient-Reported Outcomes</h3>
+        <p className="text-xs text-gray-500 mb-4">Rate each domain 1 (Very dissatisfied) → 5 (Very satisfied). ASPS registry.</p>
+        <div className="space-y-3">
+          {([
+            ['appearance_distress',      'Appearance-related distress (worry, self-consciousness)'],
+            ['facial_appearance',        'Satisfaction with facial appearance overall'],
+            ['aging_concern',            'Aging appearance concern (looking older than feel)'],
+            ['social_confidence',        'Social confidence in public / social situations'],
+            ['psychological_wellbeing',  'Psychological wellbeing (mood, quality of life)'],
+            ['satisfaction_with_outcome','Overall satisfaction with surgical outcome'],
+          ] as [keyof typeof faceQ, string][]).map(([key, label]) => (
+            <div key={key} className="flex items-center justify-between gap-4">
+              <span className="text-sm text-gray-300 flex-1">{label}</span>
+              <div className="flex gap-1">
+                {[1,2,3,4,5].map(n => (
+                  <button key={n} onClick={() => setFaceQ(p => ({ ...p, [key]: n }))}
+                    className={`w-8 h-8 rounded text-sm font-bold transition-colors ${
+                      faceQ[key] === n ? 'bg-[#c9a96e] text-[#060e1c]' : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
+                    }`}>{n}</button>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
 
       {/* Surgical Informed Consent */}
       <div className="border border-amber-700/50 rounded-lg p-5 bg-amber-900/10">

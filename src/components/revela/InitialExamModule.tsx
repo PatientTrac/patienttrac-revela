@@ -55,6 +55,16 @@ export default function InitialExamModule({ patientContext }: Props) {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [asaClass, setAsaClass] = useState<'I'|'II'|'III'|'IV'|'V'|null>(null);
+  const [smokingCessation, setSmokingCessation] = useState({
+    counseled: false,
+    referral_given: false,
+    quit_date_set: false,
+  });
+  const [lmpDate, setLmpDate] = useState('');
+  const [pregnancyTest, setPregnancyTest] = useState<'positive'|'negative'|'declined'|'not_applicable'|''>('');
+  const [psychClearance, setPsychClearance] = useState<'cleared'|'deferred'|'referred'|'not_required'|''>('');
+  const [psychNotes, setPsychNotes] = useState('');
   const [formData, setFormData] = useState<InitialExamData>({
     chief_complaint: '',
     goals_desires: '',
@@ -133,6 +143,12 @@ export default function InitialExamModule({ patientContext }: Props) {
           photos_taken: data.photos_taken || false,
           photo_consent: data.photo_consent || false
         });
+        if (data.asa_class) setAsaClass(data.asa_class);
+        if (data.smoking_cessation_counseled) setSmokingCessation((prev: typeof smokingCessation) => ({ ...prev, counseled: data.smoking_cessation_counseled }));
+        if (data.lmp_date) setLmpDate(data.lmp_date);
+        if (data.pregnancy_test_result) setPregnancyTest(data.pregnancy_test_result);
+        if (data.psych_clearance) setPsychClearance(data.psych_clearance);
+        if (data.psych_clearance_notes) setPsychNotes(data.psych_clearance_notes);
       }
     } catch (err) {
       console.error('Error loading consultation:', err);
@@ -163,7 +179,13 @@ export default function InitialExamModule({ patientContext }: Props) {
         recommended_procedures: formData.recommended_procedures,
         contraindications: formData.contraindications,
         photos_taken: formData.photos_taken,
-        photo_consent: formData.photo_consent
+        photo_consent: formData.photo_consent,
+        asa_class: asaClass,
+        smoking_cessation_counseled: smokingCessation.counseled,
+        lmp_date: lmpDate || null,
+        pregnancy_test_result: pregnancyTest || null,
+        psych_clearance: psychClearance || null,
+        psych_clearance_notes: psychNotes || null,
       };
 
       // ── Risk engine computation ────────────────────────────────
@@ -530,6 +552,106 @@ export default function InitialExamModule({ patientContext }: Props) {
             <Upload className="w-4 h-4" />
             Upload Photos
           </button>
+        </div>
+      </div>
+
+      {/* ASA Physical Status */}
+      <div className="border border-gray-700 rounded-lg p-6">
+        <h3 className="text-lg font-rajdhani font-semibold text-white mb-4">ASA Physical Status Classification</h3>
+        <div className="grid grid-cols-1 gap-2">
+          {([
+            ['I',  'Normal healthy patient. No organic, physiologic, or psychiatric disturbance.'],
+            ['II', 'Mild systemic disease without substantive functional limitations (e.g., controlled DM/HTN, smoker, BMI 30-40).'],
+            ['III','Severe systemic disease with substantive functional limitations (e.g., poorly controlled DM/HTN, COPD, morbid obesity ≥40 BMI, EF < 40%).'],
+            ['IV', 'Severe systemic disease that is a constant threat to life (e.g., recent MI/CVA/TIA, severe valvular dysfunction, sepsis).'],
+            ['V',  'Moribund patient not expected to survive without the operation.'],
+          ] as [string,string][]).map(([cls, desc]) => (
+            <label key={cls} className={`flex items-start gap-3 p-3 rounded-lg cursor-pointer border transition-colors ${
+              asaClass === cls ? 'border-[#c9a96e] bg-[#c9a96e]/10' : 'border-gray-700 hover:border-gray-600'
+            }`}>
+              <input type="radio" name="asa_class" value={cls}
+                checked={asaClass === cls}
+                onChange={() => setAsaClass(cls as 'I'|'II'|'III'|'IV'|'V')}
+                className="mt-1 accent-[#c9a96e]" />
+              <div>
+                <span className="text-[#c9a96e] font-rajdhani font-bold">ASA {cls}</span>
+                <span className="text-gray-300 text-sm ml-2">{desc}</span>
+              </div>
+            </label>
+          ))}
+        </div>
+      </div>
+
+      {/* Smoking Cessation — show only for current/former smokers */}
+      {(formData.social_history?.smoking_status === 'current' || formData.social_history?.smoking_status === 'former') && (
+        <div className="border border-amber-700/40 rounded-lg p-5 bg-amber-900/10">
+          <h3 className="text-base font-rajdhani font-semibold text-amber-400 mb-3">Smoking Cessation Counseling <span className="text-xs font-normal text-gray-500">CMS Tobacco Use / SCIP</span></h3>
+          <div className="space-y-2">
+            {([
+              ['counseled', 'Cessation counseling provided (risks of smoking on wound healing, anesthesia, outcomes)'],
+              ['referral_given', 'Referral to cessation program given (nicotine replacement, varenicline, bupropion)'],
+              ['quit_date_set', 'Quit date established (minimum 4 weeks pre-op recommended)'],
+            ] as [keyof typeof smokingCessation, string][]).map(([key, label]) => (
+              <label key={key} className="flex items-center gap-3 cursor-pointer text-sm text-gray-300">
+                <input type="checkbox"
+                  checked={smokingCessation[key]}
+                  onChange={e => setSmokingCessation(p => ({ ...p, [key]: e.target.checked }))}
+                  className="w-4 h-4 accent-amber-400" />
+                {label}
+              </label>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Pregnancy Screening — female / non-binary patients */}
+      <div className="border border-gray-700 rounded-lg p-5">
+        <h3 className="text-base font-rajdhani font-semibold text-white mb-3">Pregnancy Screening</h3>
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label className="block text-xs text-[#c9a96e] mb-1">Last Menstrual Period</label>
+            <input type="date" value={lmpDate}
+              onChange={e => setLmpDate(e.target.value)}
+              className="w-full bg-[#060e1c] border border-gray-700 rounded px-3 py-2 text-white text-sm" />
+          </div>
+          <div>
+            <label className="block text-xs text-[#c9a96e] mb-1">Pregnancy Test Result</label>
+            <select value={pregnancyTest}
+              onChange={e => setPregnancyTest(e.target.value as typeof pregnancyTest)}
+              className="w-full bg-[#060e1c] border border-gray-700 rounded px-3 py-2 text-white text-sm">
+              <option value="">Select...</option>
+              <option value="negative">Negative</option>
+              <option value="positive">Positive — procedure deferred</option>
+              <option value="declined">Patient declined testing</option>
+              <option value="not_applicable">Not applicable (post-menopausal / surgical)</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      {/* Psychological / Psychiatric Clearance */}
+      <div className="border border-gray-700 rounded-lg p-5">
+        <h3 className="text-base font-rajdhani font-semibold text-white mb-3">Psychological Clearance</h3>
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label className="block text-xs text-[#c9a96e] mb-1">Clearance Status</label>
+            <select value={psychClearance}
+              onChange={e => setPsychClearance(e.target.value as typeof psychClearance)}
+              className="w-full bg-[#060e1c] border border-gray-700 rounded px-3 py-2 text-white text-sm">
+              <option value="">Select...</option>
+              <option value="not_required">Not required (BDD score &lt; 2, no concerns)</option>
+              <option value="cleared">Cleared by surgeon / evaluator</option>
+              <option value="deferred">Deferred — additional evaluation needed</option>
+              <option value="referred">Referred to mental health professional</option>
+            </select>
+          </div>
+          <div>
+            <label className="block text-xs text-[#c9a96e] mb-1">Notes</label>
+            <input type="text" value={psychNotes}
+              onChange={e => setPsychNotes(e.target.value)}
+              placeholder="e.g., BDD concerns, unrealistic expectations..."
+              className="w-full bg-[#060e1c] border border-gray-700 rounded px-3 py-2 text-white text-sm" />
+          </div>
         </div>
       </div>
 

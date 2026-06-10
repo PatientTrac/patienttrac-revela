@@ -104,6 +104,18 @@ export default function BodyDocumentation({ patientContext }: Props) {
 
   const [suggestedProcedures, setSuggestedProcedures] = useState<string[]>([]);
   const [consentObtained, setConsentObtained] = useState(false);
+  const [asaClass, setAsaClass] = useState<'I'|'II'|'III'|'IV'|'V'|null>(null);
+  const [herniaPresent, setHerniaPresent] = useState<boolean|null>(null);
+  const [herniaDescription, setHerniaDescription] = useState('');
+  const [keloidHistory, setKeloidHistory] = useState<boolean|null>(null);
+  const [bodyQ, setBodyQ] = useState({
+    body_image: 0,
+    weight_appearance: 0,
+    clothes_fit: 0,
+    physical_function: 0,
+    psychological_wellbeing: 0,
+    satisfaction_with_outcome: 0,
+  });
 
   useEffect(() => {
     loadExistingDocumentation();
@@ -170,6 +182,13 @@ export default function BodyDocumentation({ patientContext }: Props) {
       if (data && data.physical_findings) {
         setFormData(data.physical_findings);
       }
+      if (data) {
+        if (data.asa_class) setAsaClass(data.asa_class);
+        if (data.hernia_present !== null && data.hernia_present !== undefined) setHerniaPresent(data.hernia_present);
+        if (data.hernia_description) setHerniaDescription(data.hernia_description);
+        if (data.keloid_history !== null && data.keloid_history !== undefined) setKeloidHistory(data.keloid_history);
+        if (data.prom_score?.domains) setBodyQ(data.prom_score.domains);
+      }
     } catch (err) {
       console.error('Error loading body documentation:', err);
     } finally {
@@ -192,6 +211,11 @@ export default function BodyDocumentation({ patientContext }: Props) {
         ai_suggested_procedures: suggestedProcedures,
         ai_suggested_cpt_codes: extractCptCodes(suggestedProcedures),
         surgical_consent_obtained: consentObtained,
+        asa_class: asaClass,
+        hernia_present: herniaPresent,
+        hernia_description: herniaDescription || null,
+        keloid_history: keloidHistory,
+        prom_score: { instrument: 'BODY-Q', domains: bodyQ, date: new Date().toISOString().split('T')[0] },
         // created_at — let DB default now() set server-side timestamp
       };
 
@@ -757,6 +781,91 @@ export default function BodyDocumentation({ patientContext }: Props) {
           </div>
         </div>
       )}
+
+      {/* ASA Physical Status */}
+      <div className="border border-gray-700 rounded-lg p-5">
+        <h3 className="text-base font-rajdhani font-semibold text-white mb-3">ASA Physical Status</h3>
+        <div className="flex flex-wrap gap-2">
+          {(['I','II','III','IV','V'] as const).map(cls => (
+            <button key={cls} onClick={() => setAsaClass(cls)}
+              className={`px-4 py-2 rounded border font-rajdhani font-semibold text-sm transition-colors ${
+                asaClass === cls ? 'bg-[#c9a96e] border-[#c9a96e] text-[#060e1c]' : 'border-gray-600 text-gray-300 hover:border-[#c9a96e]'
+              }`}>ASA {cls}</button>
+          ))}
+        </div>
+        <p className="text-xs text-gray-500 mt-2">
+          {asaClass === 'I' && 'Normal healthy patient'}{asaClass === 'II' && 'Mild systemic disease'}
+          {asaClass === 'III' && 'Severe systemic disease'}{asaClass === 'IV' && 'Severe, constant threat to life'}
+          {asaClass === 'V' && 'Moribund'}
+        </p>
+      </div>
+
+      {/* Hernia Assessment */}
+      <div className="border border-gray-700 rounded-lg p-5">
+        <h3 className="text-base font-rajdhani font-semibold text-white mb-3">Hernia Assessment</h3>
+        <div className="flex gap-4 mb-3">
+          {([['true','Present'],['false','Absent']] as const).map(([val,label]) => (
+            <button key={val} onClick={() => setHerniaPresent(val === 'true')}
+              className={`px-4 py-2 rounded border text-sm transition-colors ${
+                herniaPresent === (val === 'true')
+                  ? val === 'true' ? 'bg-red-800 border-red-500 text-white' : 'bg-green-800 border-green-500 text-white'
+                  : 'border-gray-600 text-gray-300 hover:border-gray-400'
+              }`}>{label}</button>
+          ))}
+        </div>
+        {herniaPresent && (
+          <textarea value={herniaDescription}
+            onChange={e => setHerniaDescription(e.target.value)}
+            placeholder="Describe type, location, size (e.g., umbilical hernia 2cm, reducible, no bowel sounds)..."
+            rows={2}
+            className="w-full bg-[#060e1c] border border-gray-700 rounded px-3 py-2 text-white text-sm" />
+        )}
+        {herniaPresent && <p className="text-xs text-amber-400 mt-1">Note: abdominoplasty patients with hernias require surgical consent for concurrent repair and may need general surgery consult.</p>}
+      </div>
+
+      {/* Keloid / Hypertrophic Scar History */}
+      <div className="border border-gray-700 rounded-lg p-5">
+        <h3 className="text-base font-rajdhani font-semibold text-white mb-3">Keloid / Hypertrophic Scar History</h3>
+        <div className="flex gap-4">
+          {([['true','Yes — keloid/hypertrophic history'],['false','No — normal scar formation']] as const).map(([val,label]) => (
+            <button key={val} onClick={() => setKeloidHistory(val === 'true')}
+              className={`px-4 py-2 rounded border text-sm transition-colors ${
+                keloidHistory === (val === 'true')
+                  ? val === 'true' ? 'bg-amber-800 border-amber-500 text-white' : 'bg-green-800 border-green-500 text-white'
+                  : 'border-gray-600 text-gray-300 hover:border-gray-400'
+              }`}>{label}</button>
+          ))}
+        </div>
+        {keloidHistory && <p className="text-xs text-amber-400 mt-2">Counsel patient on keloid risk at incision sites. Consider silicone sheeting and steroid injection protocol post-op.</p>}
+      </div>
+
+      {/* BODY-Q Patient-Reported Outcomes */}
+      <div className="border border-gray-700 rounded-lg p-5">
+        <h3 className="text-base font-rajdhani font-semibold text-white mb-1">BODY-Q — Patient-Reported Outcomes</h3>
+        <p className="text-xs text-gray-500 mb-4">Rate each domain 1 (Very dissatisfied) → 5 (Very satisfied).</p>
+        <div className="space-y-3">
+          {([
+            ['body_image',               'Body image (how you feel about your body)'],
+            ['weight_appearance',        'Weight / appearance satisfaction'],
+            ['clothes_fit',              'Clothes fit and dressing comfort'],
+            ['physical_function',        'Physical function (mobility, activity)'],
+            ['psychological_wellbeing',  'Psychological wellbeing (mood, confidence)'],
+            ['satisfaction_with_outcome','Overall satisfaction with surgical outcome'],
+          ] as [keyof typeof bodyQ, string][]).map(([key, label]) => (
+            <div key={key} className="flex items-center justify-between gap-4">
+              <span className="text-sm text-gray-300 flex-1">{label}</span>
+              <div className="flex gap-1">
+                {[1,2,3,4,5].map(n => (
+                  <button key={n} onClick={() => setBodyQ(p => ({ ...p, [key]: n }))}
+                    className={`w-8 h-8 rounded text-sm font-bold transition-colors ${
+                      bodyQ[key] === n ? 'bg-[#c9a96e] text-[#060e1c]' : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
+                    }`}>{n}</button>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
 
       {/* Surgical Informed Consent */}
       <div className="border border-amber-700/50 rounded-lg p-5 bg-amber-900/10">

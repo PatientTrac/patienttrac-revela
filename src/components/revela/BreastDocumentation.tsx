@@ -128,6 +128,18 @@ export default function BreastDocumentation({ patientContext }: Props) {
     pectoral_definition: 'excellent',
   });
   const [consentObtained, setConsentObtained] = useState(false);
+  const [asaClass, setAsaClass] = useState<'I'|'II'|'III'|'IV'|'V'|null>(null);
+  const [mammogramStatus, setMammogramStatus] = useState<'current'|'overdue'|'never'|'not_indicated'|''>('');
+  const [mammogramDate, setMammogramDate] = useState('');
+  const [birads, setBirads] = useState<0|1|2|3|4|5|6|null>(null);
+  const [priorBreastProcedures, setPriorBreastProcedures] = useState('');
+  const [breastQ, setBreastQ] = useState({
+    satisfaction_with_breasts: 0,
+    psychosocial_wellbeing: 0,
+    sexual_wellbeing: 0,
+    physical_wellbeing_chest: 0,
+    satisfaction_with_outcome: 0,
+  });
 
   useEffect(() => {
     loadExistingDocumentation();
@@ -176,6 +188,12 @@ export default function BreastDocumentation({ patientContext }: Props) {
         setMeasurements(data.measurements || measurements);
         setFindings(data.physical_findings || findings);
         setPhotoUrls(data.photo_urls || []);
+        if (data.asa_class) setAsaClass(data.asa_class);
+        if (data.mammogram_status) setMammogramStatus(data.mammogram_status);
+        if (data.mammogram_date) setMammogramDate(data.mammogram_date);
+        if (data.birads_category !== null && data.birads_category !== undefined) setBirads(data.birads_category);
+        if (data.prior_procedures?.breast) setPriorBreastProcedures(data.prior_procedures.breast);
+        if (data.prom_score?.domains) setBreastQ(data.prom_score.domains);
       }
     } catch (err) {
       console.error('Error loading breast documentation:', err);
@@ -203,6 +221,12 @@ export default function BreastDocumentation({ patientContext }: Props) {
         surgical_consent_obtained: consentObtained,
         ai_suggested_procedures: suggestedProcedures,
         ai_suggested_cpt_codes: extractCptCodes(suggestedProcedures),
+        asa_class: asaClass,
+        mammogram_status: mammogramStatus || null,
+        mammogram_date: mammogramDate || null,
+        birads_category: birads,
+        prior_procedures: priorBreastProcedures ? { breast: priorBreastProcedures } : null,
+        prom_score: { instrument: 'BREAST-Q', domains: breastQ, date: new Date().toISOString().split('T')[0] },
         // created_at — let DB default now() set server-side timestamp
       };
 
@@ -618,6 +642,117 @@ export default function BreastDocumentation({ patientContext }: Props) {
             Written informed consent has been obtained, signed, and placed in the chart.
           </span>
         </label>
+      </div>
+
+      {/* ASA Physical Status */}
+      <div className="border border-gray-700 rounded-lg p-5">
+        <h3 className="text-base font-rajdhani font-semibold text-white mb-3">ASA Physical Status</h3>
+        <div className="flex flex-wrap gap-2">
+          {(['I','II','III','IV','V'] as const).map(cls => (
+            <button key={cls} onClick={() => setAsaClass(cls)}
+              className={`px-4 py-2 rounded border font-rajdhani font-semibold text-sm transition-colors ${
+                asaClass === cls ? 'bg-[#c9a96e] border-[#c9a96e] text-[#060e1c]' : 'border-gray-600 text-gray-300 hover:border-[#c9a96e]'
+              }`}>
+              ASA {cls}
+            </button>
+          ))}
+        </div>
+        <p className="text-xs text-gray-500 mt-2">
+          {asaClass === 'I' && 'Normal healthy patient'}
+          {asaClass === 'II' && 'Mild systemic disease'}
+          {asaClass === 'III' && 'Severe systemic disease'}
+          {asaClass === 'IV' && 'Severe, constant threat to life'}
+          {asaClass === 'V' && 'Moribund'}
+        </p>
+      </div>
+
+      {/* Mammogram Status */}
+      <div className="border border-gray-700 rounded-lg p-5">
+        <h3 className="text-base font-rajdhani font-semibold text-white mb-3">
+          Mammogram Status <span className="text-xs text-gray-500 font-normal">ACR / ASPS pre-op guidelines</span>
+        </h3>
+        <div className="grid grid-cols-2 gap-4 mb-3">
+          <div>
+            <label className="block text-xs text-[#c9a96e] mb-1">Status</label>
+            <select value={mammogramStatus}
+              onChange={e => setMammogramStatus(e.target.value as typeof mammogramStatus)}
+              className="w-full bg-[#060e1c] border border-gray-700 rounded px-3 py-2 text-white text-sm">
+              <option value="">Select...</option>
+              <option value="current">Current (within 12 months)</option>
+              <option value="overdue">Overdue — ordered pre-op</option>
+              <option value="never">Never — ordered pre-op</option>
+              <option value="not_indicated">Not indicated (age &lt; 40, male)</option>
+            </select>
+          </div>
+          <div>
+            <label className="block text-xs text-[#c9a96e] mb-1">Most recent date</label>
+            <input type="date" value={mammogramDate}
+              onChange={e => setMammogramDate(e.target.value)}
+              className="w-full bg-[#060e1c] border border-gray-700 rounded px-3 py-2 text-white text-sm" />
+          </div>
+        </div>
+        <div>
+          <label className="block text-xs text-[#c9a96e] mb-2">BI-RADS Category</label>
+          <div className="flex flex-wrap gap-2">
+            {([0,1,2,3,4,5,6] as const).map(cat => (
+              <button key={cat} onClick={() => setBirads(cat)}
+                className={`px-3 py-1 rounded border text-sm font-mono transition-colors ${
+                  birads === cat
+                    ? cat <= 2 ? 'bg-green-700 border-green-500 text-white'
+                      : cat === 3 ? 'bg-yellow-700 border-yellow-500 text-white'
+                      : 'bg-red-800 border-red-500 text-white'
+                    : 'border-gray-600 text-gray-400 hover:border-gray-400'
+                }`}>
+                {cat}
+              </button>
+            ))}
+          </div>
+          <p className="text-xs text-gray-500 mt-1">
+            0=Incomplete · 1=Negative · 2=Benign · 3=Probably benign · 4=Suspicious · 5=Highly suspicious · 6=Known malignancy
+          </p>
+        </div>
+      </div>
+
+      {/* Prior Breast Procedures */}
+      <div className="border border-gray-700 rounded-lg p-5">
+        <h3 className="text-base font-rajdhani font-semibold text-white mb-3">Prior Breast Procedures</h3>
+        <textarea value={priorBreastProcedures}
+          onChange={e => setPriorBreastProcedures(e.target.value)}
+          placeholder="e.g., Breast augmentation 2018 (400cc smooth round silicone, dual plane), biopsy right breast 2020 (benign fibroadenoma)..."
+          rows={3}
+          className="w-full bg-[#060e1c] border border-gray-700 rounded px-3 py-2 text-white text-sm" />
+      </div>
+
+      {/* BREAST-Q Patient-Reported Outcomes */}
+      <div className="border border-gray-700 rounded-lg p-5">
+        <h3 className="text-base font-rajdhani font-semibold text-white mb-1">BREAST-Q — Patient-Reported Outcomes</h3>
+        <p className="text-xs text-gray-500 mb-4">Rate each domain 1 (Very dissatisfied) → 5 (Very satisfied). ASPS registry requirement.</p>
+        <div className="space-y-3">
+          {([
+            ['satisfaction_with_breasts',  'Satisfaction with breasts (appearance, shape, size, feel)'],
+            ['psychosocial_wellbeing',     'Psychosocial wellbeing (confidence, self-consciousness)'],
+            ['sexual_wellbeing',           'Sexual wellbeing (comfortable, attractive, sexuality)'],
+            ['physical_wellbeing_chest',   'Physical wellbeing — chest (tightness, discomfort, sensitivity)'],
+            ['satisfaction_with_outcome',  'Overall satisfaction with outcome / would recommend'],
+          ] as [keyof typeof breastQ, string][]).map(([key, label]) => (
+            <div key={key} className="flex items-center justify-between gap-4">
+              <span className="text-sm text-gray-300 flex-1">{label}</span>
+              <div className="flex gap-1">
+                {[1,2,3,4,5].map(n => (
+                  <button key={n} onClick={() => setBreastQ(p => ({ ...p, [key]: n }))}
+                    className={`w-8 h-8 rounded text-sm font-bold transition-colors ${
+                      breastQ[key] === n ? 'bg-[#c9a96e] text-[#060e1c]' : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
+                    }`}>{n}</button>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+        {Object.values(breastQ).some(v => v > 0) && (
+          <p className="text-xs text-gray-500 mt-3">
+            Mean score: {(Object.values(breastQ).reduce((a, b) => a + b, 0) / Object.values(breastQ).filter(v => v > 0).length).toFixed(1)} / 5
+          </p>
+        )}
       </div>
 
       {/* Photo Upload */}

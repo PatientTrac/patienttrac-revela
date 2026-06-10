@@ -75,6 +75,18 @@ export default function LiposuctionDocumentation({ patientContext }: Props) {
 
   const [cptCodes, setCptCodes] = useState<string[]>([]);
   const [consentObtained, setConsentObtained] = useState(false);
+  const [asaClass, setAsaClass] = useState<'I'|'II'|'III'|'IV'|'V'|null>(null);
+  // Tumescent solution dosing (Klein protocol)
+  const [patientWeightKg, setPatientWeightKg] = useState(0);
+  const [tumescentVolumeML, setTumescentVolumeML] = useState(0);
+  const [lidocaineConcentrationPct, setLidocaineConcentrationPct] = useState(0.1);
+  const [totalAspirateML, setTotalAspirateML] = useState(0);
+  const [bodyQlipo, setBodyQlipo] = useState({
+    body_image: 0,
+    contour_satisfaction: 0,
+    physical_function: 0,
+    satisfaction_with_outcome: 0,
+  });
 
   useEffect(() => {
     loadExistingDocumentation();
@@ -106,6 +118,14 @@ export default function LiposuctionDocumentation({ patientContext }: Props) {
     setCptCodes(codes);
   }, [formData.selected_areas]);
 
+  // Tumescent safety calculations (Klein 1990, ASPS guidelines)
+  const lidocaineMg = Math.round(tumescentVolumeML * (lidocaineConcentrationPct / 100) * 1000);
+  const lidocaineMgPerKg = patientWeightKg > 0 ? parseFloat((lidocaineMg / patientWeightKg).toFixed(1)) : 0;
+  const lidocaineSafeLimit = patientWeightKg > 0 ? Math.round(patientWeightKg * 35) : 0;
+  const lidocaineUnsafe = patientWeightKg > 0 && lidocaineMgPerKg > 35;
+  const fluidRatio = totalAspirateML > 0 && tumescentVolumeML > 0
+    ? parseFloat((tumescentVolumeML / totalAspirateML).toFixed(2)) : 0;
+
   const loadExistingDocumentation = async () => {
     try {
       const { data, error } = await supabase
@@ -118,6 +138,12 @@ export default function LiposuctionDocumentation({ patientContext }: Props) {
 
       if (data && data.physical_findings) {
         setFormData(data.physical_findings);
+      }
+      if (data) {
+        if (data.asa_class) setAsaClass(data.asa_class);
+        if (data.tumescent_volume_ml) setTumescentVolumeML(data.tumescent_volume_ml);
+        if (data.total_aspirate_ml) setTotalAspirateML(data.total_aspirate_ml);
+        if (data.prom_score?.domains) setBodyQlipo(data.prom_score.domains);
       }
     } catch (err) {
       console.error('Error loading liposuction documentation:', err);
@@ -141,6 +167,13 @@ export default function LiposuctionDocumentation({ patientContext }: Props) {
         ai_suggested_procedures: cptCodes.map(c => `Liposuction CPT ${c}`),
         ai_suggested_cpt_codes: cptCodes,
         surgical_consent_obtained: consentObtained,
+        asa_class: asaClass,
+        tumescent_lidocaine_mg: lidocaineMg || null,
+        tumescent_mg_per_kg: lidocaineMgPerKg || null,
+        tumescent_volume_ml: tumescentVolumeML || null,
+        total_aspirate_ml: totalAspirateML || null,
+        fluid_ratio: fluidRatio || null,
+        prom_score: { instrument: 'BODY-Q-lipo', domains: bodyQlipo, date: new Date().toISOString().split('T')[0] },
         // created_at — let DB default now() set server-side timestamp
       };
 
@@ -430,6 +463,101 @@ export default function LiposuctionDocumentation({ patientContext }: Props) {
                   <span className="text-gray-400 text-sm">
                     {idx === 0 ? 'First area' : `Additional area ${idx}`}
                   </span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* ASA Physical Status */}
+          <div className="border border-gray-700 rounded-lg p-5">
+            <h3 className="text-base font-rajdhani font-semibold text-white mb-3">ASA Physical Status</h3>
+            <div className="flex flex-wrap gap-2">
+              {(['I','II','III','IV','V'] as const).map(cls => (
+                <button key={cls} onClick={() => setAsaClass(cls)}
+                  className={`px-4 py-2 rounded border font-rajdhani font-semibold text-sm transition-colors ${
+                    asaClass === cls ? 'bg-[#c9a96e] border-[#c9a96e] text-[#060e1c]' : 'border-gray-600 text-gray-300 hover:border-[#c9a96e]'
+                  }`}>ASA {cls}</button>
+              ))}
+            </div>
+          </div>
+
+          {/* Tumescent Dosing Calculator */}
+          <div className="border border-gray-700 rounded-lg p-5">
+            <h3 className="text-base font-rajdhani font-semibold text-white mb-1">
+              Tumescent Dosing Calculator <span className="text-xs text-gray-500 font-normal">Klein protocol — ASPS safety guidelines</span>
+            </h3>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+              <div>
+                <label className="block text-xs text-[#c9a96e] mb-1">Patient weight (kg)</label>
+                <input type="number" value={patientWeightKg || ''}
+                  onChange={e => setPatientWeightKg(parseFloat(e.target.value) || 0)}
+                  className="w-full bg-[#060e1c] border border-gray-700 rounded px-3 py-2 text-white text-sm" />
+              </div>
+              <div>
+                <label className="block text-xs text-[#c9a96e] mb-1">Tumescent volume (mL)</label>
+                <input type="number" value={tumescentVolumeML || ''}
+                  onChange={e => setTumescentVolumeML(parseInt(e.target.value) || 0)}
+                  className="w-full bg-[#060e1c] border border-gray-700 rounded px-3 py-2 text-white text-sm" />
+              </div>
+              <div>
+                <label className="block text-xs text-[#c9a96e] mb-1">Lidocaine concentration (%)</label>
+                <select value={lidocaineConcentrationPct}
+                  onChange={e => setLidocaineConcentrationPct(parseFloat(e.target.value))}
+                  className="w-full bg-[#060e1c] border border-gray-700 rounded px-3 py-2 text-white text-sm">
+                  <option value={0.05}>0.05%</option>
+                  <option value={0.1}>0.10% (standard)</option>
+                  <option value={0.15}>0.15%</option>
+                  <option value={0.2}>0.20%</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-xs text-[#c9a96e] mb-1">Total aspirate (mL)</label>
+                <input type="number" value={totalAspirateML || ''}
+                  onChange={e => setTotalAspirateML(parseInt(e.target.value) || 0)}
+                  className="w-full bg-[#060e1c] border border-gray-700 rounded px-3 py-2 text-white text-sm" />
+              </div>
+            </div>
+            {(lidocaineMg > 0 || totalAspirateML > 0) && (
+              <div className={`grid grid-cols-3 gap-4 p-4 rounded-lg border ${lidocaineUnsafe ? 'border-red-500 bg-red-900/20' : 'border-green-700 bg-green-900/10'}`}>
+                <div>
+                  <div className="text-xs text-gray-400 mb-1">Total lidocaine</div>
+                  <div className={`text-xl font-rajdhani font-bold ${lidocaineUnsafe ? 'text-red-400' : 'text-white'}`}>{lidocaineMg} mg</div>
+                </div>
+                <div>
+                  <div className="text-xs text-gray-400 mb-1">mg/kg (safe limit ≤ 35)</div>
+                  <div className={`text-xl font-rajdhani font-bold ${lidocaineUnsafe ? 'text-red-400' : 'text-green-400'}`}>{lidocaineMgPerKg} mg/kg</div>
+                  {lidocaineUnsafe && <div className="text-xs text-red-400 mt-1">EXCEEDS safe limit ({lidocaineSafeLimit} mg max)</div>}
+                </div>
+                <div>
+                  <div className="text-xs text-gray-400 mb-1">Fluid:aspirate ratio</div>
+                  <div className="text-xl font-rajdhani font-bold text-white">{fluidRatio > 0 ? fluidRatio + ':1' : '—'}</div>
+                  {fluidRatio > 0 && <div className="text-xs text-gray-500 mt-1">{fluidRatio < 1 ? 'Dry' : fluidRatio < 2 ? 'Wet' : fluidRatio < 3 ? 'Superwet' : 'Tumescent'} technique</div>}
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* BODY-Q Lipo — Patient-Reported Outcomes */}
+          <div className="border border-gray-700 rounded-lg p-5">
+            <h3 className="text-base font-rajdhani font-semibold text-white mb-1">BODY-Q — Patient-Reported Outcomes</h3>
+            <p className="text-xs text-gray-500 mb-4">Rate each domain 1 → 5 (Very satisfied). ASPS registry.</p>
+            <div className="space-y-3">
+              {([
+                ['body_image','Body image satisfaction'],
+                ['contour_satisfaction','Contour / shape satisfaction'],
+                ['physical_function','Physical function / activity'],
+                ['satisfaction_with_outcome','Overall satisfaction with outcome'],
+              ] as [keyof typeof bodyQlipo, string][]).map(([key, label]) => (
+                <div key={key} className="flex items-center justify-between gap-4">
+                  <span className="text-sm text-gray-300 flex-1">{label}</span>
+                  <div className="flex gap-1">
+                    {[1,2,3,4,5].map(n => (
+                      <button key={n} onClick={() => setBodyQlipo(p => ({ ...p, [key]: n }))}
+                        className={`w-8 h-8 rounded text-sm font-bold transition-colors ${
+                          bodyQlipo[key] === n ? 'bg-[#c9a96e] text-[#060e1c]' : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
+                        }`}>{n}</button>
+                    ))}
+                  </div>
                 </div>
               ))}
             </div>

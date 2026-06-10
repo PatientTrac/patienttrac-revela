@@ -152,6 +152,10 @@ export default function BasicOperativeNote({ patientContext }: Props) {
     discontinued_within_24h: false,
   });
 
+  const [asaClass, setAsaClass] = useState<'I'|'II'|'III'|'IV'|'V'|null>(null);
+  const [woundClass, setWoundClass] = useState<'I_clean'|'II_clean_contaminated'|'III_contaminated'|'IV_dirty'|''>('');
+  const [fireRisk, setFireRisk] = useState<'low'|'high'|''>('');
+
   useEffect(() => {
     loadExistingNote();
   }, [patientContext.encounter_id]);
@@ -186,6 +190,9 @@ export default function BasicOperativeNote({ patientContext }: Props) {
           condition:                data.condition || 'stable',
           disposition:              data.disposition || 'pacu',
         });
+        if (data.asa_class) setAsaClass(data.asa_class);
+        if (data.wound_class) setWoundClass(data.wound_class);
+        if (data.fire_risk) setFireRisk(data.fire_risk);
       }
     } catch (err) {
       console.error('Error loading operative note:', err);
@@ -324,6 +331,9 @@ export default function BasicOperativeNote({ patientContext }: Props) {
         rcri_risk: rcriRisk,
         universal_protocol: universalProtocol,
         ssi_prophylaxis: ssiProphylaxis,
+        asa_class: asaClass,
+        wound_class: woundClass || null,
+        fire_risk: fireRisk || null,
         electronically_signed: signed,
         signed_at: signedAt ?? null,
       };
@@ -831,6 +841,52 @@ export default function BasicOperativeNote({ patientContext }: Props) {
             </div>
           </div>
         )}
+      </div>
+
+      {/* OR Classification: ASA, Wound Class, Fire Risk */}
+      <div className="border border-gray-700 rounded-lg p-6">
+        <h3 className="text-lg font-rajdhani font-semibold text-white mb-4">OR Classification</h3>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div>
+            <label className="block text-sm font-rajdhani text-[#c9a96e] mb-2">ASA Physical Status</label>
+            <select value={asaClass ?? ''}
+              onChange={e => setAsaClass((e.target.value as 'I'|'II'|'III'|'IV'|'V') || null)}
+              className="w-full bg-[#060e1c] border border-gray-700 rounded px-3 py-2 text-white text-sm">
+              <option value="">Select...</option>
+              <option value="I">ASA I — Healthy</option>
+              <option value="II">ASA II — Mild disease</option>
+              <option value="III">ASA III — Severe disease</option>
+              <option value="IV">ASA IV — Threat to life</option>
+              <option value="V">ASA V — Moribund</option>
+            </select>
+          </div>
+          <div>
+            <label className="block text-sm font-rajdhani text-[#c9a96e] mb-2">Wound Classification (Altemeier)</label>
+            <select value={woundClass}
+              onChange={e => setWoundClass(e.target.value as typeof woundClass)}
+              className="w-full bg-[#060e1c] border border-gray-700 rounded px-3 py-2 text-white text-sm">
+              <option value="">Select...</option>
+              <option value="I_clean">Class I — Clean</option>
+              <option value="II_clean_contaminated">Class II — Clean-Contaminated</option>
+              <option value="III_contaminated">Class III — Contaminated</option>
+              <option value="IV_dirty">Class IV — Dirty/Infected</option>
+            </select>
+          </div>
+          <div>
+            <label className="block text-sm font-rajdhani text-[#c9a96e] mb-2">Fire Risk Assessment <span className="text-xs text-gray-500">(AORN / JC NPSG.03.04.01)</span></label>
+            <div className="flex gap-3">
+              {([['low','Low'],['high','High']] as const).map(([val,label]) => (
+                <button key={val} onClick={() => setFireRisk(val)}
+                  className={`flex-1 px-3 py-2 rounded border text-sm transition-colors ${
+                    fireRisk === val
+                      ? val === 'high' ? 'bg-red-800 border-red-500 text-white' : 'bg-green-800 border-green-500 text-white'
+                      : 'border-gray-600 text-gray-300 hover:border-gray-400'
+                  }`}>{label}</button>
+              ))}
+            </div>
+            <p className="text-xs text-gray-500 mt-1">High = O&#x2082;/N&#x2082;O enrichment near ignition source</p>
+          </div>
+        </div>
       </div>
 
       {/* ── Pre-Op Safety Screening ── */}
