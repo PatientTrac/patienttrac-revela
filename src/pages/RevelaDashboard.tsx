@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
-import { User, Calendar, AlertCircle, CheckCircle, ShieldAlert, LogOut } from 'lucide-react';
+import { User, Calendar, AlertCircle, CheckCircle, ShieldAlert, LogOut, Settings } from 'lucide-react';
 import type { RiskScore } from '../lib/riskEngine';
 import { getSurgicalFlags } from '../lib/revelai';
 import type { SurgicalFlag } from '../lib/revelai';
@@ -397,7 +397,15 @@ export default function RevelaDashboard() {
             ← Back to Check-In
           </button>
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3">
+            <a
+              href="/admin"
+              className="flex items-center gap-2 px-4 py-2 bg-[#0d1e36] hover:bg-[#152840] text-[#c9a96e] border border-[#c9a96e]/30 font-rajdhani rounded transition-colors"
+              title="Admin Panel"
+            >
+              <Settings className="w-4 h-4" />
+              Admin
+            </a>
             <button
               onClick={() => setShowCloseConfirm(true)}
               disabled={closingEncounter}

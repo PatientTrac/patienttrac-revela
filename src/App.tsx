@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate, useSearchParams } from 'react-r
 import RevelaLogin from './RevelaLogin'
 import NewPatientRevela from './components/NewPatientRevela'
 import RevelaDashboard from './pages/RevelaDashboard'
+import AdminPanel from './pages/AdminPanel'
 
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL
 const ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY
@@ -296,6 +297,7 @@ export default function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/dashboard" element={<RevelaDashboard />} />
+        <Route path="/admin" element={<AdminPanel />} />
         <Route path="/legacy" element={<LegacyRevelaApp />} />
         <Route path="/" element={<Navigate to="/legacy" replace />} />
       </Routes>
