@@ -600,6 +600,11 @@ export default function SurgicalDrawingTool({ encounterId, patientId, orgId, pro
   const [showStamps, setShowStamps] = useState(false)
   const [isTouch, setIsTouch] = useState(false)
   const [loadingDrawing, setLoadingDrawing] = useState(false)
+  const [photos, setPhotos] = useState<{ photo_id: string; photo_url: string; photo_type: string; view_label: string | null; storage_path: string }[]>([])
+  const [showPhotoPanel, setShowPhotoPanel] = useState(false)
+  const [activePhotoUrl, setActivePhotoUrl] = useState<string | null>(null)
+  const [uploadingPhoto, setUploadingPhoto] = useState(false)
+  const photoFileInputRef = useRef<HTMLInputElement>(null)
 
   // Surgical color palette — includes standard marking colors + skin tones
   const colors = [
@@ -796,13 +801,89 @@ export default function SurgicalDrawingTool({ encounterId, patientId, orgId, pro
     }, { crossOrigin: 'anonymous' })
   }, [])
 
+  // Photo helpers
+  const loadPhotos = useCallback(async () => {
+    const { data } = await supabase.schema('cr').from('patient_photos')
+      .select('photo_id,photo_url,photo_type,view_label,storage_path')
+      .eq('encounter_id', encounterId)
+      .eq('is_active', true)
+      .order('captured_at', { ascending: false })
+    setPhotos(data ?? [])
+  }, [encounterId])
+
+  useEffect(() => { loadPhotos() }, [loadPhotos])
+
+  const uploadAndUsePhoto = useCallback(async (file: File) => {
+    setUploadingPhoto(true)
+    try {
+      const blob = await new Promise<Blob>(resolve => {
+        const img = new window.Image()
+        img.onload = () => {
+          const scale = Math.min(1, 1600 / img.width)
+          const c = document.createElement('canvas')
+          c.width = Math.round(img.width * scale)
+          c.height = Math.round(img.height * scale)
+          const ctx = c.getContext('2d')!
+          ctx.drawImage(img, 0, 0, c.width, c.height)
+          c.toBlob(b => resolve(b!), 'image/jpeg', 0.88)
+          URL.revokeObjectURL(img.src)
+        }
+        img.src = URL.createObjectURL(file)
+      })
+      const ts   = Date.now()
+      const path = `${orgId}/patients/${encounterId}/${ts}_drawing_background.jpg`
+      const { error: se } = await supabase.storage.from('revela-assets').upload(path, blob, { contentType: 'image/jpeg', upsert: false })
+      if (se) throw se
+      const { data: ud } = supabase.storage.from('revela-assets').getPublicUrl(path)
+      const { data: { user } } = await supabase.auth.getUser()
+      await supabase.schema('cr').from('patient_photos').insert({
+        org_id: orgId, encounter_id: encounterId, storage_path: path,
+        photo_url: ud.publicUrl, photo_type: 'drawing_background',
+        file_size_bytes: blob.size, mime_type: 'image/jpeg',
+        captured_by: user?.id ?? null,
+      })
+      setActivePhotoUrl(ud.publicUrl)
+      await loadPhotos()
+    } catch {
+      // silently ignore — photo upload errors don't break the drawing tool
+    } finally {
+      setUploadingPhoto(false)
+    }
+  }, [orgId, encounterId, loadPhotos])
+
+  // Photo background effect — sets patient photo as canvas background
+  useEffect(() => {
+    const canvas = fabricRef.current
+    if (!canvas || !fabricLoaded) return
+    if (!activePhotoUrl) {
+      loadTemplate(canvas, activeTemplate, activeView, canvasSize)
+      return
+    }
+    const fabric = (window as any).fabric
+    fabric.Image.fromURL(activePhotoUrl, (img: any) => {
+      if (!img) return
+      const scaleX = canvasSize.width  / (img.width  || canvasSize.width)
+      const scaleY = canvasSize.height / (img.height || canvasSize.height)
+      const scale  = Math.max(scaleX, scaleY)
+      img.set({
+        scaleX: scale, scaleY: scale,
+        left: (canvasSize.width  - (img.width  || 0) * scale) / 2,
+        top:  (canvasSize.height - (img.height || 0) * scale) / 2,
+        selectable: false, evented: false,
+      })
+      canvas.setBackgroundImage(img, canvas.renderAll.bind(canvas))
+    }, { crossOrigin: 'anonymous' })
+  }, [activePhotoUrl, fabricLoaded, canvasSize])
+
   // Template / view change
   useEffect(() => {
     const canvas = fabricRef.current
     if (!canvas || !fabricLoaded) return
     canvas.clear()
     canvas.backgroundColor = '#ffffff'
-    loadTemplate(canvas, activeTemplate, activeView, canvasSize)
+    if (!activePhotoUrl) {
+      loadTemplate(canvas, activeTemplate, activeView, canvasSize)
+    }
     setHistory([])
     setHistoryIndex(-1)
   }, [activeTemplate, activeView, fabricLoaded, loadTemplate, canvasSize])
@@ -1051,6 +1132,7 @@ export default function SurgicalDrawingTool({ encounterId, patientId, orgId, pro
           </svg>
           <span style={{ color: '#c9a96e', fontSize: 14, fontWeight: 600, letterSpacing: '0.3px' }}>Surgical Drawing</span>
           {isTouch && <span style={{ fontSize: 10, color: 'rgba(201,169,110,0.5)', marginLeft: 4 }}>Apple Pencil ready</span>}
+          {activePhotoUrl && <span style={{ fontSize: 10, background: 'rgba(201,169,110,0.15)', color: '#c9a96e', border: '1px solid rgba(201,169,110,0.35)', borderRadius: 6, padding: '2px 8px', fontWeight: 700 }}>📷 Photo Mode</span>}
         </div>
         <div style={{ display: 'flex', gap: 8 }}>
           <button onClick={exportPng} style={btn('ghost', false, btnH, fontSize)}>Export PNG</button>
@@ -1126,6 +1208,69 @@ export default function SurgicalDrawingTool({ encounterId, patientId, orgId, pro
                     <span style={{ fontSize: 16, color: activeColor }}>{stamp.icon}</span> {stamp.label}
                   </button>
                 ))}
+              </div>
+            )}
+          </div>
+          {/* Photo background button */}
+          <div style={{ position: 'relative' }}>
+            <button
+              title={activePhotoUrl ? 'Clear photo background' : 'Add photo background'}
+              onClick={() => { setShowPhotoPanel(s => !s) }}
+              style={{ width: btnH, height: btnH, borderRadius: 8, border: activePhotoUrl ? '1.5px solid rgba(201,169,110,0.6)' : 'none', cursor: 'pointer', fontSize: isTouch ? 15 : 13,
+                background: showPhotoPanel ? '#c9a96e' : activePhotoUrl ? 'rgba(201,169,110,0.2)' : 'rgba(255,255,255,0.07)',
+                color: showPhotoPanel ? '#060e1c' : activePhotoUrl ? '#c9a96e' : 'rgba(255,255,255,0.65)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 4, minWidth: isTouch ? 52 : 44,
+              }}
+            >
+              📷{activePhotoUrl ? <span style={{ fontSize: 9, fontWeight: 700 }}>ON</span> : null}
+            </button>
+            {/* Photo panel */}
+            {showPhotoPanel && (
+              <div style={{ position: 'absolute', top: btnH + 8, left: 0, background: '#0a1628', border: '1px solid rgba(201,169,110,0.3)', borderRadius: 12, padding: 14, zIndex: 200, width: 280, boxShadow: '0 12px 40px rgba(0,0,0,0.7)' }}>
+                <div style={{ color: '#c9a96e', fontSize: 12, fontWeight: 700, marginBottom: 10 }}>Photo Background</div>
+                {/* Upload new */}
+                <input ref={photoFileInputRef} type="file" accept="image/*" capture="environment" style={{ display: 'none' }}
+                  onChange={e => { const f = e.target.files?.[0]; e.target.value = ''; if (f) { setShowPhotoPanel(false); uploadAndUsePhoto(f) } }}
+                />
+                <button
+                  onClick={() => photoFileInputRef.current?.click()}
+                  disabled={uploadingPhoto}
+                  style={{ width: '100%', padding: '8px 12px', borderRadius: 8, border: '1px dashed rgba(201,169,110,0.4)', background: 'transparent', color: '#c9a96e', fontSize: 12, cursor: 'pointer', marginBottom: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, opacity: uploadingPhoto ? 0.6 : 1 }}
+                >
+                  {uploadingPhoto ? '⏳ Uploading…' : '📷 Camera / Upload New'}
+                </button>
+                {/* Existing photos */}
+                {photos.length > 0 && (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 6, maxHeight: 220, overflowY: 'auto' }}>
+                    {photos.map(p => (
+                      <div key={p.photo_id}
+                        onClick={() => { setActivePhotoUrl(activePhotoUrl === p.photo_url ? null : p.photo_url); setShowPhotoPanel(false) }}
+                        style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '6px 8px', borderRadius: 8, cursor: 'pointer',
+                          background: activePhotoUrl === p.photo_url ? 'rgba(201,169,110,0.15)' : 'rgba(255,255,255,0.04)',
+                          border: activePhotoUrl === p.photo_url ? '1px solid rgba(201,169,110,0.4)' : '1px solid transparent',
+                        }}
+                      >
+                        <img src={p.photo_url} alt="" style={{ width: 40, height: 40, objectFit: 'cover', borderRadius: 5, flexShrink: 0 }} />
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                          <div style={{ color: '#fff', fontSize: 11, fontWeight: 600, textTransform: 'capitalize' }}>{p.photo_type.replace('_', ' ')}</div>
+                          {p.view_label && <div style={{ color: 'rgba(255,255,255,0.4)', fontSize: 10 }}>{p.view_label}</div>}
+                        </div>
+                        {activePhotoUrl === p.photo_url && <span style={{ color: '#c9a96e', fontSize: 14 }}>✓</span>}
+                      </div>
+                    ))}
+                  </div>
+                )}
+                {photos.length === 0 && !uploadingPhoto && (
+                  <p style={{ color: 'rgba(255,255,255,0.3)', fontSize: 11, margin: 0 }}>No photos yet. Tap Camera above to add one.</p>
+                )}
+                {activePhotoUrl && (
+                  <button
+                    onClick={() => { setActivePhotoUrl(null); setShowPhotoPanel(false) }}
+                    style={{ width: '100%', marginTop: 10, padding: '7px 12px', borderRadius: 8, border: 'none', background: 'rgba(239,68,68,0.15)', color: '#f87171', fontSize: 12, cursor: 'pointer' }}
+                  >
+                    ✕ Clear Photo Background
+                  </button>
+                )}
               </div>
             )}
           </div>

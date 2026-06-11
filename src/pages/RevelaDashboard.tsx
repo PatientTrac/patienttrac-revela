@@ -13,6 +13,7 @@ import BodyDocumentation from '../components/revela/BodyDocumentation';
 import LiposuctionDocumentation from '../components/revela/LiposuctionDocumentation';
 import FaceDocumentation from '../components/revela/FaceDocumentation';
 import BasicOperativeNote from '../components/revela/BasicOperativeNote';
+import PatientPhotoCapture from '../components/revela/PatientPhotoCapture';
 
 interface PatientContext {
   patient_id: number;
@@ -330,6 +331,15 @@ export default function RevelaDashboard() {
                 )}
               </div>
             )}
+          </div>
+        )}
+
+        {patientContext && (
+          <div className="mb-6">
+            <PatientPhotoCapture
+              orgId={patientContext.org_id}
+              encounterId={patientContext.encounter_id.toString()}
+            />
           </div>
         )}
 
