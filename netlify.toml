@@ -7,9 +7,11 @@
 
 [functions]
   directory = "netlify/functions"
-  # 30s required — Fable 5 responses take 15-25s for clinical reasoning tasks
-  timeout = 30
   node_bundler = "esbuild"
+
+# 30s required — Fable 5 responses take 15-25s for clinical reasoning tasks
+[functions."*"]
+  timeout = 30
 
 # ── SPA routing ───────────────────────────────────────────────────────────────
 [[redirects]]
