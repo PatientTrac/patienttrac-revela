@@ -915,7 +915,7 @@ export default function SurgicalDrawingTool({ encounterId, patientId, procedureT
       const jsonData = JSON.stringify(canvas.toJSON())
       const templateInfo = `${activeTemplate}:${TEMPLATES[activeTemplate].views[activeView].name}`
       const { data, error } = await supabase
-        .from('cr.surgical_drawings')
+        .schema('cr').from('surgical_drawings')
         .upsert({ encounter_id: encounterId, patient_id: patientId, template_key: templateInfo, drawing_svg: svgData, drawing_json: jsonData }, { onConflict: 'encounter_id,template_key' })
         .select('id').single()
       if (error) throw error

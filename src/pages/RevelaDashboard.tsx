@@ -62,41 +62,35 @@ export default function RevelaDashboard() {
 
   const loadPatientContext = async () => {
     try {
-      // Validate cross-app token
-      const { data: tokenValidation, error: tokenError } = await supabase
-        .rpc('validate_cross_app_token', { token_string: token });
-
-      if (tokenError || !tokenValidation) {
-        throw new Error('Invalid or expired session token');
-      }
-
-      // Load patient and encounter context
-      const { data: encounterData, error: encounterError } = await supabase
-        .from('cr.revela_encounter_view')
-        .select('*')
-        .eq('encounter_id', encounterId)
-        .eq('patient_id', patientId)
-        .single();
-
-      if (encounterError) throw encounterError;
-
-      setPatientContext({
-        patient_id: encounterData.patient_id,
-        encounter_id: encounterData.encounter_id,
-        patient_name: `${encounterData.first_name} ${encounterData.last_name}`,
-        patient_sex: encounterData.sex,
-        patient_dob: encounterData.dob,
-        patient_photo_url: encounterData.photo_url,
-        chief_complaint: encounterData.chief_complaint,
-        provider_id: encounterData.provider_id,
-        provider_name: encounterData.provider_name,
-        org_id: encounterData.org_id
+      // Exchange cross-app token for a real Supabase session (server-side validation)
+      const authRes = await fetch('/.netlify/functions/revela-auth', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token }),
       });
 
-      // Load most recent risk score from consultation (if exists)
+      if (!authRes.ok) {
+        const { error } = await authRes.json().catch(() => ({ error: 'Auth service unavailable' }));
+        throw new Error(error ?? 'Authentication failed');
+      }
+
+      const { token_hash, patient_context } = await authRes.json();
+
+      // Exchange hashed magic-link token for a real Supabase session
+      const { error: otpError } = await supabase.auth.verifyOtp({
+        token_hash,
+        type: 'magiclink',
+      });
+      if (otpError) throw new Error(`Session exchange failed: ${otpError.message}`);
+
+      // Patient context is pre-loaded by the auth function — no extra round-trip needed
+      setPatientContext(patient_context);
+
+      // Load most recent risk score (now works — auth.uid() is set, RLS passes)
       const { data: consult } = await supabase
-        .from('cr.surgical_consultation')
-        .select('risk_score, or_clearance')
+        .schema('cr')
+        .from('surgical_consultation')
+        .select('risk_score, or_clearance, asa_class')
         .eq('encounter_id', encounterId)
         .eq('patient_id', patientId)
         .order('consultation_date', { ascending: false })
@@ -109,16 +103,16 @@ export default function RevelaDashboard() {
       if (consult) {
         setFlagsLoading(true);
         getSurgicalFlags({
-          procedureType: encounterData.chief_complaint || 'plastic_surgery',
-          procedureName: encounterData.chief_complaint || 'Consultation',
+          procedureType: patient_context.chief_complaint || 'plastic_surgery',
+          procedureName: patient_context.chief_complaint || 'Consultation',
           capriniScore: (consult.risk_score as any)?.caprini ?? undefined,
           stopBangScore: (consult.risk_score as any)?.stopBang ?? undefined,
           rcriScore: (consult.risk_score as any)?.rcri ?? undefined,
           asaClass: (consult as any).asa_class ?? undefined,
           orClearance: (consult.or_clearance as string) ?? undefined,
           encounterId: encounterId ?? undefined,
-          orgId: encounterData.org_id,
-          providerId: encounterData.provider_id?.toString(),
+          orgId: patient_context.org_id,
+          providerId: patient_context.provider_id?.toString(),
         }).then(flags => {
           setSurgicalFlags(flags);
           setFlagsLoading(false);
@@ -126,9 +120,10 @@ export default function RevelaDashboard() {
       }
 
       setLoading(false);
-    } catch (err) {
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Failed to load patient information';
       console.error('Error loading patient context:', err);
-      setError(err.message || 'Failed to load patient information');
+      setError(msg);
       setLoading(false);
     }
   };
@@ -138,7 +133,8 @@ export default function RevelaDashboard() {
     setClosingEncounter(true);
     try {
       const { error } = await supabase
-        .from('cr.encounter')
+        .schema('cr')
+        .from('encounter')
         .update({ status: 'completed', end_time: new Date().toISOString(), update_date: new Date().toISOString() })
         .eq('encounter_id', patientContext.encounter_id);
 

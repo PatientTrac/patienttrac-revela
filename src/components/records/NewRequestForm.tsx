@@ -44,7 +44,7 @@ export default function NewRequestForm({ patientId, encounterId, providerId, org
     if (!reportType) return
     setSaving(true)
     try {
-      await supabase.from('cr.records_requests').insert({
+      await supabase.schema('cr').from('records_requests').insert({
         org_id: orgId,
         patient_id: patientId,
         encounter_id: encounterId || null,

@@ -25,7 +25,7 @@ export default function RequestsList({ patientId, orgId, onSelectRequest }: Prop
   useEffect(() => {
     const load = async () => {
       const { data } = await supabase
-        .from('cr.records_requests')
+        .schema('cr').from('records_requests')
         .select('*')
         .eq('patient_id', patientId)
         .order('created_at', { ascending: false })

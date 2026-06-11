@@ -119,7 +119,7 @@ export default function InitialExamModule({ patientContext }: Props) {
   const loadExistingConsultation = async () => {
     try {
       const { data, error } = await supabase
-        .from('cr.surgical_consultation')
+        .schema('cr').from('surgical_consultation')
         .select('*')
         .eq('patient_id', patientContext.patient_id)
         .eq('encounter_id', patientContext.encounter_id)
@@ -214,7 +214,7 @@ export default function InitialExamModule({ patientContext }: Props) {
       if (formData.consultation_id) {
         // Update existing
         const { error } = await supabase
-          .from('cr.surgical_consultation')
+          .schema('cr').from('surgical_consultation')
           .update(consultationWithRisk)
           .eq('consultation_id', formData.consultation_id);
 
@@ -222,7 +222,7 @@ export default function InitialExamModule({ patientContext }: Props) {
       } else {
         // Insert new
         const { data, error } = await supabase
-          .from('cr.surgical_consultation')
+          .schema('cr').from('surgical_consultation')
           .insert(consultationWithRisk)
           .select('consultation_id')
           .single();

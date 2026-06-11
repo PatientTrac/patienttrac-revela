@@ -179,7 +179,7 @@ export default function BreastDocumentation({ patientContext }: Props) {
   const loadExistingDocumentation = async () => {
     try {
       const { data, error } = await supabase
-        .from('cr.body_part_documentation')
+        .schema('cr').from('body_part_documentation')
         .select('*')
         .eq('patient_id', patientContext.patient_id)
         .eq('encounter_id', patientContext.encounter_id)
@@ -233,7 +233,7 @@ export default function BreastDocumentation({ patientContext }: Props) {
       };
 
       const { error } = await supabase
-        .from('cr.body_part_documentation')
+        .schema('cr').from('body_part_documentation')
         .upsert(documentationData, {
           onConflict: 'patient_id,encounter_id,body_part'
         });

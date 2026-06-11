@@ -170,7 +170,7 @@ export default function BasicOperativeNote({ patientContext }: Props) {
   const loadExistingNote = async () => {
     try {
       const { data, error } = await supabase
-        .from('cr.operative_note_detailed')
+        .schema('cr').from('operative_note_detailed')
         .select('*')
         .eq('encounter_id', patientContext.encounter_id)
         .single();
@@ -346,7 +346,7 @@ export default function BasicOperativeNote({ patientContext }: Props) {
       };
 
       const { error } = await supabase
-        .from('cr.operative_note_detailed')
+        .schema('cr').from('operative_note_detailed')
         .upsert(operativeNoteData, {
           onConflict: 'encounter_id'
         });
@@ -379,7 +379,7 @@ export default function BasicOperativeNote({ patientContext }: Props) {
       };
 
       await supabase
-        .from('cr.superbill')
+        .schema('cr').from('superbill')
         .upsert(superbillData, { onConflict: 'encounter_id' });
     } catch (err) {
       console.error('Error auto-populating superbill:', err);
