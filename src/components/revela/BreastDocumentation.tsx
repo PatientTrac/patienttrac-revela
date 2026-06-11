@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../../lib/supabase';
 import { Save, Camera, AlertTriangle, CheckCircle, Ruler } from 'lucide-react';
+import SurgicalDrawingTool from '../SurgicalDrawingTool';
 
 interface PatientContext {
   patient_id: number;
@@ -289,9 +290,31 @@ export default function BreastDocumentation({ patientContext }: Props) {
 
   const isFemale = patientContext.patient_sex === 'female';
   const isMale = patientContext.patient_sex === 'male';
+  const [showDrawing, setShowDrawing] = useState(false);
 
   return (
     <div className="space-y-6">
+      {/* Surgical Drawing Panel */}
+      <div className="border border-[rgba(201,169,110,0.2)] rounded-lg overflow-hidden">
+        <button
+          onClick={() => setShowDrawing(v => !v)}
+          className="w-full flex items-center justify-between px-5 py-3 bg-[#0a1628] hover:bg-[#0d1e36] transition-colors"
+        >
+          <span className="text-[#c9a96e] font-rajdhani font-semibold text-sm tracking-wide flex items-center gap-2">
+            ✏ Surgical Drawings
+          </span>
+          <span className="text-gray-400 text-xs">{showDrawing ? '▲ Collapse' : '▼ Expand'}</span>
+        </button>
+        {showDrawing && (
+          <SurgicalDrawingTool
+            encounterId={patientContext.encounter_id.toString()}
+            patientId={patientContext.patient_id.toString()}
+            orgId={patientContext.org_id}
+            procedureType="breast"
+          />
+        )}
+      </div>
+
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>

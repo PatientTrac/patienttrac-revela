@@ -510,6 +510,7 @@ interface Stamp { label: string; icon: string; action: (canvas: any, x: number, 
 interface Props {
   encounterId: string
   patientId: string
+  orgId: string
   procedureType?: keyof typeof TEMPLATES
   onSave?: (drawingId: string) => void
 }
@@ -574,11 +575,14 @@ function makeStamps(fabric: any): Stamp[] {
 
 // ── Component ────────────────────────────────────────────────────────────────────────────────────────
 
-export default function SurgicalDrawingTool({ encounterId, patientId, procedureType = 'breast', onSave }: Props) {
+export default function SurgicalDrawingTool({ encounterId, patientId, orgId, procedureType = 'breast', onSave }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
   const fabricRef = useRef<any>(null)
   const arrowStartRef = useRef<{ x: number; y: number } | null>(null)
+  const penActiveRef = useRef(false)
+  const autoSaveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const saveDrawingRef = useRef<(() => void) | null>(null)
 
   const [fabricLoaded, setFabricLoaded] = useState(false)
   const [activeTool, setActiveTool] = useState<Tool>('draw')
@@ -595,6 +599,7 @@ export default function SurgicalDrawingTool({ encounterId, patientId, procedureT
   const [canvasSize, setCanvasSize] = useState({ width: 700, height: 540 })
   const [showStamps, setShowStamps] = useState(false)
   const [isTouch, setIsTouch] = useState(false)
+  const [loadingDrawing, setLoadingDrawing] = useState(false)
 
   // Surgical color palette — includes standard marking colors + skin tones
   const colors = [
@@ -651,15 +656,47 @@ export default function SurgicalDrawingTool({ encounterId, patientId, procedureT
 
     canvas.freeDrawingBrush.color = activeColor
     canvas.freeDrawingBrush.width = brushSize
+    canvas.freeDrawingBrush.decimate = 2 // Douglas-Peucker simplification on pencil strokes
 
     canvas.on('object:added', () => pushHistory(canvas))
     canvas.on('object:modified', () => pushHistory(canvas))
     canvas.on('object:removed', () => pushHistory(canvas))
 
+    // Auto-save 2s after last stroke
+    canvas.on('path:created', () => {
+      if (autoSaveTimerRef.current) clearTimeout(autoSaveTimerRef.current)
+      autoSaveTimerRef.current = setTimeout(() => {
+        setSaveStatus('idle') // will trigger saveDrawing via the effect below
+        saveDrawingRef.current?.()
+      }, 2000)
+    })
+
     fabricRef.current = canvas
     loadTemplate(canvas, activeTemplate, activeView, canvasSize)
 
-    return () => canvas.dispose()
+    // Load previously saved drawing for this encounter + template
+    const templateKey = `${activeTemplate}:${TEMPLATES[activeTemplate].views[activeView].name}`
+    setLoadingDrawing(true)
+    supabase.schema('cr').from('surgical_drawings')
+      .select('drawing_json')
+      .eq('encounter_id', encounterId)
+      .eq('template_key', templateKey)
+      .maybeSingle()
+      .then(({ data }) => {
+        if (data?.drawing_json) {
+          canvas.loadFromJSON(data.drawing_json, () => {
+            canvas.renderAll()
+            loadTemplate(canvas, activeTemplate, activeView, canvasSize)
+          })
+        }
+        setLoadingDrawing(false)
+      })
+      .catch(() => setLoadingDrawing(false))
+
+    return () => {
+      if (autoSaveTimerRef.current) clearTimeout(autoSaveTimerRef.current)
+      canvas.dispose()
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fabricLoaded])
 
@@ -695,6 +732,40 @@ export default function SurgicalDrawingTool({ encounterId, patientId, procedureT
     const prevent = (e: TouchEvent) => { if (fabricRef.current?.isDrawingMode) e.preventDefault() }
     el.addEventListener('touchmove', prevent, { passive: false })
     return () => el.removeEventListener('touchmove', prevent)
+  }, [isTouch])
+
+  // Palm rejection — when Apple Pencil is active, block finger touch events from reaching Fabric
+  useEffect(() => {
+    const el = canvasRef.current
+    if (!el || !isTouch) return
+
+    const onPenDown = (e: PointerEvent) => {
+      if (e.pointerType === 'pen') penActiveRef.current = true
+    }
+    const onPenUp = (e: PointerEvent) => {
+      if (e.pointerType === 'pen') {
+        // Keep pen-active for 120ms to absorb any trailing touch events
+        setTimeout(() => { penActiveRef.current = false }, 120)
+      }
+    }
+    const blockPalmTouch = (e: PointerEvent) => {
+      if (e.pointerType === 'touch' && penActiveRef.current) e.stopImmediatePropagation()
+    }
+
+    el.addEventListener('pointerdown', onPenDown, { capture: true })
+    el.addEventListener('pointerup', onPenUp, { capture: true })
+    el.addEventListener('pointercancel', onPenUp, { capture: true })
+    // Block touch at capture phase so Fabric never sees it
+    el.addEventListener('pointerdown', blockPalmTouch, { capture: true })
+    el.addEventListener('pointermove', blockPalmTouch, { capture: true })
+
+    return () => {
+      el.removeEventListener('pointerdown', onPenDown, { capture: true })
+      el.removeEventListener('pointerup', onPenUp, { capture: true })
+      el.removeEventListener('pointercancel', onPenUp, { capture: true })
+      el.removeEventListener('pointerdown', blockPalmTouch, { capture: true })
+      el.removeEventListener('pointermove', blockPalmTouch, { capture: true })
+    }
   }, [isTouch])
 
   // Load SVG template as background image
@@ -751,18 +822,21 @@ export default function SurgicalDrawingTool({ encounterId, patientId, procedureT
         canvas.freeDrawingBrush = new fabric.PencilBrush(canvas)
         canvas.freeDrawingBrush.color = activeColor
         canvas.freeDrawingBrush.width = brushSize
+        canvas.freeDrawingBrush.decimate = 2
         break
       case 'marker':
         canvas.isDrawingMode = true
         canvas.freeDrawingBrush = new fabric.PencilBrush(canvas)
         canvas.freeDrawingBrush.color = activeColor + '70'
         canvas.freeDrawingBrush.width = brushSize * 5
+        canvas.freeDrawingBrush.decimate = 4
         break
       case 'eraser':
         canvas.isDrawingMode = true
         canvas.freeDrawingBrush = new fabric.PencilBrush(canvas)
         canvas.freeDrawingBrush.color = '#ffffff'
         canvas.freeDrawingBrush.width = brushSize * 6
+        canvas.freeDrawingBrush.decimate = 4
         break
       case 'select':
         canvas.selection = true
@@ -905,7 +979,7 @@ export default function SurgicalDrawingTool({ encounterId, patientId, procedureT
     canvas.renderAll()
   }
 
-  const saveDrawing = async () => {
+  const saveDrawing = useCallback(async () => {
     const canvas = fabricRef.current
     if (!canvas) return
     setSaving(true)
@@ -914,16 +988,31 @@ export default function SurgicalDrawingTool({ encounterId, patientId, procedureT
       const svgData = canvas.toSVG()
       const jsonData = JSON.stringify(canvas.toJSON())
       const templateInfo = `${activeTemplate}:${TEMPLATES[activeTemplate].views[activeView].name}`
+      const { data: { user } } = await supabase.auth.getUser()
       const { data, error } = await supabase
         .schema('cr').from('surgical_drawings')
-        .upsert({ encounter_id: encounterId, patient_id: patientId, template_key: templateInfo, drawing_svg: svgData, drawing_json: jsonData }, { onConflict: 'encounter_id,template_key' })
+        .upsert(
+          {
+            encounter_id: encounterId,
+            org_id: orgId,
+            template_key: templateInfo,
+            drawing_svg: svgData,
+            drawing_json: jsonData,
+            created_by: user?.id ?? null,
+            updated_at: new Date().toISOString(),
+          },
+          { onConflict: 'encounter_id,template_key' },
+        )
         .select('id').single()
       if (error) throw error
       setSaveStatus('saved')
       onSave?.(data.id)
       setTimeout(() => setSaveStatus('idle'), 3000)
     } catch { setSaveStatus('error') } finally { setSaving(false) }
-  }
+  }, [activeTemplate, activeView, encounterId, orgId, onSave])
+
+  // Keep saveDrawingRef current so the auto-save timer closure always calls the latest version
+  useEffect(() => { saveDrawingRef.current = saveDrawing }, [saveDrawing])
 
   const exportPng = () => {
     const canvas = fabricRef.current
