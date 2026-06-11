@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
-import { Building2, Scale, Users, ShieldAlert, ChevronLeft, Settings, FileText } from 'lucide-react';
+import { Building2, Scale, Users, ShieldAlert, ChevronLeft, Settings, FileText, PenLine } from 'lucide-react';
 import FacilitySettings from '../components/admin/FacilitySettings';
 import ConsentTemplates from '../components/admin/ConsentTemplates';
+import ConsentSender from '../components/admin/ConsentSender';
 import ProvidersTab from '../components/admin/ProvidersTab';
 import ProposalBuilder from '../components/admin/ProposalBuilder';
 
-type Tab = 'facility' | 'consents' | 'providers' | 'proposals';
+type Tab = 'facility' | 'consents' | 'send_consent' | 'providers' | 'proposals';
 
 interface OrgInfo {
   org_id: string;
@@ -15,10 +16,11 @@ interface OrgInfo {
 }
 
 const TABS: { id: Tab; label: string; icon: React.ReactNode; description: string }[] = [
-  { id: 'facility',  label: 'Facility & Branding', icon: <Building2 size={18} />, description: 'Logo, address, contact info' },
-  { id: 'consents',  label: 'Consent Templates',   icon: <Scale size={18} />,    description: 'Informed consent library' },
-  { id: 'providers', label: 'Providers',            icon: <Users size={18} />,    description: 'Provider roster & credentials' },
-  { id: 'proposals', label: 'Proposal Builder',     icon: <FileText size={18} />, description: 'AI proposals + branded PDFs' },
+  { id: 'facility',     label: 'Facility & Branding', icon: <Building2 size={18} />, description: 'Logo, address, contact info' },
+  { id: 'consents',     label: 'Consent Templates',   icon: <Scale size={18} />,    description: 'Informed consent library' },
+  { id: 'send_consent', label: 'Send Consent',        icon: <PenLine size={18} />,  description: 'E-sign forms · email + iPad' },
+  { id: 'providers',    label: 'Providers',            icon: <Users size={18} />,    description: 'Provider roster & credentials' },
+  { id: 'proposals',    label: 'Proposal Builder',     icon: <FileText size={18} />, description: 'AI proposals + branded PDFs' },
 ];
 
 export default function AdminPanel() {
@@ -154,10 +156,11 @@ export default function AdminPanel() {
 
             {orgId && (
               <>
-                {activeTab === 'facility'  && <FacilitySettings orgId={orgId} />}
-                {activeTab === 'consents'  && <ConsentTemplates orgId={orgId} />}
-                {activeTab === 'providers' && <ProvidersTab orgId={orgId} />}
-                {activeTab === 'proposals' && <ProposalBuilder orgId={orgId} />}
+                {activeTab === 'facility'     && <FacilitySettings orgId={orgId} />}
+                {activeTab === 'consents'     && <ConsentTemplates orgId={orgId} />}
+                {activeTab === 'send_consent' && <ConsentSender orgId={orgId} />}
+                {activeTab === 'providers'    && <ProvidersTab orgId={orgId} />}
+                {activeTab === 'proposals'    && <ProposalBuilder orgId={orgId} />}
               </>
             )}
           </div>
