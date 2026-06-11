@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
-import { Building2, Scale, Users, ShieldAlert, ChevronLeft, Settings } from 'lucide-react';
+import { Building2, Scale, Users, ShieldAlert, ChevronLeft, Settings, FileText } from 'lucide-react';
 import FacilitySettings from '../components/admin/FacilitySettings';
 import ConsentTemplates from '../components/admin/ConsentTemplates';
 import ProvidersTab from '../components/admin/ProvidersTab';
+import ProposalBuilder from '../components/admin/ProposalBuilder';
 
-type Tab = 'facility' | 'consents' | 'providers';
+type Tab = 'facility' | 'consents' | 'providers' | 'proposals';
 
 interface OrgInfo {
   org_id: string;
@@ -17,6 +18,7 @@ const TABS: { id: Tab; label: string; icon: React.ReactNode; description: string
   { id: 'facility',  label: 'Facility & Branding', icon: <Building2 size={18} />, description: 'Logo, address, contact info' },
   { id: 'consents',  label: 'Consent Templates',   icon: <Scale size={18} />,    description: 'Informed consent library' },
   { id: 'providers', label: 'Providers',            icon: <Users size={18} />,    description: 'Provider roster & credentials' },
+  { id: 'proposals', label: 'Proposal Builder',     icon: <FileText size={18} />, description: 'AI proposals + branded PDFs' },
 ];
 
 export default function AdminPanel() {
@@ -135,8 +137,8 @@ export default function AdminPanel() {
             ))}
           </div>
 
-          {/* Content area */}
-          <div style={{ flex: 1, minWidth: 0, background: '#0a1628', borderRadius: 14, border: '1px solid rgba(201,169,110,0.12)', padding: '28px 32px' }}>
+          {/* Content area — proposals tab gets minimal chrome since it has its own layout */}
+          <div style={{ flex: 1, minWidth: 0, background: '#0a1628', borderRadius: 14, border: '1px solid rgba(201,169,110,0.12)', padding: activeTab === 'proposals' ? '28px 28px' : '28px 32px' }}>
             {/* Section header */}
             <div style={{ marginBottom: 28, paddingBottom: 20, borderBottom: '1px solid rgba(201,169,110,0.1)' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 4 }}>
@@ -155,6 +157,7 @@ export default function AdminPanel() {
                 {activeTab === 'facility'  && <FacilitySettings orgId={orgId} />}
                 {activeTab === 'consents'  && <ConsentTemplates orgId={orgId} />}
                 {activeTab === 'providers' && <ProvidersTab orgId={orgId} />}
+                {activeTab === 'proposals' && <ProposalBuilder orgId={orgId} />}
               </>
             )}
           </div>
