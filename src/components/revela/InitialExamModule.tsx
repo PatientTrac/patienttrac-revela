@@ -44,7 +44,7 @@ interface InitialExamData {
   recommended_procedures: string[];
   contraindications: string[];
   photos_taken: boolean;
-  photo_consent: boolean;
+  photo_consent: boolean | null;
 }
 
 interface Props {
@@ -94,7 +94,7 @@ export default function InitialExamModule({ patientContext }: Props) {
     recommended_procedures: [],
     contraindications: [],
     photos_taken: false,
-    photo_consent: false
+    photo_consent: null as boolean | null
   });
 
   useEffect(() => {
@@ -141,7 +141,7 @@ export default function InitialExamModule({ patientContext }: Props) {
           recommended_procedures: data.recommended_procedures || [],
           contraindications: data.contraindications || [],
           photos_taken: data.photos_taken || false,
-          photo_consent: data.photo_consent || false
+          photo_consent: data.photo_consent ?? null
         });
         if (data.asa_class) setAsaClass(data.asa_class);
         if (data.smoking_cessation_counseled) setSmokingCessation((prev: typeof smokingCessation) => ({ ...prev, counseled: data.smoking_cessation_counseled }));
@@ -527,7 +527,7 @@ export default function InitialExamModule({ patientContext }: Props) {
           <label className="flex items-center gap-3">
             <input
               type="checkbox"
-              checked={formData.photo_consent}
+              checked={formData.photo_consent === true}
               onChange={(e) => setFormData(prev => ({ ...prev, photo_consent: e.target.checked }))}
               className="w-4 h-4 text-[#c9a96e] bg-[#060e1c] border-gray-700 rounded focus:ring-[#c9a96e]"
             />
