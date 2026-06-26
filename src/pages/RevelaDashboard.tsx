@@ -5,6 +5,7 @@ import { User, Calendar, AlertCircle, CheckCircle, ShieldAlert, LogOut, Settings
 import type { RiskScore } from '../lib/riskEngine';
 import { getSurgicalFlags } from '../lib/revelai';
 import type { SurgicalFlag } from '../lib/revelai';
+import { ClinicalChart, ClinicalViewerProvider } from '@patienttrac/clinical-viewer';
 
 // Import body region modules
 import InitialExamModule from '../components/revela/InitialExamModule';
@@ -395,6 +396,15 @@ export default function RevelaDashboard() {
             <BasicOperativeNote patientContext={patientContext!} />
           )}
         </div>
+
+        {/* Shared read-only clinical chart (@patienttrac/clinical-viewer) */}
+        {patientContext && (
+          <div className="mt-6">
+            <ClinicalViewerProvider client={supabase}>
+              <ClinicalChart patientId={Number(patientContext.patient_id)} />
+            </ClinicalViewerProvider>
+          </div>
+        )}
       </div>
 
       {/* Action Bar */}
